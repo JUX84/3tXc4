@@ -6,11 +6,15 @@
 
 #include <CONIO.h>
 
+#define clear system("cls")
+
 #else
 
 #include <termios.h>
 #include <unistd.h>
 #include <stdio.h>
+
+#define clear system("CLS")
 
 char getch ( void ) {
     struct termios oldattr, newattr;
@@ -25,8 +29,7 @@ char getch ( void ) {
 
 #endif
 
-enum
-{
+enum {
     KEY_ESC = 27,
     KEY_ENTER = 13,
     ARROW_UP = 256 + 72,
@@ -40,6 +43,18 @@ static int getKey ( void ) {
     if ( Key == 0 || Key == 224 )
         Key = 256 + getch ();
     return Key;
+}
+
+static void endLine ( int endl ) {
+    int i;
+    for ( i = 0 ; i < endl ; ++i )
+        std::cout << std::endl;
+}
+
+static void tab ( int space ) {
+    int i;
+    for ( i = 0 ; i < space ; ++i )
+        std::cout << " ";
 }
 
 class grid {
