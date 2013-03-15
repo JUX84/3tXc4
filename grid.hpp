@@ -2,7 +2,28 @@
 #define _GRID_HPP_
 
 //#include <cstring>
+#ifdef _WIN32
+
 #include <CONIO.h>
+
+#else
+
+#include <termios.h>
+#include <unistd.h>
+#include <stdio.h>
+
+char getch ( void ) {
+    struct termios oldattr, newattr;
+    tcgetattr ( STDIN_FILENO, &oldattr );
+    newattr = oldattr;
+    newattr.c_lflag &= ~( ICANON | ECHO );
+    tcsetattr ( STDIN_FILENO, TCSANOW, &newattr );
+    char ch = getchar ();
+    tcsetattr ( STDIN_FILENO, TCSANOW, &oldattr );
+    return ch;
+}
+
+#endif
 
 enum
 {
@@ -14,11 +35,11 @@ enum
     ARROW_RIGHT = 256 + 77
 };
 
-static int getKey () {
-    int ch = getch ();
-    if ( ch == 0 || ch == 224 )
-        ch = 256 + getch ();
-    return ch;
+static int getKey ( void ) {
+    int Key = getch ();
+    if ( Key == 0 || Key == 224 )
+        Key = 256 + getch ();
+    return Key;
 }
 
 class grid {
@@ -30,16 +51,16 @@ class grid {
         int alignWinTotal;
 
     public:
-        grid ();
+        grid ( void );
         grid ( int newSize , int newAlignWinSize , int newAlignWinTotal );
         //grid ( std::string file );
-        //~grid ();
-        void draw ();
-        void gravitate ();
+        //~grid ( void );
+        void draw ( void );
+        void gravitate ( void );
         void play ( int player );
         void rotate ( bool clockwise );
         void insert ( int player , int pos );
-        bool checkWin ( int player );
+        int checkWin ( void );
         bool checkLine ( int line );
         bool checkColumn ( int column );
 

@@ -2,17 +2,17 @@
 #include "windows.h"
 #include "grid.hpp"
 
-void endLine () {
+void endLine ( void ) {
     std::cout << std::endl << std::endl;
 }
 
-void tab () {
+void tab ( int space ) {
     int i;
-    for ( i = 0 ; i < 10 ; ++i )
+    for ( i = 0 ; i < space ; ++i )
         std::cout << " ";
 }
 
-bool warnExit () {
+bool warnExit ( void ) {
     int selected (1);
     int Key;
     while ( true ) {
@@ -23,11 +23,12 @@ bool warnExit () {
         system ("cls");
         endLine ();
         endLine ();
-        tab ();
-        tab ();
+        tab ( 25 );
         std::cout << "ARE YOU SURE ?";
         endLine ();
-        tab ();
+        endLine ();
+
+        tab ( 12 );
         if ( selected == 1 )
             std::cout << "-> ";
         else
@@ -37,8 +38,7 @@ bool warnExit () {
             std::cout << " <-";
         else
             std::cout << "   ";
-        tab ();
-        tab ();
+        tab ( 22 );
         if ( selected == 2 )
             std::cout << "-> ";
         else
@@ -64,6 +64,135 @@ bool warnExit () {
 
 void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWinTotal ) {
 
+    int selected (1);
+    int i;
+    while ( true ) {
+        if ( selected < 1 )
+            selected = 1;
+        if ( selected > 3 )
+            selected = 3;
+        if ( defaultSize < 3 )
+            defaultSize = 3;
+        if ( defaultSize > 20 )
+            defaultSize = 20;
+        if ( defaultAlignWinSize > defaultSize ) {
+            defaultAlignWinSize = defaultSize;
+        }
+        if ( defaultAlignWinSize < 3 ) {
+            defaultAlignWinSize = 3;
+        }
+        if ( defaultAlignWinTotal < 1 ) {
+            defaultAlignWinTotal = 1;
+        }
+        if ( defaultAlignWinTotal > 4 ) {
+            defaultAlignWinTotal = 4;
+        }
+
+        system("cls");
+        endLine ();
+        tab (27);
+        std::cout << "OPTIONS";
+        endLine ();
+
+        endLine ();
+        tab (15);
+        if ( selected == 1 )
+            std::cout << "-> ";
+        else
+            std::cout << "   ";
+        std::cout << "Size";
+        tab (7);
+        std::cout << defaultSize;
+        if ( defaultSize < 10 )
+            std::cout << " ";
+        tab (2);
+        std::cout << "[";
+        for ( i = 0 ; i < defaultSize ; ++i ) {
+            std::cout << "-";
+        }
+        for ( i = 20 ; i > defaultSize ; --i ) {
+            std::cout << " ";
+        }
+        std::cout << "]";
+        if ( selected == 1 )
+            std::cout << " <-";
+        else
+            std::cout << "   ";
+
+        endLine ();
+        tab (10);
+        if ( selected == 2 )
+            std::cout << "-> ";
+        else
+            std::cout << "   ";
+        std::cout << "Alignment Size";
+        tab (2);
+        std::cout << defaultAlignWinSize;
+        if ( defaultAlignWinSize < 10 )
+            std::cout << " ";
+        tab (2);
+        std::cout << "[";
+        for ( i = 0 ; i < defaultAlignWinSize ; ++i ) {
+            std::cout << "-";
+        }
+        for ( i = 20 ; i > defaultAlignWinSize ; --i ) {
+            std::cout << " ";
+        }
+        std::cout << "]";
+        if ( selected == 2 )
+            std::cout << " <-";
+        else
+            std::cout << "   ";
+
+        endLine ();
+        tab (9);
+        if ( selected == 3 )
+            std::cout << "-> ";
+        else
+            std::cout << "   ";
+        std::cout << "Alignment Total";
+        tab (2);
+        std::cout << defaultAlignWinTotal;
+        if ( defaultAlignWinTotal < 10 )
+            std::cout << " ";
+        tab (2);
+        std::cout << "[";
+        for ( i = 0 ; i < defaultAlignWinTotal ; ++i ) {
+            std::cout << "-----";
+        }
+        for ( i = 4 ; i > defaultAlignWinTotal ; --i ) {
+            std::cout << "     ";
+        }
+        std::cout << "]";
+        if ( selected == 3 )
+            std::cout << " <-";
+        else
+            std::cout << "   ";
+
+        int Key = getKey ();
+        if ( Key == KEY_ESC )
+            break;
+        if ( Key == ARROW_LEFT ) {
+            if ( selected == 1 )
+                defaultSize--;
+            if ( selected == 2 )
+                defaultAlignWinSize--;
+            if ( selected == 3 )
+                defaultAlignWinTotal--;
+        }
+        if ( Key == ARROW_RIGHT ) {
+            if ( selected == 1 )
+                defaultSize++;
+            if ( selected == 2 )
+                defaultAlignWinSize++;
+            if ( selected == 3 )
+                defaultAlignWinTotal++;
+        }
+        if ( Key == ARROW_DOWN )
+            selected++;
+        if ( Key == ARROW_UP )
+            selected--;
+    }
 }
 
 int main ( int argc , char *arvg[] ) {
@@ -83,12 +212,11 @@ int main ( int argc , char *arvg[] ) {
 
         endLine ();
 
-        tab ();
-        std::cout << "       ";
+        tab ( 27 );
         std::cout << "Welcome!";
         endLine();
 
-        tab();
+        tab( 20 );
         if ( selected == 1 )
             std::cout << "->      ";
         else
@@ -98,7 +226,7 @@ int main ( int argc , char *arvg[] ) {
             std::cout << "      <-";
         endLine();
 
-        tab();
+        tab( 20 );
         if ( selected == 2 )
             std::cout << "->     ";
         else
@@ -108,7 +236,7 @@ int main ( int argc , char *arvg[] ) {
             std::cout << "    <-";
         endLine();
 
-        tab();
+        tab( 20 );
         if ( selected == 3 )
             std::cout << "->      ";
         else
@@ -133,9 +261,8 @@ int main ( int argc , char *arvg[] ) {
                     return 0;
             }
 
-            if ( selected == 2 ) {
+            if ( selected == 2 )
                 options ( defaultSize , defaultAlignWinSize , defaultAlignWinTotal );
-            }
         }
 
         if ( Key == KEY_ESC ) {

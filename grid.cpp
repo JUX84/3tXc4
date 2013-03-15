@@ -2,7 +2,7 @@
 #include "windows.h"
 #include "grid.hpp"
 
-grid::grid () {
+grid::grid ( void ) {
     size = 5;
     XO = new int*[size];
     int i;
@@ -79,18 +79,14 @@ bool grid::checkColumn ( int column ) {
     return true;
 }
 
-bool grid::checkWin ( int player ) {
-    int i;
+int grid::checkWin ( void ) {
+    /*int i;
     int j;
     int countLine;
     int countColumn;
 
-    /**** TO-DO ****
-
     int countDiag1;
     int countDiag2;
-
-    ***************/
 
     for ( i = 0 ; i < size ; ++i ) {
         if ( checkLine ( i ) ) {
@@ -98,8 +94,8 @@ bool grid::checkWin ( int player ) {
             for ( j = 0 ; j < size ; ++j ) {
                 countLine += XO[i][j];
             }
-            if ( countLine == 5*player )
-                return true;
+            if ( countLine/5 == 1 || countLine/5 ==  2 )
+                return countLine/5;
         }
     }
     for ( j = 0 ; j < size ; ++j ) {
@@ -108,11 +104,12 @@ bool grid::checkWin ( int player ) {
             for ( i = 0 ; i < size ; ++i ) {
                 countColumn += XO[i][j];
             }
-            if ( countColumn == 5*player )
-                return true;
+            if ( countColumn/alignSizeWin == 1 || countColumn/5 == 2 )
+                return countColumn/5;
         }
     }
-    return false;
+    */
+    return 0;
 }
 
 void grid::rotate ( bool clockwise ) {
@@ -149,7 +146,7 @@ void grid::rotate ( bool clockwise ) {
     delete []TMP_XO;
 }
 
-void grid::gravitate () {
+void grid::gravitate ( void ) {
     int i;
     int j;
     bool modified(true);
@@ -201,7 +198,7 @@ void grid::play ( int player ) {
     }
 }
 
-void grid::draw () {
+void grid::draw ( void ) {
 	int i;
 	int j;
 	std::cout << "    |--";
