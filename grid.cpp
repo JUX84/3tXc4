@@ -1,5 +1,4 @@
 #include <iostream>
-#include "windows.h"
 #include "grid.hpp"
 
 grid::grid ( void ) {
@@ -56,7 +55,7 @@ void grid::insert ( int player , int pos ) {
         if ( pos > size - 1 )
             pos = size - 1;
 
-        system("cls");
+        clear;
 
         endLine ( 2 );
 
@@ -88,70 +87,17 @@ void grid::insert ( int player , int pos ) {
 	}
 }
 
-bool grid::checkLine ( int line ) {
-
-    int j;
-
-    for ( j = 0 ; j < size ; ++j ) {
-
-        if ( XO[line][j] == 0 )
-            return false;
-    }
-
-    return true;
-}
-
-bool grid::checkColumn ( int column ) {
-
-    int i;
-
-    for ( i = 0 ; i < size ; ++i ) {
-
-        if ( XO[i][column] == 0 )
-            return false;
-    }
-
-    return true;
-}
-
 int grid::checkWin ( void ) {
 
-    /*int i;
+    int i;
     int j;
-    int countLine;
-    int countColumn;
-
-    int countDiag1;
-    int countDiag2;
-
-    for ( i = 0 ; i < size ; ++i ) {
-        if ( checkLine ( i ) ) {
-            countLine = 0;
-            for ( j = 0 ; j < size ; ++j ) {
-                countLine += XO[i][j];
-            }
-            if ( countLine/5 == 1 || countLine/5 ==  2 )
-                return countLine/5;
-        }
-    }
-    for ( j = 0 ; j < size ; ++j ) {
-        if ( checkColumn ( j ) ) {
-            countColumn = 0;
-            for ( i = 0 ; i < size ; ++i ) {
-                countColumn += XO[i][j];
-            }
-            if ( countColumn/alignSizeWin == 1 || countColumn/5 == 2 )
-                return countColumn/5;
-        }
-    }
-    */
 
     return 0;
 }
 
 void grid::rotate ( bool clockwise ) {
 
-    system("cls");
+    clear;
 
     int i;
     int j;
@@ -209,13 +155,13 @@ void grid::gravitate ( void ) {
 
         for ( i = 0 ; i < size-1 ; ++i ) {
 
-            system("cls");
+            clear;
 
             endLine ( 3 );
 
             draw ();
 
-            Sleep(100);
+            wait(100);
 
             for ( j = 0 ; j < size ; ++j ) {
 
@@ -244,21 +190,21 @@ void grid::play ( int player ) {
         if ( selected > 2 )
             selected = 2;
 
-        system("cls");
+        clear;
 
         endLine ( 3 );
 
         draw ();
 
-        endLine ( 3 );
+        endLine ( 2 );
 
-        tab ( 30 );
+        tab ( 32 );
 
         std::cout << "PLAYER " << player << " !";
 
         endLine ( 2 );
 
-        tab ( 15 );
+        tab ( 16 );
 
         if ( selected == 1 )
             std::cout << "-> ";
@@ -371,7 +317,7 @@ void grid::draw ( void ) {
 
 	endLine ( 2 );
 
-	tab ( 130/size );
+	tab ( 130 / size );
 
 	std::cout << "|--";
 	for ( i = 0 ; i < size-1 ; ++i ) {
@@ -381,7 +327,7 @@ void grid::draw ( void ) {
 
 	for( i = 0 ; i < size ; ++i ) {
 
-        tab ( 130/size );
+        tab ( 130 / size );
 
 		std::cout << "|";
 		for ( j = 0 ; j < size ; ++j ) {
@@ -396,7 +342,7 @@ void grid::draw ( void ) {
 
 		endLine ( 1 );
 
-		tab ( 130/size );
+		tab ( 130 / size );
 
 		std::cout << "|--";
 		for ( j = 0 ; j < size-1 ; ++j ) {

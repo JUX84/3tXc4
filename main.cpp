@@ -1,5 +1,4 @@
 #include <iostream>
-#include "windows.h"
 #include "grid.hpp"
 
 bool warnExit ( void ) {
@@ -15,7 +14,7 @@ bool warnExit ( void ) {
         if ( selected > 2 )
             selected = 2;
 
-        system ("cls");
+        clear;
 
         endLine ( 6 );
 
@@ -76,7 +75,7 @@ bool warnExit ( void ) {
 
 void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWinTotal ) {
 
-    int selected (1);
+    int selected ( 1 );
     int i;
 
     while ( true ) {
@@ -107,15 +106,15 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
 
         clear;
 
-        endLine ( 2 );
+        endLine ( 4 );
 
-        tab (27);
+        tab ( 35 );
 
         std::cout << "OPTIONS";
 
-        endLine ( 4 );
+        endLine ( 6 );
 
-        tab (15);
+        tab ( 20 );
 
         if ( selected == 1 )
             std::cout << "-> ";
@@ -124,14 +123,14 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
 
         std::cout << "Size";
 
-        tab (7);
+        tab ( 7 );
 
         std::cout << defaultSize;
 
         if ( defaultSize < 10 )
             std::cout << " ";
 
-        tab (2);
+        tab ( 2 );
 
         std::cout << "[";
 
@@ -152,7 +151,7 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
 
         endLine ( 2 );
 
-        tab (10);
+        tab ( 15 );
 
         if ( selected == 2 )
             std::cout << "-> ";
@@ -161,14 +160,14 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
 
         std::cout << "Alignment Size";
 
-        tab (2);
+        tab ( 2 );
 
         std::cout << defaultAlignWinSize;
 
         if ( defaultAlignWinSize < 10 )
             std::cout << " ";
 
-        tab (2);
+        tab ( 2 );
 
         std::cout << "[";
 
@@ -189,7 +188,7 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
 
         endLine ( 2 );
 
-        tab (9);
+        tab ( 14 );
 
         if ( selected == 3 )
             std::cout << "-> ";
@@ -198,14 +197,14 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
 
         std::cout << "Alignment Total";
 
-        tab (2);
+        tab ( 2 );
 
         std::cout << defaultAlignWinTotal;
 
         if ( defaultAlignWinTotal < 10 )
             std::cout << " ";
 
-        tab (2);
+        tab ( 2 );
 
         std::cout << "[";
 
@@ -264,8 +263,28 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
 void play ( int size , int alignWinSize , int alignWinTotal ) {
 
     grid G ( size , alignWinSize , alignWinTotal );
+    int Key;
 
     while ( true ) {
+
+        clear;
+
+        endLine ( 10 );
+
+        tab ( 32 );
+
+        std::cout << "PLAYER 1 !";
+
+        endLine ( 2 );
+
+        tab ( 16 );
+
+        std::cout << "Press any key to continue (ESC to quit)...";
+
+        Key = getKey ();
+
+        if ( Key == KEY_ESC )
+            break;
 
         G.play ( 1 );
         G.gravitate ();
@@ -277,6 +296,25 @@ void play ( int size , int alignWinSize , int alignWinTotal ) {
         if ( G.checkWin () == 2 ) {
 
         }
+
+        clear;
+
+        endLine ( 10 );
+
+        tab ( 32 );
+
+        std::cout << "PLAYER 2 !";
+
+        endLine ( 2 );
+
+        tab ( 16 );
+
+        std::cout << "Press any key to continue (ESC to quit)...";
+
+        Key = getKey ();
+
+        if ( Key == KEY_ESC )
+            break;
 
         G.play ( 2 );
         G.gravitate ();
@@ -291,12 +329,12 @@ void play ( int size , int alignWinSize , int alignWinTotal ) {
     }
 }
 
-int main ( int argc , char *arvg[] ) {
+int main ( int argc , char **argv ) {
 
-    int selected (1);
-    int defaultSize (5);
-    int defaultAlignWinSize (5);
-    int defaultAlignWinTotal (1);
+    int selected ( 1 );
+    int defaultSize ( 5 );
+    int defaultAlignWinSize ( 5 );
+    int defaultAlignWinTotal ( 1 );
     int Key;
 
     while ( true ) {
@@ -304,46 +342,61 @@ int main ( int argc , char *arvg[] ) {
 
         if ( selected < 1 )
             selected = 1;
+
         if ( selected > 3 )
             selected = 3;
 
-        endLine ( 6 );
+        endLine ( 3 );
 
-        tab ( 34 );
-        std::cout << "Welcome!";
-        endLine( 2 );
+        tab ( 33 );
+
+        std::cout << "__3tXc4__";
+
+        endLine( 6 );
 
         tab( 27 );
+
         if ( selected == 1 )
             std::cout << "->      ";
         else
             std::cout << "        ";
+
         std::cout << "PLAY!";
+
         if ( selected == 1 )
             std::cout << "      <-";
-        endLine( 2 );
+
+        endLine( 3 );
 
         tab( 27 );
+
         if ( selected == 2 )
             std::cout << "->     ";
         else
             std::cout << "       ";
+
         std::cout << "OPTIONS";
+
         if ( selected == 2 )
             std::cout << "     <-";
-        endLine( 2 );
+
+        endLine( 3 );
 
         tab( 27 );
+
         if ( selected == 3 )
             std::cout << "->      ";
         else
             std::cout << "        ";
+
         std::cout << "EXIT";
+
         if ( selected == 3 )
             std::cout << "      <-";
         std::cout << std::endl;
 
         Key=getKey();
+
         if ( Key == ARROW_DOWN )
             selected += 1;
 

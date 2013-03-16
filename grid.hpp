@@ -4,9 +4,11 @@
 //#include <cstring>
 #ifdef _WIN32
 
+#include <windows.h>
 #include <CONIO.h>
 
 #define clear system("cls")
+#define wait(a) Sleep(a)
 
 #else
 
@@ -15,6 +17,7 @@
 #include <stdio.h>
 
 #define clear system("CLS")
+#define wait(a) sleep(a*1000)
 
 char getch ( void ) {
     struct termios oldattr, newattr;
@@ -76,8 +79,6 @@ class grid {
         void rotate ( bool clockwise );
         void insert ( int player , int pos );
         int checkWin ( void );
-        bool checkLine ( int line );
-        bool checkColumn ( int column );
 
     protected:
 
