@@ -221,7 +221,7 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
         else
             std::cout << "   ";
 
-        std::cout << std::endl;
+        endLine ( 1 );
 
         int Key = getKey ();
 
@@ -281,6 +281,8 @@ void play ( int size , int alignWinSize , int alignWinTotal ) {
 
         std::cout << "Press any key to continue (ESC to quit)...";
 
+        endLine ( 1 );
+
         Key = getKey ();
 
         if ( Key == KEY_ESC )
@@ -291,10 +293,47 @@ void play ( int size , int alignWinSize , int alignWinTotal ) {
 
         if ( G.checkWin () == 1 ) {
 
+            endLine ( 3 );
+
+            tab ( 30 );
+
+            std::cout << "Player 1 has won!";
+
+            endLine ( 1 );
+
+            wait ( 2000 );
+
+            break;
         }
 
         if ( G.checkWin () == 2 ) {
 
+            endLine ( 3 );
+
+            tab ( 30 );
+
+            std::cout << "Player 2 has won!";
+
+            endLine ( 1 );
+
+            wait ( 2000 );
+
+            break;
+        }
+
+        if ( G.checkWin () == 3 ) {
+
+            endLine ( 3 );
+
+            tab ( 30 );
+
+            std::cout << "It's a tie!";
+
+            endLine ( 1 );
+
+            wait ( 2000 );
+
+            break;
         }
 
         clear;
@@ -310,6 +349,8 @@ void play ( int size , int alignWinSize , int alignWinTotal ) {
         tab ( 16 );
 
         std::cout << "Press any key to continue (ESC to quit)...";
+
+        endLine ( 1 );
 
         Key = getKey ();
 
@@ -393,7 +434,8 @@ int main ( int argc , char **argv ) {
 
         if ( selected == 3 )
             std::cout << "      <-";
-        std::cout << std::endl;
+
+        endLine ( 1 );
 
         Key=getKey();
 

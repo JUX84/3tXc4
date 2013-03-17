@@ -43,6 +43,15 @@ grid::grid ( int newsize , int newAlignWinSize , int newAligneWinTotal ) {
     alignWinTotal = newAligneWinTotal;
 }
 
+grid::~grid ( void ) {
+
+    int i;
+
+    for ( i = 0 ; i < size ; ++i )
+        delete []XO[i];
+    delete []XO;
+}
+
 void grid::insert ( int player , int pos ) {
 
 	int i;
@@ -91,8 +100,63 @@ int grid::checkWin ( void ) {
 
     int i;
     int j;
+    int k;
+    int countX;
+    int countO;
 
-    return 0;
+    int Xi[4];
+    int Oi[4];
+
+    for ( i = 0 ; i < 4 ; ++i ) {
+        Xi[i] = 0;
+        Oi[i] = 0;
+    }
+
+    for ( i = 0 ; i < size ; ++i ) {
+
+        for ( j = 0 ; j <= ( size - alignWinSize ) ; ++j ) {
+
+            countX = 0;
+            countO = 0;
+
+            for ( k = 0 ; k < alignWinSize ; ++k ) {
+
+                if ( XO[i][k] == 1 )
+                    countX += XO[i][k];
+
+                if ( XO[i][k] == 2 )
+                    countO += XO[i][k];
+            }
+
+            if ( countX == alignWinSize )
+                Xi[0] = 1;
+
+            if ( countO == 2*alignWinSize )
+                Oi[0] = 1;
+        }
+    }
+
+    ////////////////////////////
+    //                        //
+    // TO-DO COLONNES / DIAGS //
+    //                        //
+    ////////////////////////////
+
+    int X = Xi[0] + Xi[1] + Xi[2] + Xi[3];
+
+    int O = Oi[0] + Oi[1] + Oi[2] + Oi[3];
+
+    if ( X >= alignWinTotal )
+        X = 1;
+    else
+        X = 0;
+
+    if ( O >= alignWinTotal )
+        O = 2;
+    else
+        O = 0;
+
+    return X+O;
 }
 
 void grid::rotate ( bool clockwise ) {
@@ -275,6 +339,8 @@ void grid::play ( int player ) {
 
                     std::cout << "Counter-clockwise";
 
+                    endLine ( 1 );
+
                     Key = getKey ();
 
                     if ( Key == ARROW_RIGHT )
@@ -323,7 +389,9 @@ void grid::draw ( void ) {
 	for ( i = 0 ; i < size-1 ; ++i ) {
 		std::cout << "----";
 	}
-	std::cout << "-|" << std::endl;
+	std::cout << "-|";
+
+	endLine ( 1 );
 
 	for( i = 0 ; i < size ; ++i ) {
 
@@ -348,6 +416,8 @@ void grid::draw ( void ) {
 		for ( j = 0 ; j < size-1 ; ++j ) {
 			std::cout << "----";
 		}
-		std::cout << "-|" << std::endl;
+		std::cout << "-|";
+
+		endLine ( 1 );
 	}
 }

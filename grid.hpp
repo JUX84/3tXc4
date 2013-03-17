@@ -1,7 +1,6 @@
 #ifndef _GRID_HPP_
 #define _GRID_HPP_
 
-//#include <cstring>
 #ifdef _WIN32
 
 #include <windows.h>
@@ -72,7 +71,7 @@ class grid {
         grid ( void );
         grid ( int newSize , int newAlignWinSize , int newAlignWinTotal );
         //grid ( std::string file );
-        //~grid ( void );
+        ~grid ( void );
         void draw ( void );
         void gravitate ( void );
         void play ( int player );
@@ -84,4 +83,4 @@ class grid {
 
 };
 
-#endif // _GRID_HPP_
+#endif
