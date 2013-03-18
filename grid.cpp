@@ -136,11 +136,35 @@ int grid::checkWin ( void ) {
         }
     }
 
-    ////////////////////////////
-    //                        //
-    // TO-DO COLONNES / DIAGS //
-    //                        //
-    ////////////////////////////
+    for ( i = 0 ; i <= ( size - alignWinSize ) ; ++i ) {
+
+        for ( j = 0 ; j < size ; ++j ) {
+
+            countX = 0;
+            countO = 0;
+
+            for ( k = 0 ; k < alignWinSize ; ++k ) {
+
+                if ( XO[k][j] == 1 )
+                    countX += XO[k][j];
+
+                if ( XO[k][j] == 2 )
+                    countO += XO[k][j];
+            }
+
+            if ( countX == alignWinSize )
+                Xi[1] = 1;
+
+            if ( countO == 2*alignWinSize )
+                Oi[1] = 1;
+        }
+    }
+
+    /////////////////
+    //             //
+    // TO-DO DIAGS //
+    //             //
+    /////////////////
 
     int X = Xi[0] + Xi[1] + Xi[2] + Xi[3];
 
