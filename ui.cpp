@@ -1,7 +1,8 @@
 #include <iostream>
+#include "misc.hpp"
 #include "grid.hpp"
 
-static bool warnExit ( void ) {
+bool warnExit ( void ) {
 
     int selected (1);
     int Key;
@@ -73,7 +74,7 @@ static bool warnExit ( void ) {
     }
 }
 
-static void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWinTotal ) {
+void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWinTotal ) {
 
     int selected ( 1 );
     int i;
@@ -83,8 +84,8 @@ static void options ( int &defaultSize , int &defaultAlignWinSize , int &default
         if ( selected < 1 )
             selected = 1;
 
-        if ( selected > 3 )
-            selected = 3;
+        if ( selected > 4 )
+            selected = 4;
 
         if ( defaultSize < 3 )
             defaultSize = 3;
@@ -221,12 +222,25 @@ static void options ( int &defaultSize , int &defaultAlignWinSize , int &default
         else
             std::cout << "   ";
 
-        endLine ( 1 );
+        endLine ( 3 );
+
+	tab ( 33 );
+
+	if ( selected == 4 )
+		std::cout << "-> ";
+	else
+		std::cout << "   ";
+
+	std::cout << "[OK]";
+
+	if ( selected == 4 )
+		std::cout << " <-";
+	else
+		std::cout << "   ";
+
+	endLine ( 1 );
 
         int Key = getKey ();
-
-        if ( Key == KEY_ESC )
-            break;
 
         if ( Key == ARROW_LEFT ) {
 
@@ -257,10 +271,13 @@ static void options ( int &defaultSize , int &defaultAlignWinSize , int &default
 
         if ( Key == ARROW_UP )
             selected--;
+
+	if ( Key == KEY_ENTER && selected == 4 )
+		break;
     }
 }
 
-static void play ( int size , int alignWinSize , int alignWinTotal ) {
+void play ( int size , int alignWinSize , int alignWinTotal ) {
 
     grid G ( size , alignWinSize , alignWinTotal );
     int win;
@@ -278,15 +295,15 @@ static void play ( int size , int alignWinSize , int alignWinTotal ) {
 
         endLine ( 2 );
 
-        tab ( 16 );
+        tab ( 10 );
 
-        std::cout << "Press any key to continue (ESC to quit)...";
+        std::cout << "Press any key to continue (Except ESC & ARROWS to quit)...";
 
         endLine ( 1 );
 
         Key = getKey ();
 
-        if ( Key == KEY_ESC )
+        if ( Key == 27 )
             break;
 
         G.play ( 1 );
@@ -349,15 +366,15 @@ static void play ( int size , int alignWinSize , int alignWinTotal ) {
 
         endLine ( 2 );
 
-        tab ( 16 );
+        tab ( 10 );
 
-        std::cout << "Press any key to continue (ESC to quit)...";
+        std::cout << "Press any key to continue (Except ESC & ARROWS to quit)...";
 
         endLine ( 1 );
 
         Key = getKey ();
 
-        if ( Key == KEY_ESC )
+        if ( Key == 27 )
             break;
 
         G.play ( 2 );
@@ -373,7 +390,7 @@ static void play ( int size , int alignWinSize , int alignWinTotal ) {
     }
 }
 
-static int ui ( void ) {
+int ui ( void ) {
 
     int selected ( 1 );
     int defaultSize ( 5 );
@@ -460,11 +477,6 @@ static int ui ( void ) {
 
             if ( selected == 2 )
                 options ( defaultSize , defaultAlignWinSize , defaultAlignWinTotal );
-        }
-
-        if ( Key == KEY_ESC ) {
-            if ( warnExit () )
-                return 0;
         }
     }
 }

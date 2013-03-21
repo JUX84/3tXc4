@@ -1,4 +1,5 @@
 #include <iostream>
+#include "misc.hpp"
 #include "grid.hpp"
 
 grid::grid ( void ) {
@@ -383,20 +384,10 @@ void grid::play ( int player ) {
 
                         break;
                     }
-
-                    if ( Key == KEY_ESC )
-                        break;
                 }
             }
-
-            if ( Key == KEY_ESC )
-                continue;
-
             break;
         }
-
-        if ( Key == KEY_ESC )
-            break;
     }
 }
 
