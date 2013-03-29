@@ -1,4 +1,5 @@
 #include <iostream>
+#include "pdcurses/curses.h"
 #include "misc.hpp"
 #include "grid.hpp"
 
@@ -65,7 +66,7 @@ void grid::insert ( int player , int pos ) {
         if ( pos > size - 1 )
             pos = size - 1;
 
-        clear;
+        clear ();
 
         endLine ( 2 );
 
@@ -81,15 +82,15 @@ void grid::insert ( int player , int pos ) {
 
         draw ();
 
-        int Key = getKey();
+        int Key = getch ();
 
-        if ( Key == ARROW_LEFT )
+        if ( Key == KEY_LEFT )
             pos--;
 
-        if ( Key == ARROW_RIGHT )
+        if ( Key == KEY_RIGHT )
             pos++;
 
-        if ( Key == KEY_ENTER ) {
+        if ( Key == ENTER ) {
 
             XO[0][pos] = player;
             break;
@@ -186,7 +187,7 @@ int grid::checkWin ( void ) {
 
 void grid::rotate ( bool clockwise ) {
 
-    clear;
+    clear ();
 
     int i;
     int j;
@@ -244,7 +245,7 @@ void grid::gravitate ( void ) {
 
         for ( i = 0 ; i < size-1 ; ++i ) {
 
-            clear;
+            clear ();
 
             endLine ( 3 );
 
@@ -279,7 +280,7 @@ void grid::play ( int player ) {
         if ( selected > 2 )
             selected = 2;
 
-        clear;
+        clear ();
 
         endLine ( 3 );
 
@@ -313,15 +314,15 @@ void grid::play ( int player ) {
 
         endLine ( 1 );
 
-        Key = getKey();
+        Key = getch ();
 
-        if ( Key == ARROW_RIGHT )
+        if ( Key == KEY_RIGHT )
             selected ++;
 
-        if ( Key == ARROW_LEFT )
+        if ( Key == KEY_LEFT )
             selected --;
 
-        if ( Key == KEY_ENTER ) {
+        if ( Key == ENTER ) {
 
             if ( selected == 1 )
                 insert ( player , 0 );
@@ -332,7 +333,7 @@ void grid::play ( int player ) {
 
                 while ( true ) {
 
-                    clear;
+                    clear ();
 
                     endLine ( 3 );
 
@@ -366,15 +367,15 @@ void grid::play ( int player ) {
 
                     endLine ( 1 );
 
-                    Key = getKey ();
+                    Key = getch  ();
 
-                    if ( Key == ARROW_RIGHT )
+                    if ( Key == KEY_RIGHT )
                         selected ++;
 
-                    if ( Key == ARROW_LEFT )
+                    if ( Key == KEY_LEFT )
                         selected --;
 
-                    if ( Key == KEY_ENTER ) {
+                    if ( Key == ENTER ) {
 
                         if ( selected == 3 )
                             rotate ( true );

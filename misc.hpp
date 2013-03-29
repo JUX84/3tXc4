@@ -1,70 +1,42 @@
 #ifdef _WIN32
 
 #include <windows.h>
-#include <CONIO.h>
 
-#define clear system("cls")
 #define wait(a) Sleep(a)
-
-enum {
-	KEY_ENTER = 13,
-	ARROW_UP = 256 + 72,
-	ARROW_DOWN = 256 + 80,
-	ARROW_LEFT = 256 + 75,
-	ARROW_RIGHT = 256 + 77
-};
-
-inline int getKey ( void ) {
-	int Key = getch ();
-	if ( Key == 0 || Key == 224 )
-		Key = 256 + getch ();
-	return Key;
-}
+#define ENTER 13
+#define ESC 27
 
 #else
 
-#include <cstdlib>
-#include <termios.h>
 #include <unistd.h>
-#include <cstdio>
 
-#define clear system("clear")
 #define wait(a) usleep(a*1000)
-
-enum {
-	KEY_ENTER = 10,
-	ARROW_UP = 183,
-	ARROW_DOWN = 184,
-	ARROW_LEFT = 186,
-	ARROW_RIGHT = 185
-};
-
-inline char getch ( void ) {
-
-	struct termios oldattr, newattr;
-	tcgetattr ( STDIN_FILENO, &oldattr );
-	newattr = oldattr;
-	newattr.c_lflag &= ~( ICANON | ECHO );
-	tcsetattr ( STDIN_FILENO, TCSANOW, &newattr );
-
-	char ch = getchar ();
-
-	tcsetattr ( STDIN_FILENO, TCSANOW, &oldattr );
-
-	return ch;
-}
-
-inline int getKey ( void ) {
-
-	int Key = getch ();
-
-	if ( Key == 27 )
-		Key += getch () + getch ();
-
-	return Key;
-}
+#define ENTER 13
+#define ESC 27
 
 #endif
+
+#include <cstring>
+
+static std::string STR_OPTIONS ( "[O]PTIONS" );
+static std::string STR_TITLE ( "__3tXc4__" );
+static std::string STR_PLAY ( "[P]LAY!" );
+static std::string STR_EXIT ( "[E]XIT" );
+static std::string STR_INSERT ( "[I]NSERT" );
+static std::string STR_ROTATE ( "[R]OTATE" );
+static std::string STR_P1 ( "Player 1 !" );
+static std::string STR_P2 ( "Player 2 !" );
+static std::string STR_WIN_P1 ( "Player 1 has won!" );
+static std::string STR_WIN_P2 ( "Player 2 has won!" );
+static std::string STR_CONTINUE ( "Press any key to continue ([E]SC to quit) ..." );
+static std::string STR_ARROW_LEFT ( "<-" );
+static std::string STR_ARROW_RIGHT ( "->" );
+static std::string STR_TIE ( "It's a tie..." );
+static std::string STR_WARN_EXIT ( "ARE YOU SURE?" );
+static std::string STR_WARN_YES ( "[Y]ES" );
+static std::string STR_WARN_NO ( "[N]" );
+static std::string STR_HELP ( "NEED [H]ELP?" );
+
 
 inline void endLine ( int endl ) {
 

@@ -1,4 +1,5 @@
 #include <iostream>
+#include "pdcurses/curses.h"
 #include "misc.hpp"
 #include "grid.hpp"
 
@@ -15,7 +16,7 @@ bool warnExit ( void ) {
         if ( selected > 2 )
             selected = 2;
 
-        clear;
+        clear ();
 
         endLine ( 6 );
 
@@ -55,15 +56,15 @@ bool warnExit ( void ) {
 
         endLine ( 1 );
 
-        Key = getKey ();
+        Key = getch ();
 
-        if ( Key == ARROW_LEFT )
+        if ( Key == KEY_LEFT )
             selected -= 1;
 
-        if ( Key == ARROW_RIGHT )
+        if ( Key == KEY_RIGHT )
             selected += 1;
 
-        if ( Key == KEY_ENTER ) {
+        if ( Key == ENTER ) {
 
             if ( selected == 1 )
                 return true;
@@ -78,8 +79,11 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
 
     int selected ( 1 );
     int i;
+    int row,col;
 
     while ( true ) {
+
+        getmaxyx ( stdscr , row , col );
 
         if ( selected < 1 )
             selected = 1;
@@ -105,13 +109,9 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
         if ( defaultAlignWinTotal > 4 )
             defaultAlignWinTotal = 4;
 
-        clear;
+        clear ();
 
-        endLine ( 4 );
-
-        tab ( 35 );
-
-        std::cout << "OPTIONS";
+        mvprintw ( row / 4 , ( col - STR_OPTIONS.length () + 1 ) / 2 , STR_OPTIONS.c_str () );
 
         endLine ( 6 );
 
@@ -224,25 +224,25 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
 
         endLine ( 3 );
 
-	tab ( 33 );
+        tab ( 33 );
 
-	if ( selected == 4 )
-		std::cout << "-> ";
-	else
-		std::cout << "   ";
+        if ( selected == 4 )
+            std::cout << "-> ";
+        else
+            std::cout << "   ";
 
-	std::cout << "[OK]";
+        std::cout << "[OK]";
 
-	if ( selected == 4 )
-		std::cout << " <-";
-	else
-		std::cout << "   ";
+        if ( selected == 4 )
+            std::cout << " <-";
+        else
+            std::cout << "   ";
 
-	endLine ( 1 );
+        endLine ( 1 );
 
-        int Key = getKey ();
+        int Key = getch ();
 
-        if ( Key == ARROW_LEFT ) {
+        if ( Key == KEY_LEFT ) {
 
             if ( selected == 1 )
                 defaultSize--;
@@ -254,7 +254,7 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
                 defaultAlignWinTotal--;
         }
 
-        if ( Key == ARROW_RIGHT ) {
+        if ( Key == KEY_RIGHT ) {
 
             if ( selected == 1 )
                 defaultSize++;
@@ -266,14 +266,17 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
                 defaultAlignWinTotal++;
         }
 
-        if ( Key == ARROW_DOWN )
+        if ( Key == KEY_DOWN )
             selected++;
 
-        if ( Key == ARROW_UP )
+        if ( Key == KEY_UP )
             selected--;
 
-	if ( Key == KEY_ENTER && selected == 4 )
-		break;
+        if ( Key == ENTER && selected == 4 )
+            break;
+
+        if ( Key == ESC )
+            break;
     }
 }
 
@@ -282,28 +285,23 @@ void play ( int size , int alignWinSize , int alignWinTotal ) {
     grid G ( size , alignWinSize , alignWinTotal );
     int win;
     int Key;
+    int row , col;
 
     while ( true ) {
 
-        clear;
+        clear ();
 
-        endLine ( 10 );
+        getmaxyx ( stdscr , row , col );
 
-        tab ( 32 );
+        mvprintw ( row / 3 , ( col - STR_P1.length () + 1 ) / 2 , STR_P1.c_str () );
 
-        std::cout << "PLAYER 1 !";
+        mvprintw ( 2 * row / 3 , ( col - STR_CONTINUE.length () + 1 ) / 2 , STR_CONTINUE.c_str () );
 
-        endLine ( 2 );
+        refresh ();
 
-        tab ( 10 );
+        Key = getch ();
 
-        std::cout << "Press any key to continue (Except ESC & ARROWS to quit)...";
-
-        endLine ( 1 );
-
-        Key = getKey ();
-
-        if ( Key == 27 )
+        if ( Key == ESC )
             break;
 
         G.play ( 1 );
@@ -313,13 +311,9 @@ void play ( int size , int alignWinSize , int alignWinTotal ) {
 
         if ( win == 1 ) {
 
-            endLine ( 5 );
+            mvprintw ( row / 2 , ( col - STR_WIN_P1.length () + 1 ) / 2 , STR_WIN_P1.c_str () );
 
-            tab ( 27 );
-
-            std::cout << "Player 1 has won!";
-
-            endLine ( 1 );
+            refresh ();
 
             wait ( 2000 );
 
@@ -328,13 +322,9 @@ void play ( int size , int alignWinSize , int alignWinTotal ) {
 
         if ( win == 2 ) {
 
-            endLine ( 5 );
+            mvprintw ( row / 2 , ( col - STR_WIN_P2.length () + 1 ) / 2 , STR_WIN_P2.c_str () );
 
-            tab ( 27 );
-
-            std::cout << "Player 2 has won!";
-
-            endLine ( 1 );
+            refresh ();
 
             wait ( 2000 );
 
@@ -343,38 +333,24 @@ void play ( int size , int alignWinSize , int alignWinTotal ) {
 
         if ( win == 3 ) {
 
-            endLine ( 5 );
+            mvprintw ( row / 2 , ( col - STR_TIE.length () + 1 ) / 2 , STR_TIE.c_str () );
 
-            tab ( 30 );
-
-            std::cout << "It's a tie!";
-
-            endLine ( 1 );
+            refresh ();
 
             wait ( 2000 );
 
             break;
         }
 
-        clear;
+        mvprintw ( row / 3 , ( col - STR_P2.length () + 1 ) / 2 , STR_P2.c_str () );
 
-        endLine ( 10 );
+        mvprintw ( 2 * row / 3 , ( col - STR_CONTINUE.length () + 1 ) / 2 , STR_CONTINUE.c_str () );
 
-        tab ( 32 );
+        refresh ();
 
-        std::cout << "PLAYER 2 !";
+        Key = getch ();
 
-        endLine ( 2 );
-
-        tab ( 10 );
-
-        std::cout << "Press any key to continue (Except ESC & ARROWS to quit)...";
-
-        endLine ( 1 );
-
-        Key = getKey ();
-
-        if ( Key == 27 )
+        if ( Key == ESC )
             break;
 
         G.play ( 2 );
@@ -390,16 +366,20 @@ void play ( int size , int alignWinSize , int alignWinTotal ) {
     }
 }
 
-int ui ( void ) {
+void ui ( void ) {
 
     int selected ( 1 );
     int defaultSize ( 5 );
     int defaultAlignWinSize ( 5 );
     int defaultAlignWinTotal ( 1 );
     int Key;
+    int row , col;
 
     while ( true ) {
-        clear;
+
+        clear ();
+
+        getmaxyx ( stdscr , row , col );
 
         if ( selected < 1 )
             selected = 1;
@@ -407,76 +387,50 @@ int ui ( void ) {
         if ( selected > 3 )
             selected = 3;
 
-        endLine ( 3 );
+        attron(A_BOLD);
 
-        tab ( 33 );
+        mvprintw ( row / 4 , ( col - STR_TITLE.length () + 1 ) / 2 , STR_TITLE.c_str () );
 
-        std::cout << "__3tXc4__";
+        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , ( col - 20 ) / 2 , STR_ARROW_RIGHT.c_str () );
+        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , ( col + 20 ) / 2 , STR_ARROW_LEFT.c_str () );
 
-        endLine( 6 );
+        attroff(A_BOLD);
 
-        tab( 27 );
+        mvprintw ( row / 2 , ( col - STR_PLAY.length () + 1 ) / 2 , STR_PLAY.c_str () );
+        mvprintw ( ( row / 2 ) + 2 , ( col - STR_OPTIONS.length () + 1 ) / 2 , STR_OPTIONS.c_str () );
+        mvprintw ( ( row / 2 ) + 4 , ( col - STR_EXIT.length () + 1 ) / 2 , STR_EXIT.c_str () );
 
-        if ( selected == 1 )
-            std::cout << "->      ";
-        else
-            std::cout << "        ";
+        refresh();
 
-        std::cout << "PLAY!";
+        Key = getch ();
 
-        if ( selected == 1 )
-            std::cout << "      <-";
-
-        endLine( 3 );
-
-        tab( 27 );
-
-        if ( selected == 2 )
-            std::cout << "->     ";
-        else
-            std::cout << "       ";
-
-        std::cout << "OPTIONS";
-
-        if ( selected == 2 )
-            std::cout << "     <-";
-
-        endLine( 3 );
-
-        tab( 27 );
-
-        if ( selected == 3 )
-            std::cout << "->      ";
-        else
-            std::cout << "        ";
-
-        std::cout << "EXIT";
-
-        if ( selected == 3 )
-            std::cout << "      <-";
-
-        endLine ( 1 );
-
-        Key=getKey();
-
-        if ( Key == ARROW_DOWN )
+        if ( Key == KEY_DOWN )
             selected += 1;
 
-        if ( Key == ARROW_UP )
+        if ( Key == KEY_UP )
             selected -= 1;
 
-        if ( Key == KEY_ENTER ) {
+        if ( Key == ENTER ) {
 
             if ( selected == 1 )
                 play ( defaultSize , defaultAlignWinSize , defaultAlignWinTotal );
 
             if ( selected == 3 ) {
-                if ( warnExit () )
-                    return 0;
+                if ( warnExit () ) {
+                    endwin ();
+                    return;
+                }
             }
 
             if ( selected == 2 )
                 options ( defaultSize , defaultAlignWinSize , defaultAlignWinTotal );
+        }
+
+        if ( Key == ESC ) {
+            if ( warnExit () ) {
+                endwin ();
+                return;
+            }
         }
     }
 }
