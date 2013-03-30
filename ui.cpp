@@ -58,10 +58,19 @@ bool warnExit ( void ) {
     }
 }
 
-void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWinTotal ) {
+void options_help ( void ) {
+
+}
+
+void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize , int &defaultAlignWinTotal ) {
 
     int selected ( 1 );
+    int i;
     int row,col;
+    int backupHeight ( defaultHeight );
+    int backupWidth ( defaultWidth );
+    int backupAlignWinSize ( defaultAlignWinSize );
+    int backupAlignWinTotal ( defaultAlignWinTotal );
 
     while ( true ) {
 
@@ -73,14 +82,23 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
         if ( selected > 4 )
             selected = 4;
 
-        if ( defaultSize < 3 )
-            defaultSize = 3;
+        if ( defaultHeight < 3 )
+            defaultHeight = 3;
 
-        if ( defaultSize > 20 )
-            defaultSize = 20;
+        if ( defaultHeight > 20 )
+            defaultHeight = 20;
 
-        if ( defaultAlignWinSize > defaultSize )
-            defaultAlignWinSize = defaultSize;
+        if ( defaultWidth < 3 )
+            defaultWidth = 3;
+
+        if ( defaultWidth > 20 )
+            defaultWidth = 20;
+
+        if ( defaultAlignWinSize > defaultWidth )
+            defaultAlignWinSize = defaultWidth;
+
+        if ( defaultAlignWinSize > defaultHeight )
+            defaultAlignWinSize = defaultHeight;
 
         if ( defaultAlignWinSize < 3 )
             defaultAlignWinSize = 3;
@@ -100,6 +118,8 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
         mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , ( col - 30 ) / 4 , STR_ARROW_RIGHT.c_str () );
         mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , col - ( ( col - 30 ) / 4 ) , STR_ARROW_LEFT.c_str () );
 
+        mvprintw ( 2 , 2 , STR_HELP.c_str () );
+
         attroff ( A_BOLD );
 
         mvprintw ( ( row / 2 ) , ( col - STR_HEIGHT.length() + 1 ) / 4 , STR_HEIGHT.c_str() );
@@ -107,35 +127,72 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
         mvprintw ( ( row / 2 ) + 4 , ( col - STR_ALIGN_SIZE.length() + 1 ) / 4 , STR_ALIGN_SIZE.c_str() );
         mvprintw ( ( row / 2 ) + 6 , ( col - STR_ALIGN_TOTAL.length() + 1 ) / 4 , STR_ALIGN_TOTAL.c_str() );
 
-        refresh ();
+        mvprintw ( ( row / 2 ) , ( ( col - STR_HEIGHT.length() + 1 ) / 4 ) + 20 , "%d" , defaultHeight );
+        mvprintw ( ( row / 2 ) , ( ( col - STR_HEIGHT.length() + 1 ) / 4 ) + 25 , "[" );
+        for ( i = 0 ; i < defaultHeight ; ++i )
+            printw ( "-" );
+        for ( i = 20 ; i > defaultHeight ; --i )
+            printw ( " " );
+        printw ( "]" );
 
-        /*
-            GOTTA CONTINUE
-        */
+        mvprintw ( ( row / 2 ) + 2 , ( ( col - STR_HEIGHT.length() + 1 ) / 4 ) + 20 , "%d" , defaultWidth );
+        mvprintw ( ( row / 2 ) + 2 , ( ( col - STR_HEIGHT.length() + 1 ) / 4 ) + 25 , "[" );
+        for ( i = 0 ; i < defaultWidth ; ++i )
+            printw ( "-" );
+        for ( i = 20 ; i > defaultWidth ; --i )
+            printw ( " " );
+        printw ( "]" );
+
+        mvprintw ( ( row / 2 ) + 4 , ( ( col - STR_HEIGHT.length() + 1 ) / 4 ) + 20 , "%d" , defaultAlignWinSize );
+        mvprintw ( ( row / 2 ) + 4 , ( ( col - STR_HEIGHT.length() + 1 ) / 4 ) + 25 , "[" );
+        for ( i = 0 ; i < defaultAlignWinSize ; ++i )
+            printw ( "-" );
+        for ( i = 20 ; i > defaultAlignWinSize ; --i )
+            printw ( " " );
+        printw ( "]" );
+
+        mvprintw ( ( row / 2 ) + 6 , ( ( col - STR_HEIGHT.length() + 1 ) / 4 ) + 20 , "%d" , defaultAlignWinTotal );
+        mvprintw ( ( row / 2 ) + 6 , ( ( col - STR_HEIGHT.length() + 1 ) / 4 ) + 25 , "[" );
+        for ( i = 0 ; i < defaultAlignWinTotal ; ++i )
+            printw ( "-----" );
+        for ( i = 4 ; i > defaultAlignWinTotal ; --i )
+            printw ( "     " );
+        printw ( "]" );
+
+        mvprintw ( row - 4 , ( col - STR_OK.length () + 1 ) / 4 , STR_OK.c_str () );
+        mvprintw ( row - 4 , 3 * ( col - STR_CANCEL.length () + 1 ) / 4 , STR_CANCEL.c_str () );
+
+        refresh ();
 
         int Key = getch ();
 
         if ( Key == KEY_LEFT ) {
 
             if ( selected == 1 )
-                defaultSize--;
+                defaultHeight--;
 
             if ( selected == 2 )
-                defaultAlignWinSize--;
+                defaultWidth--;
 
             if ( selected == 3 )
+                defaultAlignWinSize--;
+
+            if ( selected == 4 )
                 defaultAlignWinTotal--;
         }
 
         if ( Key == KEY_RIGHT ) {
 
             if ( selected == 1 )
-                defaultSize++;
+                defaultHeight++;
 
             if ( selected == 2 )
-                defaultAlignWinSize++;
+                defaultWidth++;
 
             if ( selected == 3 )
+                defaultAlignWinSize++;
+
+            if ( selected == 4 )
                 defaultAlignWinTotal++;
         }
 
@@ -145,11 +202,20 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
         if ( Key == KEY_UP )
             selected--;
 
-        if ( Key == ENTER && selected == 4 )
+        if ( Key == ENTER || Key == KEY_O )
             break;
 
-        if ( Key == ESC ||Key == KEY_E )
+        if ( Key == ESC || Key == KEY_C ) {
+
+            defaultHeight = backupHeight;
+            defaultWidth = backupWidth;
+            defaultAlignWinSize = backupAlignWinSize;
+            defaultAlignWinTotal = backupAlignWinTotal;
             break;
+        }
+
+        if ( Key == KEY_F ( 1 ) )
+            options_help ();
     }
 }
 
@@ -239,10 +305,15 @@ void play ( int size , int alignWinSize , int alignWinTotal ) {
     }
 }
 
+void ui_help ( void ) {
+
+}
+
 void ui ( void ) {
 
     int selected ( 1 );
-    int defaultSize ( 5 );
+    int defaultHeight ( 5 );
+    int defaultWidth ( 5 );
     int defaultAlignWinSize ( 5 );
     int defaultAlignWinTotal ( 1 );
     int Key;
@@ -267,6 +338,8 @@ void ui ( void ) {
         mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , ( col - 20 ) / 2 , STR_ARROW_RIGHT.c_str () );
         mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , ( col + 20 ) / 2 , STR_ARROW_LEFT.c_str () );
 
+        mvprintw ( 2 , 2 , STR_HELP.c_str () );
+
         attroff ( A_BOLD );
 
         mvprintw ( row / 2 , ( col - STR_PLAY.length () + 1 ) / 2 , STR_PLAY.c_str () );
@@ -286,10 +359,10 @@ void ui ( void ) {
         if ( Key == ENTER ) {
 
             if ( selected == 1 )
-                play ( defaultSize , defaultAlignWinSize , defaultAlignWinTotal );
+                play ( defaultHeight , defaultAlignWinSize , defaultAlignWinTotal );
 
             if ( selected == 2 )
-                options ( defaultSize , defaultAlignWinSize , defaultAlignWinTotal );
+                options ( defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal );
 
             if ( selected == 3 ) {
                 if ( warnExit () ) {
@@ -300,10 +373,10 @@ void ui ( void ) {
         }
 
         if ( Key == KEY_P )
-            play ( defaultSize , defaultAlignWinSize , defaultAlignWinTotal );
+            play ( defaultHeight , defaultAlignWinSize , defaultAlignWinTotal );
 
         if ( Key == KEY_O )
-            options ( defaultSize , defaultAlignWinSize , defaultAlignWinTotal );
+            options ( defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal );
 
         if ( Key == ESC || Key == KEY_E ) {
             if ( warnExit () ) {
@@ -311,5 +384,8 @@ void ui ( void ) {
                 return;
             }
         }
+
+        if ( Key == KEY_F ( 1 ) )
+            ui_help ();
     }
 }

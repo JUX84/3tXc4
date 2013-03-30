@@ -7,7 +7,7 @@
 
 void ui ( void );
 void play ( int size , int alignWinSize , int alignWinTotal );
-void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWinTotal );
+void options ( int &defaultheight , int &defaultWidth , int &defaultAlignWinSize , int &defaultAlignWinTotal );
 bool warnExit ( void );
 
 #endif
