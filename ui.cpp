@@ -1,7 +1,4 @@
-#include <iostream>
-#include "pdcurses/curses.h"
-#include "misc.hpp"
-#include "grid.hpp"
+#include "ui.hpp"
 
 bool warnExit ( void ) {
 
@@ -111,6 +108,10 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
         mvprintw ( ( row / 2 ) + 6 , ( col - STR_ALIGN_TOTAL.length() + 1 ) / 4 , STR_ALIGN_TOTAL.c_str() );
 
         refresh ();
+
+        /*
+            GOTTA CONTINUE
+        */
 
         int Key = getch ();
 

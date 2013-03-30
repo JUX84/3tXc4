@@ -1,6 +1,10 @@
 #ifndef _GRID_HPP_
 #define _GRID_HPP_
 
+#include <iostream>
+#include "pdcurses/curses.h"
+#include "misc.hpp"
+
 class grid {
 
 	private:

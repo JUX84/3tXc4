@@ -1,3 +1,6 @@
+#ifndef _MISC_HPP_
+#define _MISC_HPP_
+
 #ifdef _WIN32
 
 #include <windows.h>
@@ -12,6 +15,7 @@
 
 #endif
 
+#include <iostream>
 #include <cstring>
 
 #define ENTER 13
@@ -68,3 +72,5 @@ inline void tab ( int space ) {
 	for ( i = 0 ; i < space ; ++i )
 		std::cout << " ";
 }
+
+#endif

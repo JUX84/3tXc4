@@ -1,6 +1,3 @@
-#include <iostream>
-#include "pdcurses/curses.h"
-#include "misc.hpp"
 #include "grid.hpp"
 
 grid::grid ( void ) {
