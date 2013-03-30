@@ -3,23 +3,34 @@
 #include <windows.h>
 
 #define wait(a) Sleep(a)
-#define ENTER 13
-#define ESC 27
 
 #else
 
 #include <unistd.h>
 
 #define wait(a) usleep(a*1000)
-#define ENTER 13
-#define ESC 27
 
 #endif
 
 #include <cstring>
 
+#define ENTER 13
+#define ESC 27
+#define KEY_P 112
+#define KEY_O 111
+#define KEY_E 101
+#define KEY_I 105
+#define KEY_R 114
+#define KEY_Y 121
+#define KEY_N 110
+#define KEY_H 104
+#define KEY_S 115
+#define KEY_W 119
+#define KEY_T 116
+
 static std::string STR_OPTIONS ( "[O]PTIONS" );
-static std::string STR_TITLE ( "__3tXc4__" );
+static std::string STR_TITLE_GAME ( "__3tXc4__" );
+static std::string STR_TITLE_OPTIONS ( "_OPTIONS_" );
 static std::string STR_PLAY ( "[P]LAY!" );
 static std::string STR_EXIT ( "[E]XIT" );
 static std::string STR_INSERT ( "[I]NSERT" );
@@ -34,8 +45,12 @@ static std::string STR_ARROW_RIGHT ( "->" );
 static std::string STR_TIE ( "It's a tie..." );
 static std::string STR_WARN_EXIT ( "ARE YOU SURE?" );
 static std::string STR_WARN_YES ( "[Y]ES" );
-static std::string STR_WARN_NO ( "[N]" );
+static std::string STR_WARN_NO ( "[N]O" );
 static std::string STR_HELP ( "NEED [H]ELP?" );
+static std::string STR_HEIGHT ( "[H]EIGHT" );
+static std::string STR_WIDTH ( "[W]IDTH" );
+static std::string STR_ALIGN_SIZE ( "ALIGNMENT [S]IZE" );
+static std::string STR_ALIGN_TOTAL ( "ALIGNMENT [T]OTAL" );
 
 
 inline void endLine ( int endl ) {

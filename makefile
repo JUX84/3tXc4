@@ -1,5 +1,5 @@
 3tXc4:	main.o grid.o ui.o
-		g++ main.o grid.o -lpdcurses -o 3tXc4
+		g++ main.o grid.o -lncurses -o 3tXc4
 ui.o:	ui.cpp ui.hpp
 		g++ -c ui.cpp
 main.o:	main.cpp grid.hpp

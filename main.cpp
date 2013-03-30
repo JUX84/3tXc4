@@ -9,7 +9,7 @@ int main ( int argc , char **argv ) {
 	noecho();
 	curs_set(0);
 
-	/*while ( true ) {
+	while ( true ) {
 
         int Key = getch ();
 
@@ -23,7 +23,7 @@ int main ( int argc , char **argv ) {
 
         refresh ();
 
-	}*/
+	}
 
 	ui ();
 

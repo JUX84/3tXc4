@@ -5,8 +5,9 @@
 
 bool warnExit ( void ) {
 
-    int selected (1);
+    int selected ( 1 );
     int Key;
+    int row , col;
 
     while ( true ) {
 
@@ -16,53 +17,29 @@ bool warnExit ( void ) {
         if ( selected > 2 )
             selected = 2;
 
+        getmaxyx ( stdscr , row , col );
+
         clear ();
 
-        endLine ( 6 );
+        attron ( A_BOLD );
 
-        tab ( 32 );
+        mvprintw ( row / 3 , ( col - STR_WARN_EXIT.length () + 1 ) / 2 , STR_WARN_EXIT.c_str () );
 
-        std::cout << "ARE YOU SURE ?";
+        mvprintw ( 2 * row / 3 , ( ( col - 30 ) / 3 ) + ( ( selected - 1 ) * 26 ) , STR_ARROW_RIGHT.c_str () );
+        mvprintw ( 2 * row / 3 , ( ( col + 30 ) / 3 ) + ( ( selected - 1 ) * 26 ) , STR_ARROW_LEFT.c_str () );
 
-        endLine ( 4 );
+        attroff ( A_BOLD );
 
-        tab ( 15 );
-
-        if ( selected == 1 )
-            std::cout << "-> ";
-        else
-            std::cout << "   ";
-
-        std::cout << "YES";
-
-        if ( selected == 1 )
-            std::cout << " <-";
-        else
-            std::cout << "   ";
-
-        tab ( 30 );
-
-        if ( selected == 2 )
-            std::cout << "-> ";
-        else
-            std::cout << "   ";
-
-        std::cout << "NO";
-
-        if ( selected == 2 )
-            std::cout << " <-";
-        else
-            std::cout << "   ";
-
-        endLine ( 1 );
+        mvprintw ( 2 * row / 3 , ( col - STR_WARN_YES.length () + 1 ) / 3 , STR_WARN_YES.c_str () );
+        mvprintw ( 2 * row / 3 , 2 * ( col - STR_WARN_NO.length () + 1 ) / 3 , STR_WARN_NO.c_str () );
 
         Key = getch ();
 
-        if ( Key == KEY_LEFT )
-            selected -= 1;
-
         if ( Key == KEY_RIGHT )
-            selected += 1;
+            selected++;
+
+        if ( Key == KEY_LEFT )
+            selected--;
 
         if ( Key == ENTER ) {
 
@@ -72,13 +49,21 @@ bool warnExit ( void ) {
             if ( selected == 2 )
                 return false;
         }
+
+        if ( Key == KEY_Y )
+            return true;
+
+        if ( Key == KEY_N )
+            return false;
+
+        if ( Key == ESC )
+            return false;
     }
 }
 
 void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWinTotal ) {
 
     int selected ( 1 );
-    int i;
     int row,col;
 
     while ( true ) {
@@ -111,134 +96,21 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
 
         clear ();
 
-        mvprintw ( row / 4 , ( col - STR_OPTIONS.length () + 1 ) / 2 , STR_OPTIONS.c_str () );
+        attron ( A_BOLD );
 
-        endLine ( 6 );
+        mvprintw ( row / 4 , ( col - STR_TITLE_OPTIONS.length () + 1 ) / 2 , STR_TITLE_OPTIONS.c_str () );
 
-        tab ( 20 );
+        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , ( col - 30 ) / 4 , STR_ARROW_RIGHT.c_str () );
+        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , col - ( ( col - 30 ) / 4 ) , STR_ARROW_LEFT.c_str () );
 
-        if ( selected == 1 )
-            std::cout << "-> ";
-        else
-            std::cout << "   ";
+        attroff ( A_BOLD );
 
-        std::cout << "Size";
+        mvprintw ( ( row / 2 ) , ( col - STR_HEIGHT.length() + 1 ) / 4 , STR_HEIGHT.c_str() );
+        mvprintw ( ( row / 2 ) + 2 , ( col - STR_WIDTH.length() + 1 ) / 4 , STR_WIDTH.c_str() );
+        mvprintw ( ( row / 2 ) + 4 , ( col - STR_ALIGN_SIZE.length() + 1 ) / 4 , STR_ALIGN_SIZE.c_str() );
+        mvprintw ( ( row / 2 ) + 6 , ( col - STR_ALIGN_TOTAL.length() + 1 ) / 4 , STR_ALIGN_TOTAL.c_str() );
 
-        tab ( 7 );
-
-        std::cout << defaultSize;
-
-        if ( defaultSize < 10 )
-            std::cout << " ";
-
-        tab ( 2 );
-
-        std::cout << "[";
-
-        for ( i = 0 ; i < defaultSize ; ++i ) {
-            std::cout << "-";
-        }
-
-        for ( i = 20 ; i > defaultSize ; --i ) {
-            std::cout << " ";
-        }
-
-        std::cout << "]";
-
-        if ( selected == 1 )
-            std::cout << " <-";
-        else
-            std::cout << "   ";
-
-        endLine ( 2 );
-
-        tab ( 15 );
-
-        if ( selected == 2 )
-            std::cout << "-> ";
-        else
-            std::cout << "   ";
-
-        std::cout << "Alignment Size";
-
-        tab ( 2 );
-
-        std::cout << defaultAlignWinSize;
-
-        if ( defaultAlignWinSize < 10 )
-            std::cout << " ";
-
-        tab ( 2 );
-
-        std::cout << "[";
-
-        for ( i = 0 ; i < defaultAlignWinSize ; ++i ) {
-            std::cout << "-";
-        }
-
-        for ( i = 20 ; i > defaultAlignWinSize ; --i ) {
-            std::cout << " ";
-        }
-
-        std::cout << "]";
-
-        if ( selected == 2 )
-            std::cout << " <-";
-        else
-            std::cout << "   ";
-
-        endLine ( 2 );
-
-        tab ( 14 );
-
-        if ( selected == 3 )
-            std::cout << "-> ";
-        else
-            std::cout << "   ";
-
-        std::cout << "Alignment Total";
-
-        tab ( 2 );
-
-        std::cout << defaultAlignWinTotal;
-
-        if ( defaultAlignWinTotal < 10 )
-            std::cout << " ";
-
-        tab ( 2 );
-
-        std::cout << "[";
-
-        for ( i = 0 ; i < defaultAlignWinTotal ; ++i )
-            std::cout << "-----";
-
-        for ( i = 4 ; i > defaultAlignWinTotal ; --i )
-            std::cout << "     ";
-
-        std::cout << "]";
-
-        if ( selected == 3 )
-            std::cout << " <-";
-        else
-            std::cout << "   ";
-
-        endLine ( 3 );
-
-        tab ( 33 );
-
-        if ( selected == 4 )
-            std::cout << "-> ";
-        else
-            std::cout << "   ";
-
-        std::cout << "[OK]";
-
-        if ( selected == 4 )
-            std::cout << " <-";
-        else
-            std::cout << "   ";
-
-        endLine ( 1 );
+        refresh ();
 
         int Key = getch ();
 
@@ -275,7 +147,7 @@ void options ( int &defaultSize , int &defaultAlignWinSize , int &defaultAlignWi
         if ( Key == ENTER && selected == 4 )
             break;
 
-        if ( Key == ESC )
+        if ( Key == ESC ||Key == KEY_E )
             break;
     }
 }
@@ -301,7 +173,7 @@ void play ( int size , int alignWinSize , int alignWinTotal ) {
 
         Key = getch ();
 
-        if ( Key == ESC )
+        if ( Key == ESC || Key == KEY_E )
             break;
 
         G.play ( 1 );
@@ -350,7 +222,7 @@ void play ( int size , int alignWinSize , int alignWinTotal ) {
 
         Key = getch ();
 
-        if ( Key == ESC )
+        if ( Key == ESC || Key == KEY_E )
             break;
 
         G.play ( 2 );
@@ -387,14 +259,14 @@ void ui ( void ) {
         if ( selected > 3 )
             selected = 3;
 
-        attron(A_BOLD);
+        attron ( A_BOLD );
 
-        mvprintw ( row / 4 , ( col - STR_TITLE.length () + 1 ) / 2 , STR_TITLE.c_str () );
+        mvprintw ( row / 4 , ( col - STR_TITLE_GAME.length () + 1 ) / 2 , STR_TITLE_GAME.c_str () );
 
         mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , ( col - 20 ) / 2 , STR_ARROW_RIGHT.c_str () );
         mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , ( col + 20 ) / 2 , STR_ARROW_LEFT.c_str () );
 
-        attroff(A_BOLD);
+        attroff ( A_BOLD );
 
         mvprintw ( row / 2 , ( col - STR_PLAY.length () + 1 ) / 2 , STR_PLAY.c_str () );
         mvprintw ( ( row / 2 ) + 2 , ( col - STR_OPTIONS.length () + 1 ) / 2 , STR_OPTIONS.c_str () );
@@ -415,18 +287,24 @@ void ui ( void ) {
             if ( selected == 1 )
                 play ( defaultSize , defaultAlignWinSize , defaultAlignWinTotal );
 
+            if ( selected == 2 )
+                options ( defaultSize , defaultAlignWinSize , defaultAlignWinTotal );
+
             if ( selected == 3 ) {
                 if ( warnExit () ) {
                     endwin ();
                     return;
                 }
             }
-
-            if ( selected == 2 )
-                options ( defaultSize , defaultAlignWinSize , defaultAlignWinTotal );
         }
 
-        if ( Key == ESC ) {
+        if ( Key == KEY_P )
+            play ( defaultSize , defaultAlignWinSize , defaultAlignWinTotal );
+
+        if ( Key == KEY_O )
+            options ( defaultSize , defaultAlignWinSize , defaultAlignWinTotal );
+
+        if ( Key == ESC || Key == KEY_E ) {
             if ( warnExit () ) {
                 endwin ();
                 return;
