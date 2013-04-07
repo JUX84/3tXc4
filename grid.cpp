@@ -1,19 +1,30 @@
+#ifdef _WIN32
+
+#include "pdcurses/curses.h"
+
+#else
+
+#include <ncurses.h>
+
+#endif
+
 #include "grid.hpp"
+#include "misc.hpp"
 
 grid::grid ( void ) {
 
-    int i;
-    int j;
+    int i , j;
 
-    size = 5;
+    height = 5;
+    width = 5;
 
-    XO = new int*[size];
-    for ( i = 0 ; i < size ; ++i )
-        XO[i] = new int[size];
+    XO = new int*[height];
+    for ( i = 0 ; i < height ; ++i )
+        XO[i] = new int[width];
 
-    for ( i = 0 ; i < size ; ++i ) {
+    for ( i = 0 ; i < height ; ++i ) {
 
-        for ( j = 0 ; j < size ; ++j )
+        for ( j = 0 ; j < width ; ++j )
             XO[i][j] = 0;
     }
 
@@ -21,20 +32,20 @@ grid::grid ( void ) {
     alignWinTotal = 1;
 }
 
-grid::grid ( int newsize , int newAlignWinSize , int newAligneWinTotal ) {
+grid::grid ( int newHeight , int newWidth , int newAlignWinSize , int newAligneWinTotal ) {
 
-    int i;
-    int j;
+    int i , j;
 
-    size = newsize;
+    height = newHeight;
+    width = newWidth;
 
-    XO = new int*[size];
-    for ( i = 0 ; i < size ; ++i )
-        XO[i] = new int[size];
+    XO = new int*[height];
+    for ( i = 0 ; i < height ; ++i )
+        XO[i] = new int[width];
 
-    for ( i = 0 ; i < size ; ++i ) {
+    for ( i = 0 ; i < height ; ++i ) {
 
-        for ( j = 0 ; j < size ; ++j )
+        for ( j = 0 ; j < width ; ++j )
             XO[i][j] = 0;
     }
 
@@ -46,7 +57,7 @@ grid::~grid ( void ) {
 
     int i;
 
-    for ( i = 0 ; i < size ; ++i )
+    for ( i = 0 ; i < height ; ++i )
         delete []XO[i];
     delete []XO;
 }
@@ -54,30 +65,33 @@ grid::~grid ( void ) {
 void grid::insert ( int player , int pos ) {
 
 	int i;
+	int row , col;
 
 	while ( true ) {
+
+        getmaxyx ( stdscr , row , col );
 
         if ( pos < 0 )
         pos = 0;
 
-        if ( pos > size - 1 )
-            pos = size - 1;
+        if ( pos > width - 1 )
+            pos = width - 1;
 
         clear ();
 
-        endLine ( 2 );
+        draw ();
 
-        tab ( (130/size)+2 );
+        mvprintw ( ( row / 2 ) - ( height*2 / 2 ) - 1 , ( col / 2 ) - ( width*4 / 2 ) , "  " );
 
         for ( i = 0 ; i < pos ; ++i )
-            std::cout << "    ";
+            printw ( "    " );
 
         if ( player == 1 )
-            std::cout << "X" << std::endl;
+            printw ( "X" );
         if ( player == 2 )
-            std::cout << "O" << std::endl;
+            printw ( "O" );
 
-        draw ();
+        refresh ();
 
         int Key = getch ();
 
@@ -97,23 +111,21 @@ void grid::insert ( int player , int pos ) {
 
 int grid::checkWin ( void ) {
 
-    int i;
-    int j;
-    int k;
-    int countX;
-    int countO;
+    int i , j , k;
+    int countX , countO;
 
     int Xi[4];
     int Oi[4];
 
     for ( i = 0 ; i < 4 ; ++i ) {
+
         Xi[i] = 0;
         Oi[i] = 0;
     }
 
-    for ( i = 0 ; i < size ; ++i ) {
+    for ( i = 0 ; i < height ; ++i ) {
 
-        for ( j = 0 ; j <= ( size - alignWinSize ) ; ++j ) {
+        for ( j = 0 ; j <= ( width - alignWinSize ) ; ++j ) {
 
             countX = 0;
             countO = 0;
@@ -135,9 +147,9 @@ int grid::checkWin ( void ) {
         }
     }
 
-    for ( i = 0 ; i <= ( size - alignWinSize ) ; ++i ) {
+    for ( i = 0 ; i <= ( height - alignWinSize ) ; ++i ) {
 
-        for ( j = 0 ; j < size ; ++j ) {
+        for ( j = 0 ; j < width ; ++j ) {
 
             countX = 0;
             countO = 0;
@@ -186,53 +198,68 @@ void grid::rotate ( bool clockwise ) {
 
     clear ();
 
-    int i;
-    int j;
-
-    int next_i;
-    int next_j;
+    int i , j;
+    int next_i , next_j;
 
     int **TMP_XO;
-    TMP_XO = new int*[size];
-	for ( i = 0 ; i < size ; ++i ) {
-		TMP_XO[i] = new int[size];
-	}
 
-    for ( i = 0 ; i < size ; ++i ) {
+    TMP_XO = new int*[width];
+	for ( i = 0 ; i < width ; ++i )
+		TMP_XO[i] = new int[height];
 
-        for ( j = 0 ; j < size ; ++j ) {
+    for ( i = 0 ; i < width ; ++i ) {
 
-            if ( clockwise ) {
+        for ( j = 0 ; j < height ; ++j )
+            TMP_XO[i][j] = 0;
+    }
 
-                next_i=j;
-                next_j=size-i-1;
+    for ( i = 0 ; i < height ; ++i ) {
+
+        for ( j = 0 ; j < width ; ++j ) {
+
+            if ( XO[i][j] != 0 ) {
+
+                if ( clockwise ) {
+
+                    next_i = width - j - 1;
+                    next_j = i;
+                }
+                else {
+
+                    next_i = j;
+                    next_j = height - i - 1;
+                }
+
+                TMP_XO[next_i][next_j] = XO[i][j];
+
             }
-            else {
-
-                next_i=size-j-1;
-                next_j=i;
-            }
-
-            TMP_XO[next_i][next_j]=XO[i][j];
         }
     }
-    for ( i = 0 ; i < size ; ++i ) {
 
-        for ( j = 0 ; j < size ; ++j )
+    int tmp = width;
+    width = height;
+    height = tmp;
+
+    XO = new int*[height];
+	for ( i = 0 ; i < height ; ++i )
+		XO[i] = new int[width];
+
+    for ( i = 0 ; i < height ; ++i ) {
+
+        for ( j = 0 ; j < width ; ++j )
             XO[i][j]=TMP_XO[i][j];
     }
 
     draw ();
 
-    for ( i = 0 ; i < size ; ++i )
+    for ( i = 0 ; i < height ; ++i )
         delete []TMP_XO[i];
     delete []TMP_XO;
 }
 
 void grid::gravitate ( void ) {
 
-    int i;
-    int j;
+    int i , j;
 
     bool modified(true);
 
@@ -240,17 +267,15 @@ void grid::gravitate ( void ) {
 
         modified=false;
 
-        for ( i = 0 ; i < size-1 ; ++i ) {
+        for ( i = 0 ; i < height-1 ; ++i ) {
 
             clear ();
 
-            endLine ( 3 );
-
             draw ();
 
-            wait(100);
+            wait ( 200 );
 
-            for ( j = 0 ; j < size ; ++j ) {
+            for ( j = 0 ; j < width ; ++j ) {
 
                 if ( XO[i+1][j] != 1 && XO[i+1][j] != 2 && XO[i][j] != 0 ) {
 
@@ -267,9 +292,14 @@ void grid::gravitate ( void ) {
 void grid::play ( int player ) {
 
     int selected ( 1 );
+    std::string STR_SELECTED;
+    int TAB;
+    int row , col;
     int Key;
 
     while ( true ) {
+
+        getmaxyx ( stdscr , row , col );
 
         if ( selected < 1 )
             selected = 1;
@@ -277,39 +307,33 @@ void grid::play ( int player ) {
         if ( selected > 2 )
             selected = 2;
 
-        clear ();
+        if ( selected == 1 ) {
+            STR_SELECTED = STR_INSERT;
+            TAB = 1;
+        }
 
-        endLine ( 3 );
+        if ( selected == 2 ) {
+            STR_SELECTED = STR_ROTATE;
+            TAB = 2;
+        }
+
+        clear ();
 
         draw ();
 
-        endLine ( 2 );
+        attron ( A_BOLD );
 
-        tab ( 32 );
+        mvprintw ( 3 , ( col / 2 ) - ( STR_P1.length () / 2 ) + 1 , STR_P1.c_str () );
 
-        std::cout << "PLAYER " << player << " !";
+        mvprintw ( row - 4 , ( TAB * col / 3 ) - STR_SELECTED.length () - 2 , STR_ARROW_RIGHT.c_str () );
+        mvprintw ( row - 4 , ( TAB * col / 3 ) + STR_SELECTED.length () , STR_ARROW_LEFT.c_str () );
 
-        endLine ( 2 );
+        attroff ( A_BOLD );
 
-        tab ( 16 );
+        mvprintw ( row - 4 , ( col / 3 ) - ( STR_INSERT.length () / 2 ) , STR_INSERT.c_str () );
+        mvprintw ( row - 4 , ( 2 * col / 3 ) - ( STR_ROTATE.length () / 2 ) , STR_ROTATE.c_str () );
 
-        if ( selected == 1 )
-            std::cout << "-> ";
-        else
-            std::cout << "   ";
-
-        std::cout << "Insert";
-
-        tab ( 20 );
-
-        if ( selected == 2 )
-            std::cout << "-> ";
-        else
-            std::cout << "   ";
-
-        std::cout << "Rotate";
-
-        endLine ( 1 );
+        refresh ();
 
         Key = getch ();
 
@@ -332,8 +356,6 @@ void grid::play ( int player ) {
 
                     clear ();
 
-                    endLine ( 3 );
-
                     draw ();
 
                     endLine ( 3 );
@@ -344,25 +366,27 @@ void grid::play ( int player ) {
                     if ( selected > 4 )
                         selected = 4;
 
-                    tab ( 15 );
+                    if ( selected == 3 ) {
+                        STR_SELECTED = STR_CLOCKWISE;
+                        TAB = 1;
+                    }
 
-                    if ( selected == 3 )
-                        std::cout << "-> ";
-                    else
-                        std::cout << "   ";
+                    if ( selected == 4 ) {
+                        STR_SELECTED = STR_CCLOCKWISE;
+                        TAB = 2;
+                    }
 
-                    std::cout << "Clockwise";
+                    attron ( A_BOLD );
 
-                    tab ( 20 );
+                    mvprintw ( row - 4 , ( TAB * col / 3 ) - STR_SELECTED.length () - 2 , STR_ARROW_RIGHT.c_str () );
+                    mvprintw ( row - 4 , ( TAB * col / 3 ) + STR_SELECTED.length () , STR_ARROW_LEFT.c_str () );
 
-                    if ( selected == 4 )
-                        std::cout << "-> ";
-                    else
-                        std::cout << "   ";
+                    attroff ( A_BOLD );
 
-                    std::cout << "Counter-clockwise";
+                    mvprintw ( row - 4 , ( col / 3 ) - ( STR_CLOCKWISE.length () / 2 ) , STR_CLOCKWISE.c_str () );
+                    mvprintw ( row - 4 , ( 2 * col / 3 ) - ( STR_CCLOCKWISE.length () / 2 ) , STR_CCLOCKWISE.c_str () );
 
-                    endLine ( 1 );
+                    refresh ();
 
                     Key = getch  ();
 
@@ -386,51 +410,45 @@ void grid::play ( int player ) {
             }
             break;
         }
+
+        if ( Key == ESC )
+            break;
     }
 }
 
 void grid::draw ( void ) {
 
-	int i;
-	int j;
+	int i , j;
+	int row , col;
 
-	endLine ( 2 );
+    getmaxyx ( stdscr , row , col );
 
-	tab ( 130 / size );
-
-	std::cout << "|--";
-	for ( i = 0 ; i < size-1 ; ++i ) {
-		std::cout << "----";
+	mvprintw ( ( row / 2 ) - ( height*2 / 2 ) , ( col / 2 ) - ( width*4 / 2 ) , "|--" );
+	for ( i = 0 ; i < width-1 ; ++i ) {
+		printw ( "----" );
 	}
-	std::cout << "-|";
+	printw ( "-|" );
 
-	endLine ( 1 );
+	for( i = 0 ; i < height ; ++i ) {
 
-	for( i = 0 ; i < size ; ++i ) {
+        mvprintw ( ( row / 2 ) - ( height*2 / 2 ) + ( i * 2 ) + 1 , ( col / 2 ) - ( width*4 / 2 ) , "|" );
 
-        tab ( 130 / size );
+		for ( j = 0 ; j < width ; ++j ) {
 
-		std::cout << "|";
-		for ( j = 0 ; j < size ; ++j ) {
+			printw ( " " );
+			if ( XO[i][j]==1 ) printw ( "X" );
+			else if ( XO[i][j]==2 ) printw ( "O" );
+			else printw ( " " );
 
-			std::cout << " ";
-			if ( XO[i][j]==1 ) std::cout << "X";
-			else if ( XO[i][j]==2 ) std::cout << "O";
-			else std::cout << " ";
-
-			std::cout << " |";
+			printw ( " |" );
 		}
 
-		endLine ( 1 );
-
-		tab ( 130 / size );
-
-		std::cout << "|--";
-		for ( j = 0 ; j < size-1 ; ++j ) {
-			std::cout << "----";
-		}
-		std::cout << "-|";
-
-		endLine ( 1 );
+		mvprintw ( ( row / 2 ) - ( height*2 / 2 ) + ( i * 2 ) + 2 , ( col / 2 ) - ( width*4 / 2 ) , "|--" );
+        for ( j = 0 ; j < width-1 ; ++j ) {
+            printw ( "----" );
+        }
+        printw ( "-|" );
 	}
+
+	refresh ();
 }

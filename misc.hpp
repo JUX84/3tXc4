@@ -6,19 +6,20 @@
 #include <windows.h>
 
 #define wait(a) Sleep(a)
+#define ENTER 13
 
 #else
 
 #include <unistd.h>
 
 #define wait(a) usleep(a*1000)
+#define ENTER 10
 
 #endif
 
 #include <iostream>
 #include <cstring>
 
-#define ENTER 13
 #define ESC 27
 
 #define KEY_C 99
@@ -59,6 +60,8 @@ static std::string STR_ALIGN_SIZE ( "ALIGNMENT [S]IZE" );
 static std::string STR_ALIGN_TOTAL ( "ALIGNMENT [T]OTAL" );
 static std::string STR_OK ( "[O]K" );
 static std::string STR_CANCEL ( "[C]ANCEL" );
+static std::string STR_CLOCKWISE ( "CLOCK[W]ISE" );
+static std::string STR_CCLOCKWISE ( "[C]OUNTER-CLOCKWISE" );
 
 
 inline void endLine ( int endl ) {

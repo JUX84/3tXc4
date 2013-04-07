@@ -1,9 +1,20 @@
+#ifdef _WIN32
+
 #include "pdcurses/curses.h"
+
+#else
+
+#include <ncurses.h>
+
+#endif
+
 #include "ui.hpp"
 
 int main ( int argc , char **argv ) {
 
     initscr();
+    resize_term(51, 100);
+    timeout ( -1 );
 	raw();
 	keypad(stdscr, TRUE);
 	noecho();
@@ -11,18 +22,20 @@ int main ( int argc , char **argv ) {
 
 	/*while ( true ) { // KEY TESTING
 
-        int Key = getch ();
-
         int row,col;
 
         getmaxyx(stdscr,row,col);
 
+        int Key = getch ();
+
         clear ();
 
-        mvprintw(row/2,col/2,"%d",Key);
+        if ( Key == -1 )
+            mvprintw(row/2,col/2 - 15,"OMG WRITE SOMETHING!");
+        else
+            mvprintw(row/2,col/2,"%d",Key);
 
         refresh ();
-
 	}*/
 
 	ui ();

@@ -1,21 +1,19 @@
 #ifndef _GRID_HPP_
 #define _GRID_HPP_
 
-#include <iostream>
-#include "pdcurses/curses.h"
-#include "misc.hpp"
-
 class grid {
 
 	private:
 		int **XO;
+		int width;
+		int height;
 		int size;
 		int alignWinSize;
 		int alignWinTotal;
 
 	public:
 		grid ( void );
-		grid ( int newSize , int newAlignWinSize , int newAlignWinTotal );
+		grid ( int height , int width , int newAlignWinSize , int newAlignWinTotal );
 		//grid ( std::string file );
 		~grid ( void );
 		void draw ( void );
