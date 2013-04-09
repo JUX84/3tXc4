@@ -1,6 +1,6 @@
 #ifdef _WIN32
 
-#include "pdcurses/curses.h"
+#include <pdcurses/curses.h>
 
 #else
 
@@ -12,13 +12,13 @@
 
 int main ( int argc , char **argv ) {
 
-    initscr();
-    resize_term(51, 100);
+    initscr ();
+    resize_term ( 51 , 100 );
     timeout ( -1 );
-	raw();
-	keypad(stdscr, TRUE);
-	noecho();
-	curs_set(0);
+	raw ();
+	keypad ( stdscr , TRUE );
+	noecho ();
+	curs_set ( 0 );
 
 	/*while ( true ) { // KEY TESTING
 

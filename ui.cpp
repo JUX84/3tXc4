@@ -1,6 +1,6 @@
 #ifdef _WIN32
 
-#include "pdcurses/curses.h"
+#include <pdcurses/curses.h>
 
 #else
 
@@ -74,10 +74,7 @@ bool warnExit ( void ) {
         if ( Key == KEY_Y )
             return true;
 
-        if ( Key == KEY_N )
-            return false;
-
-        if ( Key == ESC )
+        if ( Key == KEY_N || Key == ESC )
             return false;
     }
 }
@@ -246,6 +243,7 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
 void play ( int height , int width , int alignWinSize , int alignWinTotal ) {
 
     grid G ( height , width , alignWinSize , alignWinTotal );
+
     int win;
     int Key;
     int row , col;

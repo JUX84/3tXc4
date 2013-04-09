@@ -1,6 +1,6 @@
 #ifdef _WIN32
 
-#include "pdcurses/curses.h"
+#include <pdcurses/curses.h>
 
 #else
 
@@ -111,7 +111,7 @@ void grid::insert ( int player , int pos ) {
 
 int grid::checkWin ( void ) {
 
-    int i , j , k;
+    int i , j , k , l;
     int countX , countO;
 
     int Xi[4];
@@ -130,7 +130,7 @@ int grid::checkWin ( void ) {
             countX = 0;
             countO = 0;
 
-            for ( k = 0 ; k < alignWinSize ; ++k ) {
+            for ( k = j ; k < alignWinSize ; ++k ) {
 
                 if ( XO[i][k] == 1 )
                     countX += XO[i][k];
@@ -154,7 +154,7 @@ int grid::checkWin ( void ) {
             countX = 0;
             countO = 0;
 
-            for ( k = 0 ; k < alignWinSize ; ++k ) {
+            for ( k = i ; k < alignWinSize ; ++k ) {
 
                 if ( XO[k][j] == 1 )
                     countX += XO[k][j];
@@ -171,11 +171,47 @@ int grid::checkWin ( void ) {
         }
     }
 
-    /////////////////
-    //             //
-    // TO-DO DIAGS //
-    //             //
-    /////////////////
+    for ( i = 0 , j = 0 ; i <= ( std::min ( height , width ) - alignWinSize ) , j <= ( std::min ( height , width ) - alignWinSize ) ; ++i , ++j ) {
+
+        countX = 0;
+        countO = 0;
+
+        for ( k = i , l = j ; k < alignWinSize , l < alignWinSize ; ++k , ++l ) {
+
+            if ( XO[k][l] == 1 )
+                countX += XO[k][l];
+
+            if ( XO[k][l] == 2 )
+                countO += XO[k][l];
+        }
+
+        if ( countX == alignWinSize )
+            Xi[2] = 1;
+
+        if ( countO == 2*alignWinSize )
+            Oi[2] = 1;
+    }
+
+    for ( i = height - 1 , j = 0 ; i >= alignWinSize , j <= ( std::min ( height , width ) - alignWinSize ) ; --i , ++j ) {
+
+        countX = 0;
+        countO = 0;
+
+        for ( k = i , l = j ; k > 0 , l < alignWinSize ; --k , ++l ) {
+
+            if ( XO[k][l] == 1 )
+                countX += XO[k][l];
+
+            if ( XO[k][l] == 2 )
+                countO += XO[k][l];
+        }
+
+        if ( countX == alignWinSize )
+            Xi[3] = 1;
+
+        if ( countO == 2*alignWinSize )
+            Oi[3] = 1;
+    }
 
     int X = Xi[0] + Xi[1] + Xi[2] + Xi[3];
 
@@ -221,13 +257,13 @@ void grid::rotate ( bool clockwise ) {
 
                 if ( clockwise ) {
 
-                    next_i = width - j - 1;
-                    next_j = i;
+                    next_i = j;
+                    next_j = height - i - 1;
                 }
                 else {
 
-                    next_i = j;
-                    next_j = height - i - 1;
+                    next_i = width - j - 1;
+                    next_j = i;
                 }
 
                 TMP_XO[next_i][next_j] = XO[i][j];
