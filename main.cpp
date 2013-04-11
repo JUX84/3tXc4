@@ -13,7 +13,6 @@
 int main ( int argc , char **argv ) {
 
     initscr ();
-    resize_term ( 51 , 100 );
     timeout ( -1 );
 	raw ();
 	keypad ( stdscr , TRUE );
