@@ -12,8 +12,8 @@
 
 int main ( int argc , char **argv ) {
 
-    initscr ();
-    timeout ( -1 );
+	initscr ();
+	timeout ( -1 );
 	raw ();
 	keypad ( stdscr , TRUE );
 	noecho ();
@@ -21,21 +21,21 @@ int main ( int argc , char **argv ) {
 
 	/*while ( true ) { // KEY TESTING
 
-        int row,col;
+	  int row,col;
 
-        getmaxyx(stdscr,row,col);
+	  getmaxyx(stdscr,row,col);
 
-        int Key = getch ();
+	  int Key = getch ();
 
-        clear ();
+	  clear ();
 
-        if ( Key == -1 )
-            mvprintw(row/2,col/2 - 15,"OMG WRITE SOMETHING!");
-        else
-            mvprintw(row/2,col/2,"%d",Key);
+	  if ( Key == -1 )
+	  mvprintw(row/2,col/2 - 15,"OMG WRITE SOMETHING!");
+	  else
+	  mvprintw(row/2,col/2,"%d",Key);
 
-        refresh ();
-	}*/
+	  refresh ();
+	  }*/
 
 	ui ();
 
