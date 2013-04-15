@@ -255,7 +255,7 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
 
 void play ( grid *G , int height , int width , int alignWinSize , int alignWinTotal ) {
 
-    if ( !G->initXO ) {
+    if ( !grid::initXO ) {
 
         G = new grid ( height , width , alignWinSize , alignWinTotal );
     }

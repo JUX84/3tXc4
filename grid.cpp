@@ -11,6 +11,8 @@
 #include "grid.hpp"
 #include "misc.hpp"
 
+bool grid::initXO = false;
+
 grid::grid ( void ) {
 
     int i , j;
@@ -30,8 +32,6 @@ grid::grid ( void ) {
 
     alignWinSize = 5;
     alignWinTotal = 1;
-
-    initXO = false;
 }
 
 grid::grid ( int newHeight , int newWidth , int newAlignWinSize , int newAligneWinTotal ) {

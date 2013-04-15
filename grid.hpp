@@ -22,7 +22,7 @@ class grid {
 		void rotate ( bool clockwise );
 		void insert ( int player , int pos );
 		int checkWin ( void );
-        bool initXO;
+        static bool initXO;
 
 	protected:
 
