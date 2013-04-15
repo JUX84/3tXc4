@@ -257,6 +257,7 @@ void play ( grid *G , int height , int width , int alignWinSize , int alignWinTo
 
     if ( !G->initXO ) {
 
+        return;
         G = new grid ( height , width , alignWinSize , alignWinTotal );
     }
 
