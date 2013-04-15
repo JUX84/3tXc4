@@ -19,7 +19,7 @@ int main ( int argc , char **argv ) {
     noecho ();
     curs_set ( 0 );
 
-    while ( true ) { // KEY TESTING
+    /*while ( true ) { // KEY TESTING
 
         int row,col;
 
@@ -35,7 +35,7 @@ int main ( int argc , char **argv ) {
             mvprintw(row/2,col/2,"%d",Key);
 
         refresh ();
-    }
+    }*/
 
     ui ();
 

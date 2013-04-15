@@ -149,8 +149,8 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
 
         mvprintw ( row / 4 , ( col - STR_TITLE_OPTIONS.length () + 1 ) / 2 , STR_TITLE_OPTIONS.c_str () );
 
-        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , 20 , STR_ARROW_RIGHT.c_str () );
-        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , col - 20 , STR_ARROW_LEFT.c_str () );
+        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , col / 20 , STR_ARROW_RIGHT.c_str () );
+        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , 19 * col / 20 , STR_ARROW_LEFT.c_str () );
 
         mvprintw ( 2 , 2 , STR_HELP.c_str () );
 
@@ -162,7 +162,7 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
         mvprintw ( ( row / 2 ) + 6 , ( col - STR_ALIGN_TOTAL.length() + 1 ) / 3 , STR_ALIGN_TOTAL.c_str() );
 
         mvprintw ( ( row / 2 ) , ( col / 2 ) , "%d" , defaultHeight );
-        mvprintw ( ( row / 2 ) , ( col / 2 ) + 20 , "[" );
+        mvprintw ( ( row / 2 ) , ( col / 2 ) + ( col / 20 ) , "[" );
         for ( i = 0 ; i < defaultHeight ; ++i )
             printw ( "-" );
         for ( i = 20 ; i > defaultHeight ; --i )
@@ -170,7 +170,7 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
         printw ( "]" );
 
         mvprintw ( ( row / 2 ) + 2 , ( col / 2 ) , "%d" , defaultWidth );
-        mvprintw ( ( row / 2 ) + 2 , ( col / 2 ) + 20 , "[" );
+        mvprintw ( ( row / 2 ) + 2 , ( col / 2 ) + ( col / 20 ) , "[" );
         for ( i = 0 ; i < defaultWidth ; ++i )
             printw ( "-" );
         for ( i = 20 ; i > defaultWidth ; --i )
@@ -178,7 +178,7 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
         printw ( "]" );
 
         mvprintw ( ( row / 2 ) + 4 , ( col / 2 ) , "%d" , defaultAlignWinSize );
-        mvprintw ( ( row / 2 ) + 4 , ( col / 2 ) + 20 , "[" );
+        mvprintw ( ( row / 2 ) + 4 , ( col / 2 ) + ( col / 20 ) , "[" );
         for ( i = 0 ; i < defaultAlignWinSize ; ++i )
             printw ( "-" );
         for ( i = 20 ; i > defaultAlignWinSize ; --i )
@@ -186,7 +186,7 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
         printw ( "]" );
 
         mvprintw ( ( row / 2 ) + 6 , ( col / 2 ) , "%d" , defaultAlignWinTotal );
-        mvprintw ( ( row / 2 ) + 6 , ( col / 2 ) + 20 , "[" );
+        mvprintw ( ( row / 2 ) + 6 , ( col / 2 ) + ( col / 20 ) , "[" );
         for ( i = 0 ; i < defaultAlignWinTotal ; ++i )
             printw ( "-----" );
         for ( i = 4 ; i > defaultAlignWinTotal ; --i )
