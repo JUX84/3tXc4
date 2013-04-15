@@ -13,7 +13,7 @@
 
 grid::grid ( void ) {
 
-    int i , j;
+    /*int i , j;
 
     height = 5;
     width = 5;
@@ -29,7 +29,10 @@ grid::grid ( void ) {
     }
 
     alignWinSize = 5;
-    alignWinTotal = 1;
+    alignWinTotal = 1;*/
+
+    XO = NULL;
+    initXO = false;
 }
 
 grid::grid ( int newHeight , int newWidth , int newAlignWinSize , int newAligneWinTotal ) {
@@ -51,6 +54,8 @@ grid::grid ( int newHeight , int newWidth , int newAlignWinSize , int newAligneW
 
     alignWinSize = newAlignWinSize;
     alignWinTotal = newAligneWinTotal;
+
+    initXO = true;
 }
 
 grid::~grid ( void ) {

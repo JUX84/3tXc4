@@ -149,8 +149,8 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
 
         mvprintw ( row / 4 , ( col - STR_TITLE_OPTIONS.length () + 1 ) / 2 , STR_TITLE_OPTIONS.c_str () );
 
-        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , 20 , STR_ARROW_RIGHT.c_str () );
-        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , col - 20 , STR_ARROW_LEFT.c_str () );
+        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , col / 20 , STR_ARROW_RIGHT.c_str () );
+        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , 19 * col / 20 , STR_ARROW_LEFT.c_str () );
 
         mvprintw ( 2 , 2 , STR_HELP.c_str () );
 
@@ -162,7 +162,7 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
         mvprintw ( ( row / 2 ) + 6 , ( col - STR_ALIGN_TOTAL.length() + 1 ) / 3 , STR_ALIGN_TOTAL.c_str() );
 
         mvprintw ( ( row / 2 ) , ( col / 2 ) , "%d" , defaultHeight );
-        mvprintw ( ( row / 2 ) , ( col / 2 ) + 20 , "[" );
+        mvprintw ( ( row / 2 ) , ( col / 2 ) + ( col / 20 ) , "[" );
         for ( i = 0 ; i < defaultHeight ; ++i )
             printw ( "-" );
         for ( i = 20 ; i > defaultHeight ; --i )
@@ -170,7 +170,7 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
         printw ( "]" );
 
         mvprintw ( ( row / 2 ) + 2 , ( col / 2 ) , "%d" , defaultWidth );
-        mvprintw ( ( row / 2 ) + 2 , ( col / 2 ) + 20 , "[" );
+        mvprintw ( ( row / 2 ) + 2 , ( col / 2 ) + ( col / 20 ) , "[" );
         for ( i = 0 ; i < defaultWidth ; ++i )
             printw ( "-" );
         for ( i = 20 ; i > defaultWidth ; --i )
@@ -178,7 +178,7 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
         printw ( "]" );
 
         mvprintw ( ( row / 2 ) + 4 , ( col / 2 ) , "%d" , defaultAlignWinSize );
-        mvprintw ( ( row / 2 ) + 4 , ( col / 2 ) + 20 , "[" );
+        mvprintw ( ( row / 2 ) + 4 , ( col / 2 ) + ( col / 20 ) , "[" );
         for ( i = 0 ; i < defaultAlignWinSize ; ++i )
             printw ( "-" );
         for ( i = 20 ; i > defaultAlignWinSize ; --i )
@@ -186,7 +186,7 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
         printw ( "]" );
 
         mvprintw ( ( row / 2 ) + 6 , ( col / 2 ) , "%d" , defaultAlignWinTotal );
-        mvprintw ( ( row / 2 ) + 6 , ( col / 2 ) + 20 , "[" );
+        mvprintw ( ( row / 2 ) + 6 , ( col / 2 ) + ( col / 20 ) , "[" );
         for ( i = 0 ; i < defaultAlignWinTotal ; ++i )
             printw ( "-----" );
         for ( i = 4 ; i > defaultAlignWinTotal ; --i )
@@ -253,9 +253,12 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
     }
 }
 
-void play ( int height , int width , int alignWinSize , int alignWinTotal ) {
+void play ( grid *G , int height , int width , int alignWinSize , int alignWinTotal ) {
 
-    grid G ( height , width , alignWinSize , alignWinTotal );
+    if ( !G->initXO ) {
+
+        G = new grid ( height , width , alignWinSize , alignWinTotal );
+    }
 
     int win;
     int Key;
@@ -278,10 +281,10 @@ void play ( int height , int width , int alignWinSize , int alignWinTotal ) {
         if ( Key == ESC || Key == KEY_E )
             break;
 
-        G.play ( 1 );
-        G.gravitate ();
+        G->play ( 1 );
+        G->gravitate ();
 
-        win = G.checkWin ();
+        win = G->checkWin ();
 
         clear ();
 
@@ -329,10 +332,10 @@ void play ( int height , int width , int alignWinSize , int alignWinTotal ) {
         if ( Key == ESC || Key == KEY_E )
             break;
 
-        G.play ( 2 );
-        G.gravitate ();
+        G->play ( 2 );
+        G->gravitate ();
 
-        win = G.checkWin ();
+        win = G->checkWin ();
 
         clear ();
 
@@ -424,8 +427,11 @@ void ui ( void ) {
 
         if ( Key == ENTER ) {
 
-            if ( selected == 1 )
-                play ( defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal );
+            if ( selected == 1 ) {
+
+                grid *G;
+                play ( G , defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal );
+            }
 
             if ( selected == 2 )
                 options ( defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal );
@@ -438,8 +444,11 @@ void ui ( void ) {
             }
         }
 
-        if ( Key == KEY_P )
-            play ( defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal );
+        if ( Key == KEY_P ) {
+
+            grid *G;
+            play ( G , defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal );
+        }
 
         if ( Key == KEY_O )
             options ( defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal );
