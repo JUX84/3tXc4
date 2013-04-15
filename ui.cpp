@@ -92,6 +92,7 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
     int backupWidth ( defaultWidth );
     int backupAlignWinSize ( defaultAlignWinSize );
     int backupAlignWinTotal ( defaultAlignWinTotal );
+    std::string STR_SELECTED;
 
     while ( true ) {
 
@@ -130,50 +131,62 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
         if ( defaultAlignWinTotal > 4 )
             defaultAlignWinTotal = 4;
 
+        switch ( selected ) {
+
+            case 1: STR_SELECTED = STR_HEIGHT;
+
+            case 2: STR_SELECTED = STR_WIDTH;
+
+            case 3: STR_SELECTED = STR_ALIGN_SIZE;
+
+            case 4: STR_SELECTED = STR_ALIGN_TOTAL;
+
+        }
+
         clear ();
 
         attron ( A_BOLD );
 
         mvprintw ( row / 4 , ( col - STR_TITLE_OPTIONS.length () + 1 ) / 2 , STR_TITLE_OPTIONS.c_str () );
 
-        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , ( col - 30 ) / 4 , STR_ARROW_RIGHT.c_str () );
-        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , col - ( ( col - 30 ) / 4 ) , STR_ARROW_LEFT.c_str () );
+        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , 20 , STR_ARROW_RIGHT.c_str () );
+        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , col - 20 , STR_ARROW_LEFT.c_str () );
 
         mvprintw ( 2 , 2 , STR_HELP.c_str () );
 
         attroff ( A_BOLD );
 
-        mvprintw ( ( row / 2 ) , ( col - STR_HEIGHT.length() + 1 ) / 4 +5 , STR_HEIGHT.c_str() );
-        mvprintw ( ( row / 2 ) + 2 , ( col - STR_WIDTH.length() + 1 ) / 4 +5 , STR_WIDTH.c_str() );
-        mvprintw ( ( row / 2 ) + 4 , ( col - STR_ALIGN_SIZE.length() + 1 ) / 4 +5 , STR_ALIGN_SIZE.c_str() );
-        mvprintw ( ( row / 2 ) + 6 , ( col - STR_ALIGN_TOTAL.length() + 1 ) / 4 +5 , STR_ALIGN_TOTAL.c_str() );
+        mvprintw ( ( row / 2 ) , ( col - STR_HEIGHT.length() + 1 ) / 3 , STR_HEIGHT.c_str() );
+        mvprintw ( ( row / 2 ) + 2 , ( col - STR_WIDTH.length() + 1 ) / 3 , STR_WIDTH.c_str() );
+        mvprintw ( ( row / 2 ) + 4 , ( col - STR_ALIGN_SIZE.length() + 1 ) / 3 , STR_ALIGN_SIZE.c_str() );
+        mvprintw ( ( row / 2 ) + 6 , ( col - STR_ALIGN_TOTAL.length() + 1 ) / 3 , STR_ALIGN_TOTAL.c_str() );
 
-        mvprintw ( ( row / 2 ) , ( ( col - STR_HEIGHT.length() + 1 ) / 4 ) + 25 , "%d" , defaultHeight );
-        mvprintw ( ( row / 2 ) , ( ( col - STR_HEIGHT.length() + 1 ) / 4 ) + 30 , "[" );
+        mvprintw ( ( row / 2 ) , ( col / 2 ) , "%d" , defaultHeight );
+        mvprintw ( ( row / 2 ) , ( col / 2 ) + 20 , "[" );
         for ( i = 0 ; i < defaultHeight ; ++i )
             printw ( "-" );
         for ( i = 20 ; i > defaultHeight ; --i )
             printw ( " " );
         printw ( "]" );
 
-        mvprintw ( ( row / 2 ) + 2 , ( ( col - STR_HEIGHT.length() + 1 ) / 4 ) + 25 , "%d" , defaultWidth );
-        mvprintw ( ( row / 2 ) + 2 , ( ( col - STR_HEIGHT.length() + 1 ) / 4 ) + 30 , "[" );
+        mvprintw ( ( row / 2 ) + 2 , ( col / 2 ) , "%d" , defaultWidth );
+        mvprintw ( ( row / 2 ) + 2 , ( col / 2 ) + 20 , "[" );
         for ( i = 0 ; i < defaultWidth ; ++i )
             printw ( "-" );
         for ( i = 20 ; i > defaultWidth ; --i )
             printw ( " " );
         printw ( "]" );
 
-        mvprintw ( ( row / 2 ) + 4 , ( ( col - STR_HEIGHT.length() + 1 ) / 4 ) + 25 , "%d" , defaultAlignWinSize );
-        mvprintw ( ( row / 2 ) + 4 , ( ( col - STR_HEIGHT.length() + 1 ) / 4 ) + 30 , "[" );
+        mvprintw ( ( row / 2 ) + 4 , ( col / 2 ) , "%d" , defaultAlignWinSize );
+        mvprintw ( ( row / 2 ) + 4 , ( col / 2 ) + 20 , "[" );
         for ( i = 0 ; i < defaultAlignWinSize ; ++i )
             printw ( "-" );
         for ( i = 20 ; i > defaultAlignWinSize ; --i )
             printw ( " " );
         printw ( "]" );
 
-        mvprintw ( ( row / 2 ) + 6 , ( ( col - STR_HEIGHT.length() + 1 ) / 4 ) + 25 , "%d" , defaultAlignWinTotal );
-        mvprintw ( ( row / 2 ) + 6 , ( ( col - STR_HEIGHT.length() + 1 ) / 4 ) + 30 , "[" );
+        mvprintw ( ( row / 2 ) + 6 , ( col / 2 ) , "%d" , defaultAlignWinTotal );
+        mvprintw ( ( row / 2 ) + 6 , ( col / 2 ) + 20 , "[" );
         for ( i = 0 ; i < defaultAlignWinTotal ; ++i )
             printw ( "-----" );
         for ( i = 4 ; i > defaultAlignWinTotal ; --i )

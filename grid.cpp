@@ -64,15 +64,15 @@ grid::~grid ( void ) {
 
 void grid::insert ( int player , int pos ) {
 
-	int i;
-	int row , col;
+    int i;
+    int row , col;
 
-	while ( true ) {
+    while ( true ) {
 
         getmaxyx ( stdscr , row , col );
 
         if ( pos < 0 )
-        pos = 0;
+            pos = 0;
 
         if ( pos > width - 1 )
             pos = width - 1;
@@ -106,7 +106,7 @@ void grid::insert ( int player , int pos ) {
             XO[0][pos] = player;
             break;
         }
-	}
+    }
 }
 
 int grid::checkWin ( void ) {
@@ -240,8 +240,8 @@ void grid::rotate ( bool clockwise ) {
     int **TMP_XO;
 
     TMP_XO = new int*[width];
-	for ( i = 0 ; i < width ; ++i )
-		TMP_XO[i] = new int[height];
+    for ( i = 0 ; i < width ; ++i )
+        TMP_XO[i] = new int[height];
 
     for ( i = 0 ; i < width ; ++i ) {
 
@@ -277,8 +277,8 @@ void grid::rotate ( bool clockwise ) {
     height = tmp;
 
     XO = new int*[height];
-	for ( i = 0 ; i < height ; ++i )
-		XO[i] = new int[width];
+    for ( i = 0 ; i < height ; ++i )
+        XO[i] = new int[width];
 
     for ( i = 0 ; i < height ; ++i ) {
 
@@ -454,37 +454,37 @@ void grid::play ( int player ) {
 
 void grid::draw ( void ) {
 
-	int i , j;
-	int row , col;
+    int i , j;
+    int row , col;
 
     getmaxyx ( stdscr , row , col );
 
-	mvprintw ( ( row / 2 ) - ( height*2 / 2 ) , ( col / 2 ) - ( width*4 / 2 ) , "|--" );
-	for ( i = 0 ; i < width-1 ; ++i ) {
-		printw ( "----" );
-	}
-	printw ( "-|" );
+    mvprintw ( ( row / 2 ) - ( height*2 / 2 ) , ( col / 2 ) - ( width*4 / 2 ) , "|--" );
+    for ( i = 0 ; i < width-1 ; ++i ) {
+        printw ( "----" );
+    }
+    printw ( "-|" );
 
-	for( i = 0 ; i < height ; ++i ) {
+    for( i = 0 ; i < height ; ++i ) {
 
         mvprintw ( ( row / 2 ) - ( height*2 / 2 ) + ( i * 2 ) + 1 , ( col / 2 ) - ( width*4 / 2 ) , "|" );
 
-		for ( j = 0 ; j < width ; ++j ) {
+        for ( j = 0 ; j < width ; ++j ) {
 
-			printw ( " " );
-			if ( XO[i][j]==1 ) printw ( "X" );
-			else if ( XO[i][j]==2 ) printw ( "O" );
-			else printw ( " " );
+            printw ( " " );
+            if ( XO[i][j]==1 ) printw ( "X" );
+            else if ( XO[i][j]==2 ) printw ( "O" );
+            else printw ( " " );
 
-			printw ( " |" );
-		}
+            printw ( " |" );
+        }
 
-		mvprintw ( ( row / 2 ) - ( height*2 / 2 ) + ( i * 2 ) + 2 , ( col / 2 ) - ( width*4 / 2 ) , "|--" );
+        mvprintw ( ( row / 2 ) - ( height*2 / 2 ) + ( i * 2 ) + 2 , ( col / 2 ) - ( width*4 / 2 ) , "|--" );
         for ( j = 0 ; j < width-1 ; ++j ) {
             printw ( "----" );
         }
         printw ( "-|" );
-	}
+    }
 
-	refresh ();
+    refresh ();
 }

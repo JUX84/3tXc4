@@ -66,18 +66,18 @@ static std::string STR_CCLOCKWISE ( "[C]OUNTER-CLOCKWISE" );
 
 inline void endLine ( int endl ) {
 
-	int i;
+		int i;
 
-	for ( i = 0 ; i < endl ; ++i )
-		std::cout << std::endl;
+		for ( i = 0 ; i < endl ; ++i )
+				std::cout << std::endl;
 }
 
 inline void tab ( int space ) {
 
-	int i;
+		int i;
 
-	for ( i = 0 ; i < space ; ++i )
-		std::cout << " ";
+		for ( i = 0 ; i < space ; ++i )
+				std::cout << " ";
 }
 
 #endif
