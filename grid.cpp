@@ -64,6 +64,8 @@ grid::~grid ( void ) {
     for ( i = 0 ; i < height ; ++i )
         delete []XO[i];
     delete []XO;
+
+    initXO = false;
 }
 
 void grid::insert ( int player , int pos ) {
@@ -397,8 +399,6 @@ void grid::play ( int player ) {
                     clear ();
 
                     draw ();
-
-                    endLine ( 3 );
 
                     if ( selected < 3 )
                         selected = 3;

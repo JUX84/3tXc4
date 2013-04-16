@@ -28,14 +28,18 @@ bool warnExit ( void ) {
         if ( selected > 2 )
             selected = 2;
 
-        if ( selected == 1 ) {
-            STR_SELECTED = STR_WARN_YES;
-            TAB = 1;
-        }
+        switch ( selected ) {
 
-        if ( selected == 2 ) {
-            STR_SELECTED = STR_WARN_NO;
-            TAB = 2;
+            case 1:
+                STR_SELECTED = STR_WARN_YES;
+                TAB = 1;
+                break;
+
+            case 2:
+                STR_SELECTED = STR_WARN_NO;
+                TAB = 2;
+                break;
+
         }
 
         getmaxyx ( stdscr , row , col );
@@ -133,14 +137,21 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
 
         switch ( selected ) {
 
-            case 1: STR_SELECTED = STR_HEIGHT;
+            case 1:
+                STR_SELECTED = STR_HEIGHT;
+                break;
 
-            case 2: STR_SELECTED = STR_WIDTH;
+            case 2:
+                STR_SELECTED = STR_WIDTH;
+                break;
 
-            case 3: STR_SELECTED = STR_ALIGN_SIZE;
+            case 3:
+                STR_SELECTED = STR_ALIGN_SIZE;
+                break;
 
-            case 4: STR_SELECTED = STR_ALIGN_TOTAL;
-
+            case 4:
+                STR_SELECTED = STR_ALIGN_TOTAL;
+                break;
         }
 
         clear ();
@@ -202,32 +213,46 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
 
         if ( Key == KEY_LEFT ) {
 
-            if ( selected == 1 )
-                defaultHeight--;
+            switch ( selected ) {
 
-            if ( selected == 2 )
-                defaultWidth--;
+                case 1:
+                    defaultHeight--;
+                    break;
 
-            if ( selected == 3 )
-                defaultAlignWinSize--;
+                case 2:
+                    defaultWidth--;
+                    break;
 
-            if ( selected == 4 )
-                defaultAlignWinTotal--;
+                case 3:
+                    defaultAlignWinSize--;
+                    break;
+
+                case 4:
+                    defaultAlignWinTotal--;
+                    break;
+            }
         }
 
         if ( Key == KEY_RIGHT ) {
 
-            if ( selected == 1 )
-                defaultHeight++;
+            switch ( selected ) {
 
-            if ( selected == 2 )
-                defaultWidth++;
+                case 1:
+                    defaultHeight++;
+                    break;
 
-            if ( selected == 3 )
-                defaultAlignWinSize++;
+                case 2:
+                    defaultWidth++;
+                    break;
 
-            if ( selected == 4 )
-                defaultAlignWinTotal++;
+                case 3:
+                    defaultAlignWinSize++;
+                    break;
+
+                case 4:
+                    defaultAlignWinTotal++;
+                    break;
+            }
         }
 
         if ( Key == KEY_DOWN )
@@ -374,6 +399,90 @@ void play ( grid *G , int height , int width , int alignWinSize , int alignWinTo
     }
 }
 
+void load_menu () {
+
+    return;
+}
+
+void play_menu ( int height , int width , int alignWinSize , int alignWinTotal ) {
+
+    int Key;
+    int row , col;
+    int selected ( 1 );
+
+    while ( true ) {
+
+        getmaxyx ( stdscr , row , col );
+
+        if ( selected < 1 )
+            selected = 1;
+
+        if ( selected > 3 )
+            selected = 3;
+
+        clear ();
+
+        attron ( A_BOLD );
+
+        mvprintw ( row / 4 , ( col - STR_PLAY_MENU.length () + 1 ) / 2 , STR_PLAY_MENU.c_str () );
+
+        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , 5 * col / 20 , STR_ARROW_RIGHT.c_str () );
+        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , 15 * col / 20 , STR_ARROW_LEFT.c_str () );
+
+        mvprintw ( 2 , 2 , STR_HELP.c_str () );
+
+        attroff ( A_BOLD );
+
+        mvprintw ( row / 2 , ( col - STR_1N1.length () + 1 ) / 2 , STR_1N1.c_str () );
+        mvprintw ( ( row / 2 ) + 2 , ( col - STR_1NAI.length () + 1 ) / 2 , STR_1NAI.c_str () );
+        mvprintw ( ( row / 2 ) + 4 , ( col - STR_LOAD.length () + 1 ) / 2 , STR_LOAD.c_str () );
+
+        refresh();
+
+        Key = getch ();
+
+        if ( Key == KEY_DOWN )
+            selected += 1;
+
+        if ( Key == KEY_UP )
+            selected -= 1;
+
+        if ( Key == ENTER ) {
+
+            if ( selected == 1 ) {
+
+                grid *G = new grid ();
+                play ( G , height , width , alignWinSize , alignWinTotal );
+            }
+
+            //if ( selected == 2 )
+
+            if ( selected == 3 )
+                load_menu ();
+
+            break;
+        }
+
+        if ( Key == KEY_V ) {
+
+            grid *G = new grid ();
+            play ( G , height , width , alignWinSize , alignWinTotal );
+        }
+
+        //if ( Key == KEY_A )
+
+        if ( Key == KEY_L )
+            load_menu ();
+
+        if ( Key == ESC ) {
+            if ( warnExit () ) {
+                endwin ();
+                return;
+            }
+        }
+    }
+}
+
 void ui_help ( void ) {
 
 }
@@ -404,8 +513,8 @@ void ui ( void ) {
 
         mvprintw ( row / 4 , ( col - STR_TITLE_GAME.length () + 1 ) / 2 , STR_TITLE_GAME.c_str () );
 
-        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , ( col - 20 ) / 2 , STR_ARROW_RIGHT.c_str () );
-        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , ( col + 20 ) / 2 , STR_ARROW_LEFT.c_str () );
+        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , 5 * col / 20 , STR_ARROW_RIGHT.c_str () );
+        mvprintw ( ( row / 2 ) + ( ( selected - 1 ) * 2 ) , 15 * col / 20 , STR_ARROW_LEFT.c_str () );
 
         mvprintw ( 2 , 2 , STR_HELP.c_str () );
 
@@ -429,8 +538,7 @@ void ui ( void ) {
 
             if ( selected == 1 ) {
 
-                grid *G = new grid();
-                play ( G , defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal );
+                play_menu ( defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal );
             }
 
             if ( selected == 2 )
@@ -446,8 +554,7 @@ void ui ( void ) {
 
         if ( Key == KEY_P ) {
 
-            grid *G;
-            play ( G , defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal );
+            play_menu ( defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal );
         }
 
         if ( Key == KEY_O )

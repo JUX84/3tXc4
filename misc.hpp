@@ -34,6 +34,8 @@
 #define KEY_T 116
 #define KEY_W 119
 #define KEY_Y 121
+#define KEY_V 118
+#define KEY_L 108
 
 static std::string STR_OPTIONS ( "[O]PTIONS" );
 static std::string STR_TITLE_GAME ( "__3tXc4__" );
@@ -62,22 +64,9 @@ static std::string STR_OK ( "[O]K" );
 static std::string STR_CANCEL ( "[C]ANCEL" );
 static std::string STR_CLOCKWISE ( "CLOCK[W]ISE" );
 static std::string STR_CCLOCKWISE ( "[C]OUNTER-CLOCKWISE" );
-
-
-inline void endLine ( int endl ) {
-
-		int i;
-
-		for ( i = 0 ; i < endl ; ++i )
-				std::cout << std::endl;
-}
-
-inline void tab ( int space ) {
-
-		int i;
-
-		for ( i = 0 ; i < space ; ++i )
-				std::cout << " ";
-}
+static std::string STR_1N1 ( "NEW PLAYER [V]ERSUS PLAYER" );
+static std::string STR_1NAI ( "NEW PLAYER VERSUS [A]I" );
+static std::string STR_LOAD ( "[L]OAD GAME" );
+static std::string STR_PLAY_MENU ( "__PLAY MENU__" );
 
 #endif
