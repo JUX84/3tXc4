@@ -1,18 +1,33 @@
+#========== FLAGS ==========#
+
+OBJ=obj/
+BIN=bin/
+CORE=core/
+UI=ui/
+GRID=grid/
+MISC=misc/
+CPP0X=c++0x
+IBIN=***** Compiling 3tXc4 binary *****
+IUI=***** Compiling UI object *****
+IGRID=***** Compiling grid objet *****
+IMAIN=***** Compiling main objet *****
+IRM=***** Removing object files and binary *****
+
 #========== 3tXtc4 makefile ==========#
 
-3tXc4:	main.o grid.o ui.o
-		@g++ main.o grid.o ui.o -lncurses -o 3tXc4 ; $(info #***** Compiling 3tXc4 executable *****#)
+$(BIN)3tXc4:	$(OBJ)main.o $(OBJ)grid.o $(OBJ)ui.o
+		@g++ $(OBJ)main.o $(OBJ)grid.o $(OBJ)ui.o -lncurses -o $(BIN)3tXc4 ; $(info $(IBIN))
 
-ui.o:	ui.cpp ui.hpp misc.hpp grid.hpp
-		@g++ -c ui.cpp ; $(info #***** Compiling UI object *****#)
+$(OBJ)ui.o:	$(CORE)$(UI)ui.cpp $(CORE)$(UI)ui.hpp $(CORE)$(MISC)misc.hpp $(CORE)$(GRID)grid.hpp
+		@g++ -c $(CORE)$(UI)ui.cpp -o $(OBJ)ui.o ; $(info $(IUI))
 
-grid.o:	grid.cpp grid.hpp
-		@g++ -std=c++0x -c grid.cpp ; $(info #***** Compiling grid object *****#)
+$(OBJ)grid.o:   $(CORE)$(GRID)grid.cpp $(CORE)$(GRID)grid.hpp $(CORE)$(MISC)misc.hpp
+		@g++ -std=$(CPP0X) -c $(CORE)$(GRID)grid.cpp -o $(OBJ)grid.o ; $(info $(IGRID))
         
-main.o:	main.cpp ui.hpp
-		@g++ -c main.cpp ; $(info #***** Compiling main object *****#)
+$(OBJ)main.o: $(CORE)main.cpp $(CORE)$(UI)ui.hpp $(CORE)$(MISC)misc.hpp
+		@g++ -c $(CORE)main.cpp -o $(OBJ)main.o ; $(info $(IMAIN))
 
 clean:
-		@rm -rvf *.o 3tXc4 ; $(info #***** Removing object files and executable *****#)
+		@rm -rvf $(OBJ)*.o $(BIN)3tXc4 ; $(info $(IRM))
 
 #========== makefile end ==========#
