@@ -179,6 +179,20 @@ void grid::save ( void ) {
 
     index.close ();
 
+    std::ofstream check ( "saves/check.sav" );
+
+    if ( !check ) {
+        
+        system("mkdir -p saves");
+    }
+
+    check.close ();
+
+    check.open ( "saves/check.sav" );
+    check << "DO NOT MOVE/REMOVE THIS FILE" << std::endl;
+
+    check.close ();
+
     std::ofstream save ( "saves/game" + date + ".sav" );
 
     save << height << " " << width << std::endl;

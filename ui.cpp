@@ -303,8 +303,11 @@ void play ( grid *G , int height , int width , int alignWinSize , int alignWinTo
 
         Key = getch ();
 
-        if ( Key == ESC || Key == KEY_E )
+        if ( Key == ESC || Key == KEY_E ){
+
+            G->save();
             break;
+        }
 
         G->play ( 1 );
         G->gravitate ();
