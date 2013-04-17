@@ -1,15 +1,7 @@
-#ifdef _WIN32
-
-#include <pdcurses/curses.h>
-
-#else
-
 #include <ncurses.h>
-
-#endif
-
 #include <cstring>
 #include <fstream>
+#include <ctime>
 #include "grid.hpp"
 #include "misc.hpp"
 
@@ -182,7 +174,7 @@ void grid::save ( void ) {
     std::ofstream check ( "saves/check.sav" );
 
     if ( !check ) {
-        
+
         system("mkdir -p saves");
     }
 

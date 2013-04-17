@@ -1,25 +1,14 @@
 #ifndef _MISC_HPP_
 #define _MISC_HPP_
 
-#ifdef _WIN32
-
-#include <windows.h>
-
-#define wait(a) Sleep(a)
-#define ENTER 13
-
-#else
-
 #include <unistd.h>
 
 #define wait(a) usleep(a*1000)
-#define ENTER 10
-
-#endif
 
 #include <iostream>
 #include <cstring>
 
+#define ENTER 10
 #define ESC 27
 
 #define KEY_C 99

@@ -1,13 +1,4 @@
-#ifdef _WIN32
-
-#include <pdcurses/curses.h>
-
-#else
-
 #include <ncurses.h>
-
-#endif
-
 #include "ui.hpp"
 #include "grid.hpp"
 #include "misc.hpp"

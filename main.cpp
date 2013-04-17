@@ -1,14 +1,4 @@
-#ifdef _WIN32
-
-#include <pdcurses/curses.h>
-
-#else
-
 #include <ncurses.h>
-
-#endif
-
-#include <ctime>
 #include "ui.hpp"
 #include "misc.hpp"
 
@@ -20,7 +10,7 @@ int main ( int argc , char **argv ) {
     keypad ( stdscr , TRUE );
     noecho ();
     curs_set ( 0 );
- 
+
     /*    while ( true ) { // KEY TESTING
 
           int row,col;
