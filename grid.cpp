@@ -8,6 +8,8 @@
 
 #endif
 
+#include <cstring>
+#include <fstream>
 #include "grid.hpp"
 #include "misc.hpp"
 
@@ -57,6 +59,64 @@ grid::grid ( int newHeight , int newWidth , int newAlignWinSize , int newAligneW
     initXO = true;
 }
 
+grid::grid ( const char *file ) {
+
+    std::ifstream input ( file );
+    if ( !input ) {
+
+        int row , col;
+
+        getmaxyx ( stdscr , row , col );
+
+        clear ();
+        mvprintw ( row / 2 , ( col - STR_FAIL_LOAD.length() + 1 ) / 2 , STR_FAIL_LOAD.c_str() );
+        refresh ();
+        wait ( 2000 );
+
+        initXO = false;
+    }
+    else {
+
+        int i , j;
+        int buff;
+
+        input >> height >> width;
+        input >> alignWinSize >> alignWinTotal;
+
+        XO = new int*[height];
+        for ( i = 0 ; i < height ; ++i )
+            XO[i] = new int[width];
+
+
+        for ( i = 0 ; i < height ; ++i ) {
+
+            for ( j = 0 ; j < width ; ++j ) {
+
+                input >> buff;
+
+                switch ( buff ) {
+
+                    case 1:
+                        XO[i][j] = 1;
+                        break;
+
+                    case 2:
+                        XO[i][j] = 2;
+                        break;
+
+                    default:
+                        XO[i][j] = 0;
+                        break;
+                }
+            }
+        }
+
+        input.close ();
+
+        initXO = true;
+    }
+}
+
 grid::~grid ( void ) {
 
     int i;
@@ -66,6 +126,79 @@ grid::~grid ( void ) {
     delete []XO;
 
     initXO = false;
+}
+
+void grid::save ( void ) {
+
+    time_t now = time ( 0 );
+    tm *ltm = localtime ( &now );
+    int year = ltm->tm_year + 1900;
+    int month = ltm->tm_mon + 1;
+    int day = ltm->tm_mday;
+    int hour = ltm->tm_hour;
+    int min = ltm->tm_min;
+    int sec = ltm->tm_sec;
+
+    std::string str_year ( std::to_string ( year ) );
+
+    std::string str_month ( "" );
+    if ( month < 10 ) {
+        str_month += "0";
+    }
+    str_month += std::to_string ( month );
+
+    std::string str_day ( "" );
+    if ( day < 10 ) {
+        str_day += "0";
+    }
+    str_day += std::to_string ( day );
+
+    std::string str_hour ( "" );
+    if ( hour < 10 ) {
+        str_hour += "0";
+    }
+    str_hour += std::to_string ( hour );
+
+    std::string str_min ( "" );
+    if ( min < 10 ) {
+        str_min += "0";
+    }
+    str_min += std::to_string ( min );
+
+    std::string str_sec ( "" );
+    if ( sec < 10 ) {
+        str_sec += "0";
+    }
+    str_sec += std::to_string ( sec );
+
+    std::string date = str_year + str_month + str_day + str_hour + str_min + str_sec;
+
+    std::ofstream index ( "index.sav" , std::ios_base::app );
+
+    index << date+"\n";
+
+    index.close ();
+
+    std::ofstream save ( "saves/game" + date + ".sav" );
+
+    save << height << " " << width << std::endl;
+    save << alignWinSize << " " << alignWinTotal << std::endl;
+
+    int i , j;
+
+    for ( i = 0 ; i < height ; ++i ) {
+
+        for ( j = 0 ; j < width ; ++j ) {
+
+            save << XO[i][j] << " ";
+        }
+
+        save << std::endl;
+    }
+
+    save.close ();
+
+    return;
 }
 
 void grid::insert ( int player , int pos ) {

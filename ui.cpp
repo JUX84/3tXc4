@@ -401,6 +401,11 @@ void play ( grid *G , int height , int width , int alignWinSize , int alignWinTo
 
 void load_menu () {
 
+    /*grid *G = new grid ( file.c_str() );
+    if ( grid::initXO ) {
+        play ( G , 5 , 5 , 5 , 1 );
+    }*/
+
     return;
 }
 

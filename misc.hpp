@@ -68,5 +68,6 @@ static std::string STR_1N1 ( "NEW PLAYER [V]ERSUS PLAYER" );
 static std::string STR_1NAI ( "NEW PLAYER VERSUS [A]I" );
 static std::string STR_LOAD ( "[L]OAD GAME" );
 static std::string STR_PLAY_MENU ( "__PLAY MENU__" );
+static std::string STR_FAIL_LOAD ( "FAILED TO OPEN FILE" );
 
 #endif
