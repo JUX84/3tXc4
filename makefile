@@ -6,6 +6,7 @@ CORE=core/
 UI=ui/
 GRID=grid/
 MISC=misc/
+SAV=saves/
 CPP0X=c++0x
 IBIN=***** Compiling 3tXc4 binary *****
 IUI=***** Compiling UI object *****
@@ -28,6 +29,6 @@ $(OBJ)main.o: $(CORE)main.cpp $(CORE)$(UI)ui.hpp $(CORE)$(MISC)misc.hpp
 		@g++ -c $(CORE)main.cpp -o $(OBJ)main.o ; $(info $(IMAIN))
 
 clean:
-		@rm -rvf $(OBJ)*.o $(BIN)3tXc4.bin ; $(info $(IRM))
+		@rm -rvf $(OBJ)*.o $(BIN)3tXc4.bin $(BIN)$(SAV)game* $(BIN)$(SAV)index.sav; $(info $(IRM))
 
 #========== makefile end ==========#

@@ -517,6 +517,7 @@ void load_menu () {
                 grid *G = new grid ( currentID.c_str() );
                 if ( grid::initXO ) {
                     play ( G , 5 , 5 , 5 , 1 );
+                    return;
                 }
             }
             else {
