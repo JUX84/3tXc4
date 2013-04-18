@@ -293,19 +293,24 @@ void grid::insert ( int player , int pos ) {
     }
 }
 
+void _debug ( std::string s , int n ) {
+
+    clear ();
+    int row , col;
+    getmaxyx ( stdscr , row , col );
+    mvprintw ( row / 2 , ( col - 2 ) / 2 , s.c_str() );
+    printw ( " %d" , n );
+    refresh ();
+    wait ( 200 );
+}
+
 int grid::checkWin ( void ) {
 
-    int i , j , k , l;
+    int h , i , j , k , l;
     int countX , countO;
 
-    int Xi[4];
-    int Oi[4];
-
-    for ( i = 0 ; i < 4 ; ++i ) {
-
-        Xi[i] = 0;
-        Oi[i] = 0;
-    }
+    int alignX ( 0 );
+    int alignO ( 0 );
 
     for ( i = 0 ; i < height ; ++i ) {
 
@@ -314,20 +319,26 @@ int grid::checkWin ( void ) {
             countX = 0;
             countO = 0;
 
-            for ( k = j ; k < alignWinSize ; ++k ) {
+            for ( k = j ; k < j + alignWinSize ; ++k ) {
 
                 if ( XO[i][k] == 1 )
-                    countX += XO[i][k];
+                    countX++;
 
                 if ( XO[i][k] == 2 )
-                    countO += XO[i][k];
+                    countO++;
             }
 
-            if ( countX == alignWinSize )
-                Xi[0] = 1;
+            if ( countX == alignWinSize ) {
 
-            if ( countO == 2*alignWinSize )
-                Oi[0] = 1;
+                alignX++;
+                countX = 0;
+            }
+
+            if ( countO == alignWinSize ) {
+
+                alignO++;
+                countO = 0;
+            }
         }
     }
 
@@ -338,80 +349,192 @@ int grid::checkWin ( void ) {
             countX = 0;
             countO = 0;
 
-            for ( k = i ; k < alignWinSize ; ++k ) {
+            for ( k = i ; k < i + alignWinSize ; ++k ) {
 
                 if ( XO[k][j] == 1 )
-                    countX += XO[k][j];
+                    countX++;
 
                 if ( XO[k][j] == 2 )
-                    countO += XO[k][j];
+                    countO++;
             }
 
-            if ( countX == alignWinSize )
-                Xi[1] = 1;
+            if ( countX == alignWinSize ) {
 
-            if ( countO == 2*alignWinSize )
-                Oi[1] = 1;
+                alignX++;
+                countX = 0;
+            }
+
+            if ( countO == alignWinSize ) {
+
+                alignO++;
+                countO = 0;
+            }
         }
     }
 
-    for ( i = 0 , j = 0 ; i <= ( std::min ( height , width ) - alignWinSize ) , j <= ( std::min ( height , width ) - alignWinSize ) ; ++i , ++j ) {
+    for ( h = height - alignWinSize ; h >= 0 ; --h ) {
 
-        countX = 0;
-        countO = 0;
+        for ( i = h , j = 0 ; i <= height - alignWinSize , j <= width - alignWinSize ; ++i , ++j ) {
 
-        for ( k = i , l = j ; k < alignWinSize , l < alignWinSize ; ++k , ++l ) {
+            if ( i > height - alignWinSize )
+                break;
 
-            if ( XO[k][l] == 1 )
-                countX += XO[k][l];
+            if ( j > width - alignWinSize )
+                break;
 
-            if ( XO[k][l] == 2 )
-                countO += XO[k][l];
+            countX = 0;
+            countO = 0;
+
+            for ( k = i , l = j ; k < i + alignWinSize , l < j + alignWinSize ; ++k , ++l ) {
+
+                if ( XO[k][l] == 1 )
+                    countX++;
+
+                if ( XO[k][l] == 2 )
+                    countO++;
+
+                _debug ( "cX1" , countX );
+            }
+
+            if ( countX == alignWinSize ) {
+
+                alignX++;
+                countX = 0;
+            }
+
+            if ( countO == alignWinSize ) {
+
+                alignO++;
+                countO = 0;
+            }
         }
-
-        if ( countX == alignWinSize )
-            Xi[2] = 1;
-
-        if ( countO == 2*alignWinSize )
-            Oi[2] = 1;
     }
 
-    for ( i = height - 1 , j = 0 ; i >= alignWinSize , j <= ( std::min ( height , width ) - alignWinSize ) ; --i , ++j ) {
+    for ( h = 1 ; h <= width - alignWinSize ; ++h ) {
 
-        countX = 0;
-        countO = 0;
+        for ( i = 0 , j = h ; i <= height - alignWinSize , j <= width - alignWinSize ; ++i , ++j ) {
 
-        for ( k = i , l = j ; k > 0 , l < alignWinSize ; --k , ++l ) {
+            if ( i > height - alignWinSize )
+                break;
 
-            if ( XO[k][l] == 1 )
-                countX += XO[k][l];
+            if ( j > width - alignWinSize )
+                break;
 
-            if ( XO[k][l] == 2 )
-                countO += XO[k][l];
+            countX = 0;
+            countO = 0;
+
+            for ( k = i , l = j ; k < i + alignWinSize , l < j + alignWinSize ; ++k , ++l ) {
+
+                if ( XO[k][l] == 1 )
+                    countX++;
+
+                if ( XO[k][l] == 2 )
+                    countO++;
+
+                _debug ( "cX2" , countX );
+            }
+
+            if ( countX == alignWinSize ) {
+
+                alignX++;
+                countX = 0;
+            }
+
+            if ( countO == alignWinSize ) {
+
+                alignO++;
+                countO = 0;
+            }
         }
-
-        if ( countX == alignWinSize )
-            Xi[3] = 1;
-
-        if ( countO == 2*alignWinSize )
-            Oi[3] = 1;
     }
 
-    int X = Xi[0] + Xi[1] + Xi[2] + Xi[3];
+    for ( h = width - alignWinSize ; h >= 0 ; --h ) {
 
-    int O = Oi[0] + Oi[1] + Oi[2] + Oi[3];
+        for ( i = height - 1 , j = h ; i >= alignWinSize - 1 , j <= width - alignWinSize ; --i , ++j ) {
 
-    if ( X >= alignWinTotal )
-        X = 1;
+            if ( i < alignWinSize - 1 )
+                break;
+
+            if ( j > width - alignWinSize )
+                break;
+
+            countX = 0;
+            countO = 0;
+
+            for ( k = i , l = j ; k >= 0 , l < j + alignWinSize ; --k , ++l ) {
+
+                if ( XO[k][l] == 1 )
+                    countX++;
+
+                if ( XO[k][l] == 2 )
+                    countO++;
+
+                _debug ( "cX3" , countX );
+            }
+
+            if ( countX == alignWinSize ) {
+
+                alignX++;
+                countX = 0;
+            }
+
+            if ( countO == alignWinSize ) {
+
+                alignO++;
+                countO = 0;
+            }
+        }
+    }
+
+    for ( h = height - 2 ; h >= alignWinSize - 1 ; --h ) {
+
+        for ( i = h , j = 0 ; i >= alignWinSize - 1 , j <= width - alignWinSize ; --i , ++j ) {
+
+            if ( i < alignWinSize - 1 )
+                break;
+
+            if ( j < width - alignWinSize )
+                break;
+
+            countX = 0;
+            countO = 0;
+
+            for ( k = i , l = j ; k >= 0 , l < j + alignWinSize ; --k , ++l ) {
+
+                if ( XO[k][l] == 1 )
+                    countX++;
+
+                if ( XO[k][l] == 2 )
+                    countO++;
+
+                _debug ( "cX4" , countX );
+            }
+
+            if ( countX == alignWinSize ) {
+
+                alignX++;
+                countX = 0;
+            }
+
+            if ( countO == alignWinSize ) {
+
+                alignO++;
+                countO = 0;
+            }
+        }
+    }
+
+    if ( alignX >= alignWinTotal )
+        alignX = 1;
     else
-        X = 0;
+        alignX = 0;
 
-    if ( O >= alignWinTotal )
-        O = 2;
+    if ( alignO >= alignWinTotal )
+        alignO = 2;
     else
-        O = 0;
+        alignO = 0;
 
-    return X+O;
+    return alignX+alignO;
 }
 
 void grid::rotate ( bool clockwise ) {

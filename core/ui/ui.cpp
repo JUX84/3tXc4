@@ -127,8 +127,8 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
         if ( defaultAlignWinTotal < 1 )
             defaultAlignWinTotal = 1;
 
-        if ( defaultAlignWinTotal > 4 )
-            defaultAlignWinTotal = 4;
+        if ( defaultAlignWinTotal > 10 )
+            defaultAlignWinTotal = 10;
 
         switch ( selected ) {
 
@@ -194,9 +194,9 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
         mvprintw ( ( row / 2 ) + 6 , ( col / 2 ) , "%d" , defaultAlignWinTotal );
         mvprintw ( ( row / 2 ) + 6 , ( col / 2 ) + ( col / 20 ) , "[" );
         for ( i = 0 ; i < defaultAlignWinTotal ; ++i )
-            printw ( "-----" );
-        for ( i = 4 ; i > defaultAlignWinTotal ; --i )
-            printw ( "     " );
+            printw ( "--" );
+        for ( i = 10 ; i > defaultAlignWinTotal ; --i )
+            printw ( "  " );
         printw ( "]" );
 
         mvprintw ( row - 4 , ( col - STR_OK.length () + 1 ) / 4 , STR_OK.c_str () );

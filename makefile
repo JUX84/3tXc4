@@ -7,7 +7,7 @@ UI=ui/
 GRID=grid/
 MISC=misc/
 SAV=saves/
-CPP0X=c++0x
+CPP0X=-std=c++0x
 IBIN=***** Compiling 3tXc4 binary *****
 IUI=***** Compiling UI object *****
 IGRID=***** Compiling grid objet *****
@@ -23,7 +23,7 @@ $(OBJ)ui.o:	$(CORE)$(UI)ui.cpp $(CORE)$(UI)ui.hpp $(CORE)$(MISC)misc.hpp $(CORE)
 		@g++ -c $(CORE)$(UI)ui.cpp -o $(OBJ)ui.o ; $(info $(IUI))
 
 $(OBJ)grid.o:   $(CORE)$(GRID)grid.cpp $(CORE)$(GRID)grid.hpp $(CORE)$(MISC)misc.hpp
-		@g++ -std=$(CPP0X) -c $(CORE)$(GRID)grid.cpp -o $(OBJ)grid.o ; $(info $(IGRID))
+		@g++ $(CPP0X) -c $(CORE)$(GRID)grid.cpp -o $(OBJ)grid.o ; $(info $(IGRID))
         
 $(OBJ)main.o: $(CORE)main.cpp $(CORE)$(UI)ui.hpp $(CORE)$(MISC)misc.hpp
 		@g++ -c $(CORE)main.cpp -o $(OBJ)main.o ; $(info $(IMAIN))
