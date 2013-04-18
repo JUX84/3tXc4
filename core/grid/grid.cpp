@@ -98,12 +98,12 @@ grid::grid ( int newHeight , int newWidth , int newAlignWinSize , int newAligneW
 
     std::string date = str_year + str_month + str_day + str_hour + str_min + str_sec;
 
-    ID = date.c_str ();
+    ID = date;
 }
 
 grid::grid ( std::string gameID ) {
 
-    std::ifstream input ( "saves/game" + gameID + ".sav" );
+    std::ifstream input ( STR_SAVE_REP + "/" + STR_SAVE_PRE + gameID + "." + STR_SAVE_EXT );
     if ( !input ) {
 
         int row , col;
@@ -174,16 +174,17 @@ grid::~grid ( void ) {
 
 void grid::save ( void ) {
 
-    std::ofstream check ( "saves/check.sav" );
+    std::ofstream check ( STR_SAVE_REP + "/" + STR_SAVE_CHK + "." + STR_SAVE_EXT );
 
     if ( !check ) {
 
-        system("mkdir -p saves");
+        std::string command = "mkdir -p " + STR_SAVE_REP;
+        system(command.c_str());
     }
 
     check.close ();
 
-    std::ifstream indexread ( "saves/index.sav" );
+    std::ifstream indexread ( STR_SAVE_REP + "/" + STR_SAVE_IND + "." + STR_SAVE_EXT );
 
     if ( indexread ) {
 
@@ -203,28 +204,23 @@ void grid::save ( void ) {
 
         indexread.close ();
 
-        std::ofstream indexwrite ( "saves/index.sav" );
+        std::ofstream indexwrite ( STR_SAVE_REP + "/" + STR_SAVE_IND + "." + STR_SAVE_EXT );
 
-        for ( it = listID.begin() ; it != listID.end () ; ++it ) {
-
-            mvprintw ( 0 , 0 , (*it).c_str() );
-            refresh ();
-            wait ( 1000 );
+        for ( it = listID.begin() ; it != listID.end () ; ++it )
             indexwrite << (*it) << std::endl;
-        }
 
         indexwrite.close();
     }
     else {
 
-        std::ofstream index ( "saves/index.sav" );
+        std::ofstream index ( STR_SAVE_REP + "/" + STR_SAVE_IND + "." + STR_SAVE_EXT );
 
         index << ID << std::endl;
 
         index.close ();
     }
 
-    std::ofstream save ( "saves/game" + ID + ".sav" );
+    std::ofstream save ( STR_SAVE_REP + "/" + STR_SAVE_PRE + ID + "." + STR_SAVE_EXT );
 
     save << height << " " << width << std::endl;
     save << alignWinSize << " " << alignWinTotal << std::endl;
@@ -270,38 +266,47 @@ void grid::insert ( int player , int pos ) {
         for ( i = 0 ; i < pos ; ++i )
             printw ( "    " );
 
-        if ( player == 1 )
-            printw ( "X" );
-        if ( player == 2 )
-            printw ( "O" );
+        switch ( player ) {
+
+            case 1:
+                printw ( "X" );
+                break;
+
+            case 2:
+                printw ( "O" );
+                break;
+
+            default:
+                break;
+        }
 
         refresh ();
 
         int Key = getch ();
 
-        if ( Key == KEY_LEFT )
-            pos--;
+        switch ( Key ) {
 
-        if ( Key == KEY_RIGHT )
-            pos++;
+            case KEY_LEFT:
+                pos--;
+                break;
+
+            case KEY_RIGHT:
+                pos++;
+                break;
+
+            default:
+                break;
+        }
 
         if ( Key == ENTER ) {
 
-            XO[0][pos] = player;
-            break;
+            if ( XO[0][pos] == 0 ) {
+
+                XO[0][pos] = player;
+                break;
+            }
         }
     }
-}
-
-void _debug ( std::string s , int n ) {
-
-    clear ();
-    int row , col;
-    getmaxyx ( stdscr , row , col );
-    mvprintw ( row / 2 , ( col - 2 ) / 2 , s.c_str() );
-    printw ( " %d" , n );
-    refresh ();
-    wait ( 200 );
 }
 
 int grid::checkWin ( void ) {
@@ -374,13 +379,10 @@ int grid::checkWin ( void ) {
 
     for ( h = height - alignWinSize ; h >= 0 ; --h ) {
 
-        for ( i = h , j = 0 ; i <= height - alignWinSize , j <= width - alignWinSize ; ++i , ++j ) {
+        i = h;
+        j = 0;
 
-            if ( i > height - alignWinSize )
-                break;
-
-            if ( j > width - alignWinSize )
-                break;
+        while ( ( i <= ( height - alignWinSize ) ) && ( j <= (width - alignWinSize ) ) ) {
 
             countX = 0;
             countO = 0;
@@ -392,8 +394,6 @@ int grid::checkWin ( void ) {
 
                 if ( XO[k][l] == 2 )
                     countO++;
-
-                _debug ( "cX1" , countX );
             }
 
             if ( countX == alignWinSize ) {
@@ -407,18 +407,18 @@ int grid::checkWin ( void ) {
                 alignO++;
                 countO = 0;
             }
+
+            ++i;
+            ++j;
         }
     }
 
     for ( h = 1 ; h <= width - alignWinSize ; ++h ) {
 
-        for ( i = 0 , j = h ; i <= height - alignWinSize , j <= width - alignWinSize ; ++i , ++j ) {
+        i = 0;
+        j = h;
 
-            if ( i > height - alignWinSize )
-                break;
-
-            if ( j > width - alignWinSize )
-                break;
+        while ( ( i <= ( height - alignWinSize ) ) && ( j <= ( width - alignWinSize ) ) ) {
 
             countX = 0;
             countO = 0;
@@ -430,8 +430,6 @@ int grid::checkWin ( void ) {
 
                 if ( XO[k][l] == 2 )
                     countO++;
-
-                _debug ( "cX2" , countX );
             }
 
             if ( countX == alignWinSize ) {
@@ -445,18 +443,18 @@ int grid::checkWin ( void ) {
                 alignO++;
                 countO = 0;
             }
+
+            ++i;
+            ++j;
         }
     }
 
     for ( h = width - alignWinSize ; h >= 0 ; --h ) {
 
-        for ( i = height - 1 , j = h ; i >= alignWinSize - 1 , j <= width - alignWinSize ; --i , ++j ) {
+        i = height - 1;
+        j = h;
 
-            if ( i < alignWinSize - 1 )
-                break;
-
-            if ( j > width - alignWinSize )
-                break;
+        while ( ( i >= ( alignWinSize - 1 ) ) && ( j <= ( width - alignWinSize ) ) ) {
 
             countX = 0;
             countO = 0;
@@ -468,8 +466,6 @@ int grid::checkWin ( void ) {
 
                 if ( XO[k][l] == 2 )
                     countO++;
-
-                _debug ( "cX3" , countX );
             }
 
             if ( countX == alignWinSize ) {
@@ -483,18 +479,18 @@ int grid::checkWin ( void ) {
                 alignO++;
                 countO = 0;
             }
+
+            --i;
+            ++j;
         }
     }
 
     for ( h = height - 2 ; h >= alignWinSize - 1 ; --h ) {
 
-        for ( i = h , j = 0 ; i >= alignWinSize - 1 , j <= width - alignWinSize ; --i , ++j ) {
+        i = h;
+        j = 0;
 
-            if ( i < alignWinSize - 1 )
-                break;
-
-            if ( j < width - alignWinSize )
-                break;
+        while ( ( i >= ( alignWinSize - 1 ) ) && ( j <= ( width - alignWinSize ) ) ) {
 
             countX = 0;
             countO = 0;
@@ -506,8 +502,6 @@ int grid::checkWin ( void ) {
 
                 if ( XO[k][l] == 2 )
                     countO++;
-
-                _debug ( "cX4" , countX );
             }
 
             if ( countX == alignWinSize ) {
@@ -521,6 +515,9 @@ int grid::checkWin ( void ) {
                 alignO++;
                 countO = 0;
             }
+
+            --i;
+            ++j;
         }
     }
 
@@ -550,32 +547,22 @@ void grid::rotate ( bool clockwise ) {
     for ( i = 0 ; i < width ; ++i )
         TMP_XO[i] = new int[height];
 
-    for ( i = 0 ; i < width ; ++i ) {
-
-        for ( j = 0 ; j < height ; ++j )
-            TMP_XO[i][j] = 0;
-    }
-
     for ( i = 0 ; i < height ; ++i ) {
 
         for ( j = 0 ; j < width ; ++j ) {
 
-            if ( XO[i][j] != 0 ) {
+            if ( clockwise ) {
 
-                if ( clockwise ) {
-
-                    next_i = j;
-                    next_j = height - i - 1;
-                }
-                else {
-
-                    next_i = width - j - 1;
-                    next_j = i;
-                }
-
-                TMP_XO[next_i][next_j] = XO[i][j];
-
+                next_i = j;
+                next_j = height - i - 1;
             }
+            else {
+
+                next_i = width - j - 1;
+                next_j = i;
+            }
+
+            TMP_XO[next_i][next_j] = XO[i][j];
         }
     }
 
@@ -604,11 +591,11 @@ void grid::gravitate ( void ) {
 
     int i , j;
 
-    bool modified(true);
+    bool modified ( true );
 
-    while(modified){
+    while ( modified ){
 
-        modified=false;
+        modified = false;
 
         for ( i = 0 ; i < height-1 ; ++i ) {
 
@@ -625,7 +612,7 @@ void grid::gravitate ( void ) {
                     XO[i+1][j] = XO[i][j];
                     XO[i][j] = 0;
 
-                    modified=true;
+                    modified = true;
                 }
             }
         }

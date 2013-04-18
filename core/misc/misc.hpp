@@ -63,5 +63,21 @@ static std::string STR_SAVE_QUIT ( "PRESS F2 TO SAVE & QUIT" );
 static std::string STR_NO_SAVE ( "CAN'T FIND ANY SAVED GAME" );
 static std::string STR_LOAD_MENU ( "__LOAD_GAME__" );
 static std::string STR_SAVE_EMPTY ( "THE SAVE INDEX FILE WAS EMPTY" );
+static std::string STR_SAVE_REP ( "saves" );
+static std::string STR_SAVE_PRE ( "game" );
+static std::string STR_SAVE_EXT ( "sav" );
+static std::string STR_SAVE_CHK ( "check" );
+static std::string STR_SAVE_IND ( "index" );
+
+static void _debug ( std::string name , int value , int time ) {
+
+    int row , col;
+    getmaxyx ( stdscr , row , col );
+    clear ();
+    mvprintw ( row / 2 , ( col - name.length () + 1 ) / 2 , name.c_str () );
+    printw ( " %d" , value );
+    refresh ();
+    wait ( time );
+}
 
 #endif
