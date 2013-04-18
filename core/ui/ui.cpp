@@ -1,4 +1,9 @@
 #include <ncurses.h>
+#include <fstream>
+#include <list>
+#include <vector>
+#include <iterator>
+#include <algorithm>
 #include "ui.hpp"
 #include "../grid/grid.hpp"
 #include "../misc/misc.hpp"
@@ -407,10 +412,144 @@ void play ( grid *G , int height , int width , int alignWinSize , int alignWinTo
 
 void load_menu () {
 
-    /*grid *G = new grid ( file.c_str() );
-    if ( grid::initXO ) {
-        play ( G , 5 , 5 , 5 , 1 );
-    }*/
+    int Key;
+    int i;
+    int row , col;
+    int top ( 0 );
+    int selected ( 1 );
+    std::string currentID;
+    std::list<std::string> listID;
+    std::list<std::string>::iterator it;
+    std::vector<std::string> vectorID;
+
+    std::ifstream input ( "saves/index.sav" );
+    if ( !input ) {
+
+        getmaxyx ( stdscr , row , col );
+        clear ();
+        mvprintw ( row / 2 , ( col - STR_NO_SAVE.length () + 1 ) / 2 , STR_NO_SAVE.c_str() );
+        refresh ();
+        wait ( 2000 );
+        return;
+    }
+
+    std::string buff;
+    
+    while ( !input.eof() ) {
+
+        input >> buff;
+        if ( buff != "" )
+            listID.push_back(buff);
+    }
+
+    if ( listID.empty () ) {
+
+        getmaxyx ( stdscr , row , col );
+        clear ();
+        mvprintw ( row / 2 , ( col - STR_SAVE_EMPTY.length () + 1 ) / 2 , STR_SAVE_EMPTY.c_str () );
+        refresh ();
+        wait ( 2000 );
+        return;
+    }
+
+    while ( true ) {
+
+        i = 0;
+
+        for ( it = listID.begin() ; it != listID.end() ; ++it ) {
+
+            currentID = (*it);
+
+            if ( i >= top + 10 )
+                break;
+
+            if ( i >= top ) {
+                
+                if ( std::find ( vectorID.begin () , vectorID.end () , currentID ) == vectorID.end () )
+                    vectorID.push_back( currentID );
+            }
+
+            ++i;
+        }
+
+        if ( selected < 1 )
+            selected = 1;
+
+        if ( selected > 20 )
+            selected = 20;
+
+        if ( selected >= 2 * vectorID.size() ) {
+
+            selected = ( 2 * vectorID.size() ) - 1;
+        }
+
+        getmaxyx ( stdscr , row , col );
+
+        clear ();
+
+        attron ( A_BOLD );
+
+        mvprintw ( row / 5 , ( col - STR_LOAD_MENU.length () + 1 ) / 2 , STR_LOAD_MENU.c_str () );
+
+        mvprintw ( ( row / 3 ) + selected - 2 + ( selected % 2 ) , 5 * col / 20 , STR_ARROW_RIGHT.c_str () );
+        mvprintw ( ( row / 3 ) + selected - 2 + ( selected % 2 ) , 15 * col / 20 , STR_ARROW_LEFT.c_str () );
+
+        mvprintw ( 2 , 2 , STR_HELP.c_str () );
+
+        attroff ( A_BOLD );
+
+        for ( i = 0 ; i < vectorID.size () ; ++i ) {
+
+            mvprintw ( ( row / 3 ) + ( i * 2 ) , ( col - 13 ) / 2 , vectorID[i].c_str() );
+        }
+
+        int current = ( selected - 0.5 ) / 2;
+
+        switch ( current ) {
+            
+            case 1:
+                currentID = "test1";
+                break;
+
+            defaut:
+                currentID = "test2";
+                break;
+        }
+
+        refresh ();
+
+        Key = getch ();
+
+        if ( Key == ENTER ) {
+
+            if ( selected % 2 == 1 ) {
+
+                grid *G = new grid ( currentID.c_str() );
+                if ( grid::initXO ) {
+                    play ( G , 5 , 5 , 5 , 1 );
+                }
+            }
+            else {
+
+                //delete_save ( currentID );
+            }
+        }
+
+        if ( Key == KEY_DOWN )
+            selected += 2;
+
+        if ( Key == KEY_UP )
+            selected -= 2;
+
+        if ( Key == KEY_RIGHT && selected % 2 == 1 )
+            selected++;
+
+        if ( Key == KEY_LEFT && selected % 2 == 0 )
+            selected--;
+
+        if ( Key == ESC )
+            return;
+    }
 
     return;
 }

@@ -15,8 +15,8 @@ IRM=***** Removing object files and binary *****
 
 #========== 3tXtc4 makefile ==========#
 
-$(BIN)3tXc4:	$(OBJ)main.o $(OBJ)grid.o $(OBJ)ui.o
-		@g++ $(OBJ)main.o $(OBJ)grid.o $(OBJ)ui.o -lncurses -o $(BIN)3tXc4 ; $(info $(IBIN))
+$(BIN)3tXc4.bin:	$(OBJ)main.o $(OBJ)grid.o $(OBJ)ui.o
+		@g++ $(OBJ)main.o $(OBJ)grid.o $(OBJ)ui.o -lncurses -o $(BIN)3tXc4.bin ; $(info $(IBIN))
 
 $(OBJ)ui.o:	$(CORE)$(UI)ui.cpp $(CORE)$(UI)ui.hpp $(CORE)$(MISC)misc.hpp $(CORE)$(GRID)grid.hpp
 		@g++ -c $(CORE)$(UI)ui.cpp -o $(OBJ)ui.o ; $(info $(IUI))
@@ -28,6 +28,6 @@ $(OBJ)main.o: $(CORE)main.cpp $(CORE)$(UI)ui.hpp $(CORE)$(MISC)misc.hpp
 		@g++ -c $(CORE)main.cpp -o $(OBJ)main.o ; $(info $(IMAIN))
 
 clean:
-		@rm -rvf $(OBJ)*.o $(BIN)3tXc4 ; $(info $(IRM))
+		@rm -rvf $(OBJ)*.o $(BIN)3tXc4.bin ; $(info $(IRM))
 
 #========== makefile end ==========#

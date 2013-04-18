@@ -100,7 +100,7 @@ grid::grid ( int newHeight , int newWidth , int newAlignWinSize , int newAligneW
 
 grid::grid ( std::string gameID ) {
 
-    std::ifstream input ( "game" + gameID + ".sav" );
+    std::ifstream input ( "saves/game" + gameID + ".sav" );
     if ( !input ) {
 
         int row , col;
@@ -171,12 +171,6 @@ grid::~grid ( void ) {
 
 void grid::save ( void ) {
 
-    std::ofstream index ( "index.sav" , std::ios_base::app );
-
-    index << ID + "\n";
-
-    index.close ();
-
     std::ofstream check ( "saves/check.sav" );
 
     if ( !check ) {
@@ -186,11 +180,12 @@ void grid::save ( void ) {
 
     check.close ();
 
-    check.open ( "saves/check.sav" );
-    check << "DO NOT MOVE/REMOVE THIS FILE" << std::endl;
+    std::ofstream index ( "saves/index.sav" , std::ios_base::app );
 
-    check.close ();
+    index << ID + "\n";
 
+    index.close ();
+    
     std::ofstream save ( "saves/game" + ID + ".sav" );
 
     save << height << " " << width << std::endl;

@@ -60,5 +60,8 @@ static std::string STR_PLAY_MENU ( "__PLAY MENU__" );
 static std::string STR_FAIL_LOAD ( "FAILED TO OPEN FILE" );
 static std::string STR_SAVE ( "PRESS F1 TO SAVE" );
 static std::string STR_SAVE_QUIT ( "PRESS F2 TO SAVE & QUIT" );
+static std::string STR_NO_SAVE ( "CAN'T FIND ANY SAVED GAME" );
+static std::string STR_LOAD_MENU ( "__LOAD_GAME__" );
+static std::string STR_SAVE_EMPTY ( "THE SAVE INDEX FILE WAS EMPTY" );
 
 #endif
