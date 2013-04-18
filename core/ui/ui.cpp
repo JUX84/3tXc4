@@ -504,17 +504,7 @@ void load_menu () {
         }
 
         int current = ( selected - 0.5 ) / 2;
-
-        switch ( current ) {
-            
-            case 1:
-                currentID = "test1";
-                break;
-
-            defaut:
-                currentID = "test2";
-                break;
-        }
+        currentID = vectorID[current];
 
         refresh ();
 

@@ -1,6 +1,9 @@
 #include <ncurses.h>
 #include <fstream>
 #include <ctime>
+#include <list>
+#include <algorithm>
+#include <iterator>
 #include "grid.hpp"
 #include "../misc/misc.hpp"
 
@@ -180,12 +183,47 @@ void grid::save ( void ) {
 
     check.close ();
 
-    std::ofstream index ( "saves/index.sav" , std::ios_base::app );
+    std::ifstream indexread ( "saves/index.sav" );
 
-    index << ID + "\n";
+    if ( indexread ) {
 
-    index.close ();
-    
+        std::list<std::string> listID;
+        std::list<std::string>::iterator it;
+        std::string buff;
+
+        while ( !indexread.eof() ) {
+
+            indexread >> buff;
+            if ( std::find ( listID.begin () , listID.end () , buff ) == listID.end () )
+                listID.push_back(buff);
+        }
+
+        if ( std::find ( listID.begin () , listID.end () , ID ) == listID.end () )
+            listID.push_back(ID);
+
+        indexread.close ();
+
+        std::ofstream indexwrite ( "saves/index.sav" );
+
+        for ( it = listID.begin() ; it != listID.end () ; ++it ) {
+
+            mvprintw ( 0 , 0 , (*it).c_str() );
+            refresh ();
+            wait ( 1000 );
+            indexwrite << (*it) << std::endl;
+        }
+
+        indexwrite.close();
+    }
+    else {
+
+        std::ofstream index ( "saves/index.sav" );
+
+        index << ID << std::endl;
+
+        index.close ();
+    }
+
     std::ofstream save ( "saves/game" + ID + ".sav" );
 
     save << height << " " << width << std::endl;
