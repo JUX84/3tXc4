@@ -10,7 +10,7 @@
 bool grid::initXO = false;
 std::string grid::ID = "";
 
-grid::grid ( void ) {
+grid::grid ( void ) { // grid c-tor #1
 
     int i , j;
 
@@ -33,7 +33,7 @@ grid::grid ( void ) {
     initXO = false;
 }
 
-grid::grid ( int newHeight , int newWidth , int newAlignWinSize , int newAligneWinTotal ) {
+grid::grid ( int newHeight , int newWidth , int newAlignWinSize , int newAligneWinTotal ) { // grid c-tor #2
 
     int i , j;
 
@@ -101,7 +101,7 @@ grid::grid ( int newHeight , int newWidth , int newAlignWinSize , int newAligneW
     ID = date;
 }
 
-grid::grid ( std::string gameID ) {
+grid::grid ( std::string gameID ) { // grid c-tor #3
 
     std::ifstream input ( STR_SAVE_REP + "/" + STR_SAVE_PRE + gameID + "." + STR_SAVE_EXT );
     if ( !input ) {
@@ -161,7 +161,7 @@ grid::grid ( std::string gameID ) {
     }
 }
 
-grid::~grid ( void ) {
+grid::~grid ( void ) { // grid d-tor
 
     int i;
 
@@ -172,7 +172,7 @@ grid::~grid ( void ) {
     initXO = false;
 }
 
-void grid::save ( void ) {
+void grid::save ( void ) { // grid save
 
     std::ofstream check ( STR_SAVE_REP + "/" + STR_SAVE_CHK + "." + STR_SAVE_EXT );
 
@@ -242,7 +242,7 @@ void grid::save ( void ) {
     return;
 }
 
-void grid::insert ( int player , int pos ) {
+void grid::insert ( int player , int pos ) { // grid insert X or O
 
     int i;
     int row , col;
@@ -309,7 +309,7 @@ void grid::insert ( int player , int pos ) {
     }
 }
 
-int grid::checkWin ( void ) {
+int grid::checkWin ( void ) { // grid win check
 
     int h , i , j , k , l;
     int countX , countO;
@@ -534,7 +534,7 @@ int grid::checkWin ( void ) {
     return alignX+alignO;
 }
 
-void grid::rotate ( bool clockwise ) {
+void grid::rotate ( bool clockwise ) { // grid rotation
 
     clear ();
 
@@ -587,7 +587,7 @@ void grid::rotate ( bool clockwise ) {
     delete []TMP_XO;
 }
 
-void grid::gravitate ( void ) {
+void grid::gravitate ( void ) { // grid gravitation
 
     int i , j;
 
@@ -619,7 +619,7 @@ void grid::gravitate ( void ) {
     }
 }
 
-void grid::play ( int player ) {
+void grid::play ( int player ) { // grid play (insert or rotate)
 
     int selected ( 1 );
     std::string STR_SELECTED;
@@ -744,7 +744,7 @@ void grid::play ( int player ) {
     }
 }
 
-void grid::draw ( void ) {
+void grid::draw ( void ) { // grid draw
 
     int i , j;
     int row , col;

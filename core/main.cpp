@@ -4,32 +4,14 @@
 
 int main ( int argc , char **argv ) {
 
-    initscr ();
-    timeout ( -1 );
-    raw ();
-    keypad ( stdscr , TRUE );
-    noecho ();
-    curs_set ( 0 );
+    initscr (); // ncurses screen init
+    timeout ( -1 ); // disable getch timeout
+    raw (); // disable buffer
+    keypad ( stdscr , TRUE ); // enable arrow keys
+    noecho (); // disable getch echo
+    curs_set ( 0 ); // disable cursor blinking
 
-    /*    while ( true ) { // KEY TESTING
-
-          int row,col;
-
-          getmaxyx(stdscr,row,col);
-
-          int Key = getch ();
-
-          clear ();
-
-          if ( Key == -1 )
-          mvprintw(row/2,col/2 - 15,"OMG WRITE SOMETHING!");
-          else
-          mvprintw(row/2,col/2,"%d",Key);
-
-          refresh ();
-          }
-     */
-    ui ();
+    ui (); // main menu
 
     return 0;
 }
