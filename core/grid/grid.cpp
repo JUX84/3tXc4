@@ -12,14 +12,14 @@ std::string grid::ID = "";
 
 grid::grid ( void ) { // grid c-tor #1
 
-	int i , j;
+	uint8_t i , j;
 
 	height = 5;
 	width = 5;
 
-	XO = new int*[height];
+	XO = new uint8_t*[height];
 	for ( i = 0 ; i < height ; ++i )
-		XO[i] = new int[width];
+		XO[i] = new uint8_t[width];
 
 	for ( i = 0 ; i < height ; ++i ) {
 
@@ -33,16 +33,16 @@ grid::grid ( void ) { // grid c-tor #1
 	initXO = false;
 }
 
-grid::grid ( int newHeight , int newWidth , int newAlignWinSize , int newAligneWinTotal ) { // grid c-tor #2
+grid::grid ( uint8_t newHeight , uint8_t newWidth , uint8_t newAlignWinSize , uint8_t newAligneWinTotal ) { // grid c-tor #2
 
-	int i , j;
+	uint8_t i , j;
 
 	height = newHeight;
 	width = newWidth;
 
-	XO = new int*[height];
+	XO = new uint8_t*[height];
 	for ( i = 0 ; i < height ; ++i )
-		XO[i] = new int[width];
+		XO[i] = new uint8_t[width];
 
 	for ( i = 0 ; i < height ; ++i ) {
 
@@ -57,12 +57,12 @@ grid::grid ( int newHeight , int newWidth , int newAlignWinSize , int newAligneW
 
 	time_t now = time ( 0 );
 	tm *ltm = localtime ( &now );
-	int year = ltm->tm_year + 1900;
-	int month = ltm->tm_mon + 1;
-	int day = ltm->tm_mday;
-	int hour = ltm->tm_hour;
-	int min = ltm->tm_min;
-	int sec = ltm->tm_sec;
+	uint16_t year = ltm->tm_year + 1900;
+	uint8_t month = ltm->tm_mon + 1;
+	uint8_t day = ltm->tm_mday;
+	uint8_t hour = ltm->tm_hour;
+	uint8_t min = ltm->tm_min;
+	uint8_t sec = ltm->tm_sec;
 
 	std::string str_year ( std::to_string ( year ) );
 
@@ -106,7 +106,7 @@ grid::grid ( std::string gameID ) { // grid c-tor #3
 	std::ifstream input ( STR_SAVE_REP + "/" + STR_SAVE_PRE + gameID + "." + STR_SAVE_EXT );
 	if ( !input ) {
 
-		int row , col;
+		uint8_t row , col;
 
 		getmaxyx ( stdscr , row , col );
 
@@ -119,17 +119,17 @@ grid::grid ( std::string gameID ) { // grid c-tor #3
 	}
 	else {
 
-		int i , j;
-		int buff;
+		uint8_t i , j;
+		uint8_t buff;
 
 		ID = gameID;
 
 		input >> height >> width;
 		input >> alignWinSize >> alignWinTotal;
 
-		XO = new int*[height];
+		XO = new uint8_t*[height];
 		for ( i = 0 ; i < height ; ++i )
-			XO[i] = new int[width];
+			XO[i] = new uint8_t[width];
 
 
 		for ( i = 0 ; i < height ; ++i ) {
@@ -163,7 +163,7 @@ grid::grid ( std::string gameID ) { // grid c-tor #3
 
 grid::~grid ( void ) { // grid d-tor
 
-	int i;
+	uint8_t i;
 
 	for ( i = 0 ; i < height ; ++i )
 		delete []XO[i];
@@ -226,13 +226,13 @@ void grid::save ( void ) { // grid save
 	save << height << " " << width << std::endl;
 	save << alignWinSize << " " << alignWinTotal << std::endl;
 
-	int i , j;
+	uint8_t i , j;
 
 	for ( i = 0 ; i < height ; ++i ) {
 
 		for ( j = 0 ; j < width ; ++j ) {
 
-			save << XO[i][j] << " ";
+			save << static_cast<int>(XO[i][j]) << " ";
 		}
 
 		save << std::endl;
@@ -243,10 +243,11 @@ void grid::save ( void ) { // grid save
 	return;
 }
 
-void grid::insert ( int player , int pos ) { // grid insert X or O
+void grid::insert ( bool player , uint8_t pos ) { // grid insert X or O
 
-	int i;
-	int row , col;
+	uint8_t i;
+	uint8_t row , col;
+	uint16_t Key;
 
 	while ( true ) {
 
@@ -267,23 +268,14 @@ void grid::insert ( int player , int pos ) { // grid insert X or O
 		for ( i = 0 ; i < pos ; ++i )
 			printw ( "    " );
 
-		switch ( player ) {
-
-			case 1:
-				printw ( "X" );
-				break;
-
-			case 2:
-				printw ( "O" );
-				break;
-
-			default:
-				break;
-		}
+		if ( player )
+			printw ( "X" );
+		else
+			printw ( "O" );
 
 		refresh ();
 
-		int Key = getch ();
+		Key = getch ();
 
 		switch ( Key ) {
 
@@ -310,13 +302,13 @@ void grid::insert ( int player , int pos ) { // grid insert X or O
 	}
 }
 
-int grid::checkWin ( void ) { // grid win check
+uint8_t grid::checkWin ( void ) { // grid win check
 
-	int h , i , j , k , l;
-	int countX , countO;
+	int8_t h , i , j , k , l;
+	uint8_t countX , countO;
 
-	int alignX ( 0 );
-	int alignO ( 0 );
+	uint8_t alignX ( 0 );
+	uint8_t alignO ( 0 );
 
 	for ( i = 0 ; i < height ; ++i ) {
 
@@ -539,14 +531,14 @@ void grid::rotate ( bool clockwise ) { // grid rotation
 
 	clear ();
 
-	int i , j;
-	int next_i , next_j;
+	uint8_t i , j;
+	uint8_t next_i , next_j;
 
-	int **TMP_XO;
+	uint8_t **TMP_XO;
 
-	TMP_XO = new int*[width];
+	TMP_XO = new uint8_t*[width];
 	for ( i = 0 ; i < width ; ++i )
-		TMP_XO[i] = new int[height];
+		TMP_XO[i] = new uint8_t[height];
 
 	for ( i = 0 ; i < height ; ++i ) {
 
@@ -567,13 +559,13 @@ void grid::rotate ( bool clockwise ) { // grid rotation
 		}
 	}
 
-	int tmp = width;
+	uint8_t tmp = width;
 	width = height;
 	height = tmp;
 
-	XO = new int*[height];
+	XO = new uint8_t*[height];
 	for ( i = 0 ; i < height ; ++i )
-		XO[i] = new int[width];
+		XO[i] = new uint8_t[width];
 
 	for ( i = 0 ; i < height ; ++i ) {
 
@@ -590,7 +582,7 @@ void grid::rotate ( bool clockwise ) { // grid rotation
 
 void grid::gravitate ( void ) { // grid gravitation
 
-	int i , j;
+	uint8_t i , j;
 
 	bool modified ( true );
 
@@ -620,13 +612,13 @@ void grid::gravitate ( void ) { // grid gravitation
 	}
 }
 
-void grid::play ( int player ) { // grid play (insert or rotate)
+void grid::play ( bool player ) { // grid play (insert or rotate)
 
-	int selected ( 1 );
+	uint8_t selected ( 1 );
 	std::string STR_SELECTED;
-	int TAB;
-	int row , col;
-	int Key;
+	uint8_t TAB;
+	uint8_t row , col;
+	uint16_t Key;
 
 	while ( true ) {
 
@@ -747,8 +739,8 @@ void grid::play ( int player ) { // grid play (insert or rotate)
 
 void grid::draw ( void ) { // grid draw
 
-	int i , j;
-	int row , col;
+	uint8_t i , j;
+	uint8_t row , col;
 
 	getmaxyx ( stdscr , row , col );
 

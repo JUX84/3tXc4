@@ -10,11 +10,11 @@
 
 bool warnExit ( void ) { // exit warning menu
 
-	int selected ( 1 );
+	uint8_t selected ( 1 );
 	std::string STR_SELECTED;
-	int TAB;
-	int Key;
-	int row , col;
+	uint8_t TAB;
+	uint8_t Key;
+	uint8_t row , col;
 
 	while ( true ) {
 
@@ -84,15 +84,16 @@ void options_help ( void ) { // options help menu
 
 }
 
-void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize , int &defaultAlignWinTotal ) { // options menu
+void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &defaultAlignWinSize , uint8_t &defaultAlignWinTotal ) { // options menu
 
-	int selected ( 1 );
-	int i;
-	int row,col;
-	int backupHeight ( defaultHeight );
-	int backupWidth ( defaultWidth );
-	int backupAlignWinSize ( defaultAlignWinSize );
-	int backupAlignWinTotal ( defaultAlignWinTotal );
+	uint8_t selected ( 1 );
+	uint8_t i;
+	uint8_t row , col;
+	uint8_t backupHeight ( defaultHeight );
+	uint8_t backupWidth ( defaultWidth );
+	uint8_t backupAlignWinSize ( defaultAlignWinSize );
+	uint8_t backupAlignWinTotal ( defaultAlignWinTotal );
+	uint16_t Key;
 	std::string STR_SELECTED;
 
 	while ( true ) {
@@ -206,7 +207,7 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
 
 		refresh ();
 
-		int Key = getch ();
+		Key = getch ();
 
 		if ( Key == KEY_LEFT ) {
 
@@ -275,16 +276,16 @@ void options ( int &defaultHeight , int &defaultWidth , int &defaultAlignWinSize
 	}
 }
 
-void play ( grid *G , int height , int width , int alignWinSize , int alignWinTotal ) { // play menu
+void play ( grid *G , uint8_t height , uint8_t width , uint8_t alignWinSize , uint8_t alignWinTotal ) { // play menu
 
 	if ( !grid::initXO ) { // if no game is loaded, create new one
 
 		G = new grid ( height , width , alignWinSize , alignWinTotal );
 	}
 
-	int win;
-	int Key;
-	int row , col;
+	uint8_t win;
+	uint16_t Key;
+	uint8_t row , col;
 
 	while ( true ) {
 
@@ -414,11 +415,11 @@ void play ( grid *G , int height , int width , int alignWinSize , int alignWinTo
 
 void load_menu () { // load game menu
 
-	int Key;
-	int i;
-	int row , col;
-	int top ( 0 );
-	int selected ( 1 );
+	uint16_t Key;
+	uint8_t i;
+	uint8_t row , col;
+	uint16_t top ( 0 );
+	uint8_t selected ( 1 );
 	std::string currentID;
 	std::list<std::string> listID;
 	std::list<std::string>::iterator it;
@@ -458,7 +459,8 @@ void load_menu () { // load game menu
 
 		i = 0;
 
-		vectorID.clear();
+		if ( !vectorID.empty() )
+			vectorID.clear();
 
 		for ( it = listID.begin() ; it != listID.end() ; ++it ) {
 
@@ -513,7 +515,7 @@ void load_menu () { // load game menu
 			mvprintw ( ( row / 3 ) + ( i * 2 ) , ( col - 13 ) / 2 , vectorID[i].c_str() );
 		}
 
-		int current = ( selected - 0.5 ) / 2;
+		uint8_t current = ( selected - 0.5 ) / 2;
 		currentID = vectorID[current];
 
 		refresh ();
@@ -555,11 +557,11 @@ void load_menu () { // load game menu
 	return;
 }
 
-void play_menu ( int height , int width , int alignWinSize , int alignWinTotal ) { // play game menu
+void play_menu ( uint8_t height , uint8_t width , uint8_t alignWinSize , uint8_t alignWinTotal ) { // play game menu
 
-	int Key;
-	int row , col;
-	int selected ( 1 );
+	uint16_t Key;
+	uint8_t row , col;
+	uint8_t selected ( 1 );
 
 	while ( true ) {
 
@@ -636,13 +638,13 @@ void ui_help ( void ) { // user interface help menu
 
 void ui ( void ) { // main menu
 
-	int selected ( 1 );
-	int defaultHeight ( 5 );
-	int defaultWidth ( 5 );
-	int defaultAlignWinSize ( 5 );
-	int defaultAlignWinTotal ( 1 );
-	int Key;
-	int row , col;
+	uint8_t selected ( 1 );
+	uint8_t defaultHeight ( 5 );
+	uint8_t defaultWidth ( 5 );
+	uint8_t defaultAlignWinSize ( 5 );
+	uint8_t defaultAlignWinTotal ( 1 );
+	uint16_t Key;
+	uint8_t row , col;
 
 	while ( true ) {
 

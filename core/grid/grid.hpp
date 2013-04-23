@@ -3,27 +3,28 @@
 
 #include <string>
 #include <cstring>
+#include <stdint.h>
 
 class grid {
 
 	private:
-		int **XO;
-		int width;
-		int height;
-		int alignWinSize;
-		int alignWinTotal;
+		uint8_t **XO;
+		uint8_t width;
+		uint8_t height;
+		uint8_t alignWinSize;
+		uint8_t alignWinTotal;
 
 	public:
 		grid ( void );
-		grid ( int height , int width , int newAlignWinSize , int newAlignWinTotal );
+		grid ( uint8_t height , uint8_t width , uint8_t newAlignWinSize , uint8_t newAlignWinTotal );
 		grid ( std::string file );
 		~grid ( void );
 		void draw ( void );
 		void gravitate ( void );
-		void play ( int player );
+		void play ( bool player );
 		void rotate ( bool clockwise );
-		void insert ( int player , int pos );
-		int checkWin ( void );
+		void insert ( bool player , uint8_t pos );
+		uint8_t checkWin ( void );
 		void save ( void );
 		static bool initXO;
 		static std::string ID;

@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <stdint.h>
 
 #define ENTER 10
 #define ESC 27
@@ -69,15 +70,26 @@ static std::string STR_SAVE_EXT ( "sav" );
 static std::string STR_SAVE_CHK ( "check" );
 static std::string STR_SAVE_IND ( "index" );
 
-static void _debug ( std::string name , int value , int time ) {
+static void _debug8_t ( std::string name , uint8_t value , uint16_t time ) { // prints the desired value ant its name in the middle of the screen during a period of time
 
-    int row , col;
-    getmaxyx ( stdscr , row , col );
-    clear ();
-    mvprintw ( row / 2 , ( col - name.length () + 1 ) / 2 , name.c_str () );
-    printw ( " %d" , value );
-    refresh ();
-    wait ( time );
+	uint8_t row , col;
+	getmaxyx ( stdscr , row , col );
+	clear ();
+	mvprintw ( row / 2 , ( col - name.length () + 1 ) / 2 , name.c_str () );
+	printw ( " %d" , value );
+	refresh ();
+	wait ( time );
+}
+
+static void _debug16_t ( std::string name , uint16_t value , uint16_t time ) {
+
+	uint8_t row , col;
+	getmaxyx ( stdscr , row , col );
+	clear ();
+	mvprintw ( row / 2 , ( col - name.length () + 1 ) / 2 , name.c_str () );
+	printw ( " %d" , value );
+	refresh ();
+	wait ( time );
 }
 
 #endif
