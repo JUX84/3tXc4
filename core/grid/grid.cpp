@@ -174,7 +174,7 @@ grid::~grid ( void ) { // grid d-tor
 
 void grid::save ( void ) { // grid save
 
-	std::ofstream check ( STR_SAVE_REP + "/" + STR_SAVE_CHK + "." + STR_SAVE_EXT );
+	std::ofstream check ( STR_SAVE_REP + "/" + STR_SAVE_IND + "." + STR_SAVE_EXT , std::ios::app );
 
 	if ( !check ) {
 

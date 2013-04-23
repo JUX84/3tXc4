@@ -67,7 +67,6 @@ static std::string STR_SAVE_EMPTY ( "THE SAVE INDEX FILE WAS EMPTY" );
 static std::string STR_SAVE_REP ( "saves" );
 static std::string STR_SAVE_PRE ( "game" );
 static std::string STR_SAVE_EXT ( "sav" );
-static std::string STR_SAVE_CHK ( "check" );
 static std::string STR_SAVE_IND ( "index" );
 
 static void _debug8_t ( std::string name , uint8_t value , uint16_t time ) { // prints the desired value ant its name in the middle of the screen during a period of time
