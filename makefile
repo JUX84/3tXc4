@@ -29,6 +29,6 @@ $(OBJ)main.o:		$(CORE)main.cpp $(CORE)$(UI)ui.hpp $(CORE)$(MISC)misc.hpp
 			@g++ -c $(CORE)main.cpp -o $(OBJ)main.o ; $(info $(IMAIN))
 
 clean:
-			@rm -rvf $(OBJ)*.o $(BIN)3tXc4.bin $(BIN)$(SAV)game* $(BIN)$(SAV)index.sav $(BIN)$(SAV)check.sav; $(info $(IRM))
+			@rm -rvf $(OBJ)*.o $(BIN)3tXc4.bin $(BIN)$(SAV)game* $(BIN)$(SAV)index.sav ; $(info $(IRM))
 
 #========== makefile end ==========#

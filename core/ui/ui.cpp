@@ -371,7 +371,7 @@ void play ( grid *G , uint8_t height , uint8_t width , uint8_t alignWinSize , ui
 		if ( Key == ESC || Key == KEY_E )
 			break;
 
-		G->play ( 2 );
+		G->play ( 0 );
 		G->gravitate ();
 
 		win = G->checkWin ();

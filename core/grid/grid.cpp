@@ -295,7 +295,11 @@ void grid::insert ( bool player , uint8_t pos ) { // grid insert X or O
 
 			if ( XO[0][pos] == 0 ) {
 
-				XO[0][pos] = player;
+				if ( player )
+					XO[0][pos] = 1;
+				else
+					XO[0][pos] = 2;
+
 				break;
 			}
 		}
