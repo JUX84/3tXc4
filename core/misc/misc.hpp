@@ -12,6 +12,7 @@
 #define ENTER 10
 #define ESC 27
 
+#define KEY_A 97
 #define KEY_C 99
 #define KEY_E 101
 #define KEY_H 104

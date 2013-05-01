@@ -9,6 +9,7 @@
 
 bool grid::initXO = false;
 std::string grid::ID = "";
+bool grid::IA = false;
 
 grid::grid ( void ) { // grid c-tor #1
 
@@ -31,9 +32,10 @@ grid::grid ( void ) { // grid c-tor #1
 	alignWinTotal = 1;
 
 	initXO = false;
+	IA = false;
 }
 
-grid::grid ( uint8_t newHeight , uint8_t newWidth , uint8_t newAlignWinSize , uint8_t newAligneWinTotal ) { // grid c-tor #2
+grid::grid ( uint8_t newHeight , uint8_t newWidth , uint8_t newAlignWinSize , uint8_t newAligneWinTotal , bool vsIA ) { // grid c-tor #2
 
 	uint8_t i , j;
 
@@ -54,6 +56,7 @@ grid::grid ( uint8_t newHeight , uint8_t newWidth , uint8_t newAlignWinSize , ui
 	alignWinTotal = newAligneWinTotal;
 
 	initXO = true;
+	IA = vsIA;
 
 	time_t now = time ( 0 );
 	tm *ltm = localtime ( &now );
@@ -124,6 +127,7 @@ grid::grid ( std::string gameID ) { // grid c-tor #3
 
 		ID = gameID;
 
+		input >> IA;
 		input >> height >> width;
 		input >> alignWinSize >> alignWinTotal;
 
@@ -170,6 +174,7 @@ grid::~grid ( void ) { // grid d-tor
 	delete []XO;
 
 	initXO = false;
+	IA = false;
 }
 
 void grid::save ( void ) { // grid save
@@ -223,8 +228,9 @@ void grid::save ( void ) { // grid save
 
 	std::ofstream save ( STR_SAVE_REP + "/" + STR_SAVE_PRE + ID + "." + STR_SAVE_EXT );
 
-	save << height << " " << width << std::endl;
-	save << alignWinSize << " " << alignWinTotal << std::endl;
+	save << IA << std::endl;
+	save << static_cast<int>(height) << " " << static_cast<int>(width) << std::endl;
+	save << static_cast<int>(alignWinSize) << " " << static_cast<int>(alignWinTotal) << std::endl;
 
 	uint8_t i , j;
 
@@ -739,6 +745,10 @@ void grid::play ( bool player ) { // grid play (insert or rotate)
 		if ( Key == ESC )
 			break;
 	}
+}
+
+void grid::IA_play ( void ) {
+
 }
 
 void grid::draw ( void ) { // grid draw
