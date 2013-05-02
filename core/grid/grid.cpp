@@ -624,7 +624,7 @@ void grid::gravitate ( void ) { // grid gravitation
 
 	clear ();
 	draw ();
-	wait ( 300 );
+	wait ( 500 );
 }
 
 void grid::play ( bool player ) { // grid play (insert or rotate)
