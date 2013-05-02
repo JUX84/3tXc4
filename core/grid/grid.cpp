@@ -602,12 +602,6 @@ void grid::gravitate ( void ) { // grid gravitation
 
 		for ( i = 0 ; i < height-1 ; ++i ) {
 
-			clear ();
-
-			draw ();
-
-			wait ( 200 );
-
 			for ( j = 0 ; j < width ; ++j ) {
 
 				if ( XO[i+1][j] != 1 && XO[i+1][j] != 2 && XO[i][j] != 0 ) {
@@ -618,8 +612,19 @@ void grid::gravitate ( void ) { // grid gravitation
 					modified = true;
 				}
 			}
+
+			if ( modified ) {
+				
+				clear ();
+				draw ();
+				wait ( 100 );
+			}
 		}
 	}
+
+	clear ();
+	draw ();
+	wait ( 300 );
 }
 
 void grid::play ( bool player ) { // grid play (insert or rotate)
