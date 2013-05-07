@@ -13,6 +13,7 @@ class grid {
 		uint8_t height;
 		uint8_t alignWinSize;
 		uint8_t alignWinTotal;
+		uint32_t AI_prof;
 
 	public:
 		grid ( void );
@@ -22,14 +23,14 @@ class grid {
 		void draw ( void );
 		void gravitate ( void );
 		void play ( bool player );
-		void IA_play ( void );
+		void AI_play ( void );
 		void rotate ( bool clockwise );
 		void insert ( bool player , uint8_t pos );
 		uint8_t checkWin ( void );
 		void save ( void );
 		static bool initXO;
 		static std::string ID;
-		static bool IA;
+		static bool AI;
 
 	protected:
 

@@ -4,12 +4,13 @@
 #include <list>
 #include <algorithm>
 #include <iterator>
+#include <climits>
 #include "grid.hpp"
 #include "../misc/misc.hpp"
 
 bool grid::initXO = false;
 std::string grid::ID = "";
-bool grid::IA = false;
+bool grid::AI = false;
 
 grid::grid ( void ) { // grid c-tor #1
 
@@ -17,6 +18,8 @@ grid::grid ( void ) { // grid c-tor #1
 
 	height = 5;
 	width = 5;
+
+	AI_prof = 5;
 
 	XO = new uint8_t*[height];
 	for ( i = 0 ; i < height ; ++i )
@@ -32,10 +35,10 @@ grid::grid ( void ) { // grid c-tor #1
 	alignWinTotal = 1;
 
 	initXO = false;
-	IA = false;
+	AI = false;
 }
 
-grid::grid ( uint8_t newHeight , uint8_t newWidth , uint8_t newAlignWinSize , uint8_t newAligneWinTotal , bool vsIA ) { // grid c-tor #2
+grid::grid ( uint8_t newHeight , uint8_t newWidth , uint8_t newAlignWinSize , uint8_t newAligneWinTotal , bool vsAI ) { // grid c-tor #2
 
 	uint8_t i , j;
 
@@ -56,11 +59,12 @@ grid::grid ( uint8_t newHeight , uint8_t newWidth , uint8_t newAlignWinSize , ui
 	alignWinTotal = newAligneWinTotal;
 
 	initXO = true;
-	IA = vsIA;
+	AI = vsAI;
+	AI_prof = 5;
 
 	time_t now = time ( 0 );
 	tm *ltm = localtime ( &now );
-	uint16_t year = ltm->tm_year + 1900;
+	uint32_t year = ltm->tm_year + 1900;
 	uint8_t month = ltm->tm_mon + 1;
 	uint8_t day = ltm->tm_mday;
 	uint8_t hour = ltm->tm_hour;
@@ -127,7 +131,7 @@ grid::grid ( std::string gameID ) { // grid c-tor #3
 
 		ID = gameID;
 
-		input >> IA;
+		input >> AI;
 		input >> height >> width;
 		input >> alignWinSize >> alignWinTotal;
 
@@ -174,7 +178,7 @@ grid::~grid ( void ) { // grid d-tor
 	delete []XO;
 
 	initXO = false;
-	IA = false;
+	AI = false;
 }
 
 void grid::save ( void ) { // grid save
@@ -228,7 +232,7 @@ void grid::save ( void ) { // grid save
 
 	std::ofstream save ( STR_SAVE_REP + "/" + STR_SAVE_PRE + ID + "." + STR_SAVE_EXT );
 
-	save << IA << std::endl;
+	save << AI << std::endl;
 	save << static_cast<int>(height) << " " << static_cast<int>(width) << std::endl;
 	save << static_cast<int>(alignWinSize) << " " << static_cast<int>(alignWinTotal) << std::endl;
 
@@ -253,7 +257,7 @@ void grid::insert ( bool player , uint8_t pos ) { // grid insert X or O
 
 	uint8_t i;
 	uint8_t row , col;
-	uint16_t Key;
+	uint32_t Key;
 
 	while ( true ) {
 
@@ -633,7 +637,7 @@ void grid::play ( bool player ) { // grid play (insert or rotate)
 	std::string STR_SELECTED;
 	uint8_t TAB;
 	uint8_t row , col;
-	uint16_t Key;
+	uint32_t Key;
 
 	while ( true ) {
 
@@ -752,8 +756,9 @@ void grid::play ( bool player ) { // grid play (insert or rotate)
 	}
 }
 
-void grid::IA_play ( void ) {
+void grid::AI_play ( void ) {
 
+	// XO[minimax ( AI_prof )][0] = 2;
 }
 
 void grid::draw ( void ) { // grid draw

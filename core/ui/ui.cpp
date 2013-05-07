@@ -276,11 +276,11 @@ void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &default
 	}
 }
 
-void play ( grid *G , uint8_t height , uint8_t width , uint8_t alignWinSize , uint8_t alignWinTotal , bool vsIA ) { // play menu
+void play ( grid *G , uint8_t height , uint8_t width , uint8_t alignWinSize , uint8_t alignWinTotal , bool vsAI ) { // play menu
 
 	if ( !grid::initXO ) { // if no game is loaded, create new one
 
-		G = new grid ( height , width , alignWinSize , alignWinTotal , vsIA );
+		G = new grid ( height , width , alignWinSize , alignWinTotal , vsAI );
 	}
 
 	uint8_t win;
@@ -360,7 +360,7 @@ void play ( grid *G , uint8_t height , uint8_t width , uint8_t alignWinSize , ui
 			break;
 		}
 
-		if ( !G->IA ) {
+		if ( !G->AI ) {
 
 			mvprintw ( row / 3 , ( col - STR_P2.length () + 1 ) / 2 , STR_P2.c_str () );
 
@@ -377,7 +377,7 @@ void play ( grid *G , uint8_t height , uint8_t width , uint8_t alignWinSize , ui
 
 		}
 		else
-			G->IA_play();
+			G->AI_play();
 
 		G->gravitate ();
 
@@ -535,7 +535,7 @@ void load_menu () { // load game menu
 
 				grid *G = new grid ( currentID.c_str() );
 				if ( grid::initXO ) {
-					play ( G , 5 , 5 , 5 , 1 , G->IA );
+					play ( G , 5 , 5 , 5 , 1 , G->AI );
 					return;
 				}
 			}
