@@ -42,7 +42,7 @@ static std::string STR_WIN_P2 ( "Player 2 has won!" );
 static std::string STR_CONTINUE ( "Press any key to continue ([E]SC to quit) ..." );
 static std::string STR_ARROW_LEFT ( "<-" );
 static std::string STR_ARROW_RIGHT ( "->" );
-static std::string STR_TIE ( "It's a tie..." );
+static std::string STR_DRAW ( "Draw..." );
 static std::string STR_WARN_EXIT ( "ARE YOU SURE?" );
 static std::string STR_WARN_YES ( "[Y]ES" );
 static std::string STR_WARN_NO ( "[N]O" );

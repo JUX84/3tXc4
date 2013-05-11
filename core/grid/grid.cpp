@@ -327,7 +327,7 @@ void grid::save ( void ) { // grid save
 	return;
 }
 
-void grid::insert ( bool player , uint8_t pos ) { // grid insert X or O
+void grid::insert ( bool player , int8_t pos ) { // grid insert X or O
 
 	uint8_t i;
 	uint8_t row , col;
@@ -338,10 +338,10 @@ void grid::insert ( bool player , uint8_t pos ) { // grid insert X or O
 		getmaxyx ( stdscr , row , col );
 
 		if ( pos < 0 )
-			pos = 0;
+			pos = width - 1;
 
 		if ( pos > width - 1 )
-			pos = width - 1;
+			pos = 0;
 
 		clear ();
 
@@ -834,7 +834,7 @@ void grid::play ( bool player ) { // grid play (insert or rotate)
 	}
 }
 
-int grid::AI_value ( void ) {
+int8_t grid::AI_value ( void ) {
 
 	int8_t h , i , j , k , l;
 	uint8_t countX , countO;
@@ -1047,16 +1047,12 @@ int grid::AI_value ( void ) {
 	}
 
 	if ( alignX >= alignWinTotal )
-		alignX = -1;
-	else
-		alignX = 0;
+		alignX = INT8_MAX;
 
 	if ( alignO >= alignWinTotal )
-		alignO = 1;
-	else
-		alignO = 0;
+		alignO = INT8_MAX;
 
-	return alignX+alignO;
+	return alignO-alignX;
 }
 
 bool grid::full ( void ) {
@@ -1075,11 +1071,11 @@ bool grid::full ( void ) {
 	return true;
 }
 
-int grid::calcMax ( uint8_t prof ) {
+int8_t grid::calcMax ( uint8_t prof ) {
 
 	uint8_t i , j;
-	int tmp;
-	int max ( INT_MIN );
+	int8_t tmp;
+	int8_t max ( INT8_MIN );
 
 	uint8_t c = checkWin();
 
@@ -1134,11 +1130,11 @@ int grid::calcMax ( uint8_t prof ) {
 	return max;
 }
 
-int grid::calcMin ( uint8_t prof ) {
+int8_t grid::calcMin ( uint8_t prof ) {
 
 	uint8_t i , j;
-	int tmp;
-	int min ( INT_MAX );
+	int8_t tmp;
+	int8_t min ( INT8_MAX );
 
 	uint8_t c = checkWin();
 
@@ -1196,8 +1192,8 @@ int grid::calcMin ( uint8_t prof ) {
 uint8_t grid::minimax ( uint8_t prof ) {
 
 	uint8_t i , j;
-	int tmp;
-	int max ( INT_MIN );
+	int8_t tmp;
+	int8_t max ( INT8_MIN );
 	int8_t maxj = -1;
 
 	if ( ( prof != 0 ) || ( !full() ) ) {

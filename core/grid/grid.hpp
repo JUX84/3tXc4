@@ -25,14 +25,14 @@ class grid {
 		void draw ( void );
 		void gravitate ( bool silent );
 		void play ( bool player );
-		int AI_value ( void );
+		int8_t AI_value ( void );
 		void AI_play ( void );
 		bool full ( void );
-		int calcMin ( uint8_t prof );
-		int calcMax ( uint8_t prof );
+		int8_t calcMin ( uint8_t prof );
+		int8_t calcMax ( uint8_t prof );
 		uint8_t minimax ( uint8_t prof );
 		void rotate ( bool silent , bool clockwise );
-		void insert ( bool player , uint8_t pos );
+		void insert ( bool player , int8_t pos );
 		uint8_t checkWin ( void );
 		void save ( void );
 		uint8_t getWidth ( void );
