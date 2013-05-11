@@ -29,7 +29,7 @@ grid::grid ( void ) { // grid c-tor #1
 	height = 5;
 	width = 5;
 
-	AI_prof = 5;
+	AI_prof = 3;
 
 	XO = new uint8_t*[height];
 	for ( i = 0 ; i < height ; ++i )
@@ -48,7 +48,7 @@ grid::grid ( void ) { // grid c-tor #1
 	AI = false;
 }
 
-grid::grid ( uint8_t newHeight , uint8_t newWidth , uint8_t newAlignWinSize , uint8_t newAligneWinTotal , bool vsAI ) { // grid c-tor #2
+grid::grid ( uint8_t newHeight , uint8_t newWidth , uint8_t newAlignWinSize , uint8_t newAligneWinTotal , bool vsAI , uint8_t newAI_prof ) { // grid c-tor #2
 
 	uint8_t i , j;
 
@@ -70,7 +70,7 @@ grid::grid ( uint8_t newHeight , uint8_t newWidth , uint8_t newAlignWinSize , ui
 
 	initXO = true;
 	AI = vsAI;
-	AI_prof = 5;
+	AI_prof = newAI_prof;
 
 	time_t now = time ( 0 );
 	tm *ltm = localtime ( &now );
@@ -141,14 +141,16 @@ grid::grid ( std::string gameID ) { // grid c-tor #3
 
 		ID = gameID;
 
+		std::string s;
+
 		input >> AI;
+		input >> AI_prof;
 		input >> height >> width;
 		input >> alignWinSize >> alignWinTotal;
 
 		XO = new uint8_t*[height];
 		for ( i = 0 ; i < height ; ++i )
 			XO[i] = new uint8_t[width];
-
 
 		for ( i = 0 ; i < height ; ++i ) {
 
@@ -179,6 +181,28 @@ grid::grid ( std::string gameID ) { // grid c-tor #3
 	}
 }
 
+grid::grid ( grid *G ) {
+
+	uint8_t i;
+	uint8_t j;
+
+	width = G->getWidth ();
+	height = G->getHeight ();
+	alignWinSize = G->getAlignWinSize ();
+	alignWinTotal = G->getAlignWinTotal ();
+	AI_prof = G->getAI_prof ();
+
+	XO = new uint8_t*[height];
+	for ( i = 0 ; i < height ; ++i )
+		XO[i] = new uint8_t[width];
+
+	for ( i = 0 ; i < height ; ++i ) {
+
+		for ( j = 0 ; j < width ; ++j )
+			XO[i][j] = G->getXO ( i , j );
+	}
+}
+
 grid::~grid ( void ) { // grid d-tor
 
 	uint8_t i;
@@ -189,6 +213,45 @@ grid::~grid ( void ) { // grid d-tor
 
 	initXO = false;
 	AI = false;
+}
+
+void grid::destroy ( void ) {
+
+	uint8_t i;
+
+	for ( i = 0 ; i < height ; ++i )
+		delete []XO[i];
+	delete []XO;
+}
+
+uint8_t grid::getWidth ( void ) {
+
+	return width;
+}
+
+uint8_t grid::getHeight ( void ) {
+
+	return height;
+}
+
+uint8_t grid::getAlignWinSize ( void ) {
+
+	return alignWinSize;
+}
+
+uint8_t grid::getAlignWinTotal ( void ) {
+
+	return alignWinTotal;
+}
+
+uint8_t grid::getAI_prof ( void ) {
+
+	return AI_prof;
+}
+
+uint8_t grid::getXO ( uint8_t i , uint8_t j ) {
+
+	return XO[i][j];
 }
 
 void grid::save ( void ) { // grid save
@@ -243,8 +306,9 @@ void grid::save ( void ) { // grid save
 	std::ofstream save ( STR_SAVE_REP + "/" + STR_SAVE_PRE + ID + "." + STR_SAVE_EXT );
 
 	save << AI << std::endl;
-	save << static_cast<int>(height) << " " << static_cast<int>(width) << std::endl;
-	save << static_cast<int>(alignWinSize) << " " << static_cast<int>(alignWinTotal) << std::endl;
+	save << AI_prof << std::endl;
+	save << height << " " << width << std::endl;
+	save << alignWinSize << " " << alignWinTotal << std::endl;
 
 	uint8_t i , j;
 
@@ -252,7 +316,7 @@ void grid::save ( void ) { // grid save
 
 		for ( j = 0 ; j < width ; ++j ) {
 
-			save << static_cast<int>(XO[i][j]) << " ";
+			save << XO[i][j] << " ";
 		}
 
 		save << std::endl;
@@ -629,7 +693,7 @@ void grid::gravitate ( bool silent ) { // grid gravitation
 			}
 
 			if ( modified && !silent ) {
-				
+
 				clear ();
 				draw ();
 				wait ( 100 );
@@ -637,9 +701,12 @@ void grid::gravitate ( bool silent ) { // grid gravitation
 		}
 	}
 
-	clear ();
-	draw ();
-	wait ( 500 );
+	if ( !silent ) {
+
+		clear ();
+		draw ();
+		wait ( 500 );
+	}
 }
 
 void grid::play ( bool player ) { // grid play (insert or rotate)
@@ -1011,36 +1078,60 @@ bool grid::full ( void ) {
 int grid::calcMax ( uint8_t prof ) {
 
 	uint8_t i , j;
-    int tmp;
-    int max ( INT_MIN );
+	int tmp;
+	int max ( INT_MIN );
 
 	uint8_t c = checkWin();
 
-    if ( prof == 0 || full() || c != 0 )
-        return AI_value();
+	if ( prof == 0 || full() || c != 0 )
+		return AI_value();
 
-    for ( i = 0 ; i < height ; ++i ) {
+	for ( i = 0 ; i < height ; ++i ) {
 
-        for ( j = 0 ; j < width ; ++j ) {
+		for ( j = 0 ; j < width ; ++j ) {
 
-            if ( XO[i][j] == 0 ) {
+			if ( XO[i][j] == 0 ) {
 
-                if ( ( i < height - 1 ) && ( XO[i + 1][j] == 0 ) )
-                    continue;
+				if ( ( i < height - 1 ) && ( XO[i + 1][j] == 0 ) )
+					continue;
 
-                XO[i][j] = 2;
+				XO[i][j] = 2;
 
-                tmp = calcMin ( prof - 1 );
+				tmp = calcMin ( prof - 1 );
 
-                if ( tmp > max || ( tmp == max && random ( width ) ) )
-                    max = tmp;
+				if ( tmp > max || ( tmp == max && random ( width ) ) )
+					max = tmp;
 
-                XO[i][j] = 0;
-            }
-        }
-    }
+				XO[i][j] = 0;
+			}
+		}
+	}
 
-    return max;
+	grid *tmpG = new grid ( this );
+
+	tmpG->rotate ( true , true );
+	tmpG->gravitate ( true );
+
+	tmp = tmpG->calcMin ( prof - 1 );
+
+	if ( tmp > max )
+		max = tmp;
+
+	tmpG->destroy ();
+
+	tmpG = new grid ( this );
+
+	tmpG->rotate ( true , false );
+	tmpG->gravitate ( true );
+
+	tmp = tmpG->calcMin ( prof - 1 );
+
+	if ( tmp > max )
+		max = tmp;
+
+	tmpG->destroy ();
+
+	return max;
 }
 
 int grid::calcMin ( uint8_t prof ) {
@@ -1074,7 +1165,31 @@ int grid::calcMin ( uint8_t prof ) {
 			}
 		}
 	}
-	
+
+	grid *tmpG = new grid ( this );
+
+	tmpG->rotate ( true , true );
+	tmpG->gravitate ( true );
+
+	tmp = tmpG->calcMax ( prof - 1 );
+
+	if ( tmp < min )
+		min = tmp;
+
+	tmpG->destroy ();
+
+	tmpG = new grid ( this );
+
+	tmpG->rotate ( true , false );
+	tmpG->gravitate ( true );
+
+	tmp = tmpG->calcMax ( prof - 1 );
+
+	if ( tmp < min )
+		min = tmp;
+
+	tmpG->destroy ();
+
 	return min;
 }
 
@@ -1097,7 +1212,7 @@ uint8_t grid::minimax ( uint8_t prof ) {
 						continue;
 
 					XO[i][j] = 2;
-					
+
 					tmp = calcMin ( prof - 1 );
 
 					if ( ( tmp > max ) || ( tmp == max && random ( width ) ) ) {
@@ -1110,6 +1225,36 @@ uint8_t grid::minimax ( uint8_t prof ) {
 				}
 			}
 		}
+
+		grid *tmpG = new grid ( this );
+
+		tmpG->rotate ( true , true );
+		tmpG->gravitate ( true );
+
+		tmp = tmpG->calcMin ( prof - 1 );
+
+		if ( tmp > max ) {
+
+			max = tmp;
+			maxj = width;
+		}
+
+		tmpG->destroy ();
+
+		tmpG = new grid ( this );
+
+		tmpG->rotate ( true , false );
+		tmpG->gravitate ( true );
+
+		tmp = tmpG->calcMin ( prof - 1 );
+
+		if ( tmp > max ) {
+
+			max = tmp;
+			maxj = width + 1;
+		}
+
+		tmpG->destroy ();
 	}
 
 	return maxj;
@@ -1125,7 +1270,20 @@ void grid::AI_play ( void ) {
 
 	refresh ();
 
-	XO[0][minimax ( AI_prof )] = 2;
+	uint8_t pred = minimax ( AI_prof );
+
+	if ( pred == width ) {
+
+		rotate ( false , true );
+		gravitate ( false );
+	}
+	else if ( pred == width + 1 ) {
+
+		rotate ( false , false );
+		gravitate ( false );
+	}
+	else
+		XO[0][pred] = 2;
 }
 
 void grid::draw ( void ) { // grid draw

@@ -70,6 +70,7 @@ static std::string STR_SAVE_PRE ( "game" );
 static std::string STR_SAVE_EXT ( "sav" );
 static std::string STR_SAVE_IND ( "index" );
 static std::string STR_THINKING ( "Thinking..." );
+static std::string STR_AI_PROF ( "AI DIFFICULTY" );
 
 static void _debug8_t ( std::string name , uint8_t value , uint16_t time ) { // prints the desired value ant its name in the middle of the screen during a period of time
 

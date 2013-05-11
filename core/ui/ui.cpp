@@ -13,7 +13,7 @@ bool warnExit ( void ) { // exit warning menu
 	uint8_t selected ( 1 );
 	std::string STR_SELECTED;
 	uint8_t TAB;
-	uint8_t Key;
+	int32_t Key;
 	uint8_t row , col;
 
 	while ( true ) {
@@ -84,7 +84,7 @@ void options_help ( void ) { // options help menu
 
 }
 
-void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &defaultAlignWinSize , uint8_t &defaultAlignWinTotal ) { // options menu
+void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &defaultAlignWinSize , uint8_t &defaultAlignWinTotal , uint8_t &defaultAI_prof ) { // options menu
 
 	uint8_t selected ( 1 );
 	uint8_t i;
@@ -93,7 +93,8 @@ void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &default
 	uint8_t backupWidth ( defaultWidth );
 	uint8_t backupAlignWinSize ( defaultAlignWinSize );
 	uint8_t backupAlignWinTotal ( defaultAlignWinTotal );
-	uint16_t Key;
+	uint8_t backupAI_prof ( defaultAI_prof );
+	int32_t Key;
 	std::string STR_SELECTED;
 
 	while ( true ) {
@@ -103,8 +104,8 @@ void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &default
 		if ( selected < 1 )
 			selected = 1;
 
-		if ( selected > 4 )
-			selected = 4;
+		if ( selected > 5 )
+			selected = 5;
 
 		if ( defaultHeight < 3 )
 			defaultHeight = 3;
@@ -133,6 +134,12 @@ void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &default
 		if ( defaultAlignWinTotal > 10 )
 			defaultAlignWinTotal = 10;
 
+		if ( defaultAI_prof < 3 )
+			defaultAI_prof = 3;
+			
+		if ( defaultAI_prof > 7 )
+			defaultAI_prof = 7;
+
 		switch ( selected ) {
 
 			case 1:
@@ -149,6 +156,10 @@ void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &default
 
 			case 4:
 				STR_SELECTED = STR_ALIGN_TOTAL;
+				break;
+
+			case 5:
+				STR_SELECTED = STR_AI_PROF;
 				break;
 		}
 
@@ -169,6 +180,7 @@ void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &default
 		mvprintw ( ( row / 2 ) + 2 , ( col - STR_WIDTH.length() + 1 ) / 3 , STR_WIDTH.c_str() );
 		mvprintw ( ( row / 2 ) + 4 , ( col - STR_ALIGN_SIZE.length() + 1 ) / 3 , STR_ALIGN_SIZE.c_str() );
 		mvprintw ( ( row / 2 ) + 6 , ( col - STR_ALIGN_TOTAL.length() + 1 ) / 3 , STR_ALIGN_TOTAL.c_str() );
+		mvprintw ( ( row / 2 ) + 8 , ( col - STR_AI_PROF.length () + 1 ) / 3 , STR_AI_PROF.c_str () );
 
 		mvprintw ( ( row / 2 ) , ( col / 2 ) , "%d" , defaultHeight );
 		mvprintw ( ( row / 2 ) , ( col / 2 ) + ( col / 20 ) , "[" );
@@ -202,8 +214,23 @@ void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &default
 			printw ( "  " );
 		printw ( "]" );
 
-		mvprintw ( row - 4 , ( col - STR_OK.length () + 1 ) / 4 , STR_OK.c_str () );
-		mvprintw ( row - 4 , 3 * ( col - STR_CANCEL.length () + 1 ) / 4 , STR_CANCEL.c_str () );
+		switch ( defaultAI_prof ) {
+
+			case 3:
+				mvprintw ( ( row / 2 ) + 8 , ( col / 2 ) + ( col / 20 ) + 9 , "EASY" );
+				break;
+
+			case 5:
+				mvprintw ( ( row / 2 ) + 8 , ( col / 2 ) + ( col / 20 ) + 8 , "MEDIUM" );
+				break;
+
+			case 7:
+				mvprintw ( ( row / 2 ) + 8 , ( col / 2 ) + ( col / 20 ) + 9 , "HARD" );
+				break;
+		}
+
+		mvprintw ( row - 2 , ( col - STR_OK.length () + 1 ) / 4 , STR_OK.c_str () );
+		mvprintw ( row - 2 , 3 * ( col - STR_CANCEL.length () + 1 ) / 4 , STR_CANCEL.c_str () );
 
 		refresh ();
 
@@ -228,6 +255,10 @@ void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &default
 				case 4:
 					defaultAlignWinTotal--;
 					break;
+
+				case 5:
+					defaultAI_prof -= 2;
+					break;
 			}
 		}
 
@@ -250,6 +281,10 @@ void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &default
 				case 4:
 					defaultAlignWinTotal++;
 					break;
+
+				case 5:
+					defaultAI_prof += 2;
+					break;
 			}
 		}
 
@@ -268,6 +303,7 @@ void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &default
 			defaultWidth = backupWidth;
 			defaultAlignWinSize = backupAlignWinSize;
 			defaultAlignWinTotal = backupAlignWinTotal;
+			defaultAI_prof = backupAI_prof;
 			break;
 		}
 
@@ -276,15 +312,15 @@ void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &default
 	}
 }
 
-void play ( grid *G , uint8_t height , uint8_t width , uint8_t alignWinSize , uint8_t alignWinTotal , bool vsAI ) { // play menu
+void play ( grid *G , uint8_t height , uint8_t width , uint8_t alignWinSize , uint8_t alignWinTotal , bool vsAI , uint8_t AI_prof ) { // play menu
 
 	if ( !grid::initXO ) { // if no game is loaded, create new one
 
-		G = new grid ( height , width , alignWinSize , alignWinTotal , vsAI );
+		G = new grid ( height , width , alignWinSize , alignWinTotal , vsAI , AI_prof );
 	}
 
 	uint8_t win;
-	uint16_t Key;
+	int32_t Key;
 	uint8_t row , col;
 
 	while ( true ) {
@@ -422,14 +458,14 @@ void play ( grid *G , uint8_t height , uint8_t width , uint8_t alignWinSize , ui
 
 void load_menu () { // load game menu
 
-	uint16_t Key;
+	int32_t Key;
 	uint8_t i;
 	uint8_t row , col;
 	uint16_t top ( 0 );
 	uint8_t selected ( 1 );
 	std::string currentID;
 	std::list<std::string> listID;
-	std::list<std::string>::iterator it;
+	std::list<std::string>::reverse_iterator it;
 	std::vector<std::string> vectorID;
 
 	std::ifstream input ( "saves/index.sav" );
@@ -469,7 +505,7 @@ void load_menu () { // load game menu
 		if ( !vectorID.empty() )
 			vectorID.clear();
 
-		for ( it = listID.begin() ; it != listID.end() ; ++it ) {
+		for ( it = listID.rbegin() ; it != listID.rend() ; ++it ) {
 
 			currentID = (*it);
 
@@ -478,7 +514,7 @@ void load_menu () { // load game menu
 
 			if ( i >= top ) {
 
-				if ( std::find ( vectorID.begin () , vectorID.end () , currentID ) == vectorID.end () )
+				if ( std::find ( vectorID.rbegin () , vectorID.rend () , currentID ) == vectorID.rend () )
 					vectorID.push_back( currentID );
 			}
 
@@ -535,7 +571,7 @@ void load_menu () { // load game menu
 
 				grid *G = new grid ( currentID.c_str() );
 				if ( grid::initXO ) {
-					play ( G , 5 , 5 , 5 , 1 , G->AI );
+					play ( G , 5 , 5 , 5 , 1 , G->AI , G->getAI_prof() );
 					return;
 				}
 			}
@@ -564,9 +600,9 @@ void load_menu () { // load game menu
 	return;
 }
 
-void play_menu ( uint8_t height , uint8_t width , uint8_t alignWinSize , uint8_t alignWinTotal ) { // play game menu
+void play_menu ( uint8_t height , uint8_t width , uint8_t alignWinSize , uint8_t alignWinTotal , uint8_t AI_prof ) { // play game menu
 
-	uint16_t Key;
+	int32_t Key;
 	uint8_t row , col;
 	uint8_t selected ( 1 );
 
@@ -612,13 +648,13 @@ void play_menu ( uint8_t height , uint8_t width , uint8_t alignWinSize , uint8_t
 			if ( selected == 1 ) {
 
 				grid *G = new grid ();
-				play ( G , height , width , alignWinSize , alignWinTotal , false );
+				play ( G , height , width , alignWinSize , alignWinTotal , false , AI_prof );
 			}
 
 			if ( selected == 2 ) {
 
 				grid *G = new grid ();
-				play ( G, height , width , alignWinSize , alignWinTotal , true );
+				play ( G, height , width , alignWinSize , alignWinTotal , true , AI_prof );
 			}
 
 			if ( selected == 3 )
@@ -630,13 +666,13 @@ void play_menu ( uint8_t height , uint8_t width , uint8_t alignWinSize , uint8_t
 		if ( Key == KEY_V ) {
 
 			grid *G = new grid ();
-			play ( G , height , width , alignWinSize , alignWinTotal , false );
+			play ( G , height , width , alignWinSize , alignWinTotal , false , AI_prof );
 		}
 
 		if ( Key == KEY_A ) {
 
 			grid *G = new grid ();
-			play ( G , height , width , alignWinSize , alignWinTotal , true );
+			play ( G , height , width , alignWinSize , alignWinTotal , true , AI_prof );
 		}
 
 		if ( Key == KEY_L )
@@ -658,7 +694,8 @@ void ui ( void ) { // main menu
 	uint8_t defaultWidth ( 5 );
 	uint8_t defaultAlignWinSize ( 5 );
 	uint8_t defaultAlignWinTotal ( 1 );
-	uint16_t Key;
+	uint8_t defaultAI_prof ( 3 );
+	int32_t Key;
 	uint8_t row , col;
 
 	while ( true ) {
@@ -702,11 +739,11 @@ void ui ( void ) { // main menu
 
 			if ( selected == 1 ) {
 
-				play_menu ( defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal );
+				play_menu ( defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal , defaultAI_prof );
 			}
 
 			if ( selected == 2 )
-				options ( defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal );
+				options ( defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal , defaultAI_prof );
 
 			if ( selected == 3 ) {
 				if ( warnExit () ) {
@@ -718,11 +755,11 @@ void ui ( void ) { // main menu
 
 		if ( Key == KEY_P ) {
 
-			play_menu ( defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal );
+			play_menu ( defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal , defaultAI_prof );
 		}
 
 		if ( Key == KEY_O )
-			options ( defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal );
+			options ( defaultHeight , defaultWidth , defaultAlignWinSize , defaultAlignWinTotal , defaultAI_prof );
 
 		if ( Key == ESC || Key == KEY_E ) {
 			if ( warnExit () ) {

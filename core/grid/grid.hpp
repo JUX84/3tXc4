@@ -17,9 +17,11 @@ class grid {
 
 	public:
 		grid ( void );
-		grid ( uint8_t height , uint8_t width , uint8_t newAlignWinSize , uint8_t newAlignWinTotal , bool vsIA );
+		grid ( uint8_t height , uint8_t width , uint8_t newAlignWinSize , uint8_t newAlignWinTotal , bool vsIA , uint8_t AI_prof );
 		grid ( std::string file );
+		grid ( grid *G );
 		~grid ( void );
+		void destroy ( void );
 		void draw ( void );
 		void gravitate ( bool silent );
 		void play ( bool player );
@@ -33,6 +35,12 @@ class grid {
 		void insert ( bool player , uint8_t pos );
 		uint8_t checkWin ( void );
 		void save ( void );
+		uint8_t getWidth ( void );
+		uint8_t getHeight ( void );
+		uint8_t getAlignWinSize ( void );
+		uint8_t getAlignWinTotal ( void );
+		uint8_t getAI_prof ( void );
+		uint8_t getXO ( uint8_t i , uint8_t j );
 		static bool initXO;
 		static std::string ID;
 		static bool AI;
