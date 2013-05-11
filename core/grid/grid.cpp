@@ -5,8 +5,18 @@
 #include <algorithm>
 #include <iterator>
 #include <climits>
+#include <random>
 #include "grid.hpp"
 #include "../misc/misc.hpp"
+
+bool random ( uint8_t value ) {
+
+	std::random_device rd;
+	std::default_random_engine generator ( rd () );
+	std::uniform_int_distribution<uint8_t> distribution ( 0 , value );
+	int tmp = distribution ( generator );
+	return tmp > ( ( value + 0.5 ) / 2 );
+}
 
 bool grid::initXO = false;
 std::string grid::ID = "";
@@ -340,13 +350,13 @@ uint8_t grid::checkWin ( void ) { // grid win check
 					countO++;
 			}
 
-			if ( countX == alignWinSize ) {
+			if ( countX >= alignWinSize ) {
 
 				alignX++;
 				countX = 0;
 			}
 
-			if ( countO == alignWinSize ) {
+			if ( countO >= alignWinSize ) {
 
 				alignO++;
 				countO = 0;
@@ -370,13 +380,13 @@ uint8_t grid::checkWin ( void ) { // grid win check
 					countO++;
 			}
 
-			if ( countX == alignWinSize ) {
+			if ( countX >= alignWinSize ) {
 
 				alignX++;
 				countX = 0;
 			}
 
-			if ( countO == alignWinSize ) {
+			if ( countO >= alignWinSize ) {
 
 				alignO++;
 				countO = 0;
@@ -403,13 +413,13 @@ uint8_t grid::checkWin ( void ) { // grid win check
 					countO++;
 			}
 
-			if ( countX == alignWinSize ) {
+			if ( countX >= alignWinSize ) {
 
 				alignX++;
 				countX = 0;
 			}
 
-			if ( countO == alignWinSize ) {
+			if ( countO >= alignWinSize ) {
 
 				alignO++;
 				countO = 0;
@@ -439,13 +449,13 @@ uint8_t grid::checkWin ( void ) { // grid win check
 					countO++;
 			}
 
-			if ( countX == alignWinSize ) {
+			if ( countX >= alignWinSize ) {
 
 				alignX++;
 				countX = 0;
 			}
 
-			if ( countO == alignWinSize ) {
+			if ( countO >= alignWinSize ) {
 
 				alignO++;
 				countO = 0;
@@ -475,13 +485,13 @@ uint8_t grid::checkWin ( void ) { // grid win check
 					countO++;
 			}
 
-			if ( countX == alignWinSize ) {
+			if ( countX >= alignWinSize ) {
 
 				alignX++;
 				countX = 0;
 			}
 
-			if ( countO == alignWinSize ) {
+			if ( countO >= alignWinSize ) {
 
 				alignO++;
 				countO = 0;
@@ -511,13 +521,13 @@ uint8_t grid::checkWin ( void ) { // grid win check
 					countO++;
 			}
 
-			if ( countX == alignWinSize ) {
+			if ( countX >= alignWinSize ) {
 
 				alignX++;
 				countX = 0;
 			}
 
-			if ( countO == alignWinSize ) {
+			if ( countO >= alignWinSize ) {
 
 				alignO++;
 				countO = 0;
@@ -541,7 +551,7 @@ uint8_t grid::checkWin ( void ) { // grid win check
 	return alignX+alignO;
 }
 
-void grid::rotate ( bool clockwise ) { // grid rotation
+void grid::rotate ( bool silent , bool clockwise ) { // grid rotation
 
 	clear ();
 
@@ -587,14 +597,15 @@ void grid::rotate ( bool clockwise ) { // grid rotation
 			XO[i][j]=TMP_XO[i][j];
 	}
 
-	draw ();
+	if ( !silent )
+		draw ();
 
 	for ( i = 0 ; i < height ; ++i )
 		delete []TMP_XO[i];
 	delete []TMP_XO;
 }
 
-void grid::gravitate ( void ) { // grid gravitation
+void grid::gravitate ( bool silent ) { // grid gravitation
 
 	uint8_t i , j;
 
@@ -617,7 +628,7 @@ void grid::gravitate ( void ) { // grid gravitation
 				}
 			}
 
-			if ( modified ) {
+			if ( modified && !silent ) {
 				
 				clear ();
 				draw ();
@@ -739,10 +750,10 @@ void grid::play ( bool player ) { // grid play (insert or rotate)
 					if ( Key == ENTER ) {
 
 						if ( selected == 3 )
-							rotate ( true );
+							rotate ( false , true );
 
 						if ( selected == 4 )
-							rotate ( false );
+							rotate ( false , false );
 
 						break;
 					}
@@ -756,9 +767,365 @@ void grid::play ( bool player ) { // grid play (insert or rotate)
 	}
 }
 
+int grid::AI_value ( void ) {
+
+	int8_t h , i , j , k , l;
+	uint8_t countX , countO;
+
+	int8_t alignX ( 0 );
+	int8_t alignO ( 0 );
+
+	for ( i = 0 ; i < height ; ++i ) {
+
+		for ( j = 0 ; j <= ( width - alignWinSize ) ; ++j ) {
+
+			countX = 0;
+			countO = 0;
+
+			for ( k = j ; k < j + alignWinSize ; ++k ) {
+
+				if ( XO[i][k] == 1 )
+					countX++;
+
+				if ( XO[i][k] == 2 )
+					countO++;
+			}
+
+			if ( countX >= alignWinSize ) {
+
+				alignX++;
+				countX = 0;
+			}
+
+			if ( countO >= alignWinSize ) {
+
+				alignO++;
+				countO = 0;
+			}
+		}
+	}
+
+	for ( i = 0 ; i <= ( height - alignWinSize ) ; ++i ) {
+
+		for ( j = 0 ; j < width ; ++j ) {
+
+			countX = 0;
+			countO = 0;
+
+			for ( k = i ; k < i + alignWinSize ; ++k ) {
+
+				if ( XO[k][j] == 1 )
+					countX++;
+
+				if ( XO[k][j] == 2 )
+					countO++;
+			}
+
+			if ( countX >= alignWinSize ) {
+
+				alignX++;
+				countX = 0;
+			}
+
+			if ( countO >= alignWinSize ) {
+
+				alignO++;
+				countO = 0;
+			}
+		}
+	}
+
+	for ( h = height - alignWinSize ; h >= 0 ; --h ) {
+
+		i = h;
+		j = 0;
+
+		while ( ( i <= ( height - alignWinSize ) ) && ( j <= (width - alignWinSize ) ) ) {
+
+			countX = 0;
+			countO = 0;
+
+			for ( k = i , l = j ; k < i + alignWinSize , l < j + alignWinSize ; ++k , ++l ) {
+
+				if ( XO[k][l] == 1 )
+					countX++;
+
+				if ( XO[k][l] == 2 )
+					countO++;
+			}
+
+			if ( countX >= alignWinSize ) {
+
+				alignX++;
+				countX = 0;
+			}
+
+			if ( countO >= alignWinSize ) {
+
+				alignO++;
+				countO = 0;
+			}
+
+			++i;
+			++j;
+		}
+	}
+
+	for ( h = 1 ; h <= width - alignWinSize ; ++h ) {
+
+		i = 0;
+		j = h;
+
+		while ( ( i <= ( height - alignWinSize ) ) && ( j <= ( width - alignWinSize ) ) ) {
+
+			countX = 0;
+			countO = 0;
+
+			for ( k = i , l = j ; k < i + alignWinSize , l < j + alignWinSize ; ++k , ++l ) {
+
+				if ( XO[k][l] == 1 )
+					countX++;
+
+				if ( XO[k][l] == 2 )
+					countO++;
+			}
+
+			if ( countX >= alignWinSize ) {
+
+				alignX++;
+				countX = 0;
+			}
+
+			if ( countO >= alignWinSize ) {
+
+				alignO++;
+				countO = 0;
+			}
+
+			++i;
+			++j;
+		}
+	}
+
+	for ( h = width - alignWinSize ; h >= 0 ; --h ) {
+
+		i = height - 1;
+		j = h;
+
+		while ( ( i >= ( alignWinSize - 1 ) ) && ( j <= ( width - alignWinSize ) ) ) {
+
+			countX = 0;
+			countO = 0;
+
+			for ( k = i , l = j ; k >= 0 , l < j + alignWinSize ; --k , ++l ) {
+
+				if ( XO[k][l] == 1 )
+					countX++;
+
+				if ( XO[k][l] == 2 )
+					countO++;
+			}
+
+			if ( countX >= alignWinSize ) {
+
+				alignX++;
+				countX = 0;
+			}
+
+			if ( countO >= alignWinSize ) {
+
+				alignO++;
+				countO = 0;
+			}
+
+			--i;
+			++j;
+		}
+	}
+
+	for ( h = height - 2 ; h >= alignWinSize - 1 ; --h ) {
+
+		i = h;
+		j = 0;
+
+		while ( ( i >= ( alignWinSize - 1 ) ) && ( j <= ( width - alignWinSize ) ) ) {
+
+			countX = 0;
+			countO = 0;
+
+			for ( k = i , l = j ; k >= 0 , l < j + alignWinSize ; --k , ++l ) {
+
+				if ( XO[k][l] == 1 )
+					countX++;
+
+				if ( XO[k][l] == 2 )
+					countO++;
+			}
+
+			if ( countX >= alignWinSize ) {
+
+				alignX++;
+				countX = 0;
+			}
+
+			if ( countO >= alignWinSize ) {
+
+				alignO++;
+				countO = 0;
+			}
+
+			--i;
+			++j;
+		}
+	}
+
+	if ( alignX >= alignWinTotal )
+		alignX = -1;
+	else
+		alignX = 0;
+
+	if ( alignO >= alignWinTotal )
+		alignO = 1;
+	else
+		alignO = 0;
+
+	return alignX+alignO;
+}
+
+bool grid::full ( void ) {
+
+	int i , j;
+
+	for ( i = 0 ; i < height ; ++i ) {
+
+		for ( j = 0 ; j < width ; ++j ) {
+
+			if ( XO[i][j] == 0 )
+				return false;
+		}
+	}
+
+	return true;
+}
+
+int grid::calcMax ( uint8_t prof ) {
+
+	uint8_t i , j;
+    int tmp;
+    int max ( INT_MIN );
+
+	uint8_t c = checkWin();
+
+    if ( prof == 0 || full() || c != 0 )
+        return AI_value();
+
+    for ( i = 0 ; i < height ; ++i ) {
+
+        for ( j = 0 ; j < width ; ++j ) {
+
+            if ( XO[i][j] == 0 ) {
+
+                if ( ( i < height - 1 ) && ( XO[i + 1][j] == 0 ) )
+                    continue;
+
+                XO[i][j] = 2;
+
+                tmp = calcMin ( prof - 1 );
+
+                if ( tmp > max || ( tmp == max && random ( width ) ) )
+                    max = tmp;
+
+                XO[i][j] = 0;
+            }
+        }
+    }
+
+    return max;
+}
+
+int grid::calcMin ( uint8_t prof ) {
+
+	uint8_t i , j;
+	int tmp;
+	int min ( INT_MAX );
+
+	uint8_t c = checkWin();
+
+	if ( prof == 0 || full() || c != 0 )
+		return AI_value();
+
+	for ( i = 0 ; i < height ; ++i ) {
+
+		for ( j = 0 ; j < width ; ++j ) {
+
+			if ( XO[i][j] == 0 ) {
+
+				if ( ( i < height - 1 ) && ( XO[i + 1][j] == 0 ) )
+					continue;
+
+				XO[i][j] = 1;
+
+				tmp = calcMax ( prof - 1 );
+
+				if ( tmp < min || ( tmp == min && random ( width ) ) )
+					min = tmp;
+
+				XO[i][j] = 0;
+			}
+		}
+	}
+	
+	return min;
+}
+
+uint8_t grid::minimax ( uint8_t prof ) {
+
+	uint8_t i , j;
+	int tmp;
+	int max ( INT_MIN );
+	int8_t maxj = -1;
+
+	if ( ( prof != 0 ) || ( !full() ) ) {
+
+		for ( i = 0 ; i < height ; ++i ) {
+
+			for ( j = 0 ; j < width ; ++j ) {
+
+				if ( XO[i][j] == 0 ) {
+
+					if ( ( i < height - 1 ) && ( XO[i + 1][j] == 0 ) )
+						continue;
+
+					XO[i][j] = 2;
+					
+					tmp = calcMin ( prof - 1 );
+
+					if ( ( tmp > max ) || ( tmp == max && random ( width ) ) ) {
+
+						max = tmp;
+						maxj = j;
+					}
+
+					XO[i][j] = 0;
+				}
+			}
+		}
+	}
+
+	return maxj;
+}
+
 void grid::AI_play ( void ) {
 
-	// XO[minimax ( AI_prof )][0] = 2;
+	uint8_t row , col;
+
+	getmaxyx ( stdscr , row , col );
+
+	mvprintw ( row / 2 + 1 , ( ( col - STR_THINKING.length() ) / 2 ) + 1 , STR_THINKING.c_str() );
+
+	refresh ();
+
+	XO[0][minimax ( AI_prof )] = 2;
 }
 
 void grid::draw ( void ) { // grid draw

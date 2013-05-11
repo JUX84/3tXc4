@@ -321,7 +321,7 @@ void play ( grid *G , uint8_t height , uint8_t width , uint8_t alignWinSize , ui
 		}
 
 		G->play ( 1 );
-		G->gravitate ();
+		G->gravitate ( false );
 
 		win = G->checkWin ();
 
@@ -379,7 +379,7 @@ void play ( grid *G , uint8_t height , uint8_t width , uint8_t alignWinSize , ui
 		else
 			G->AI_play();
 
-		G->gravitate ();
+		G->gravitate ( false );
 
 		win = G->checkWin ();
 
@@ -407,7 +407,7 @@ void play ( grid *G , uint8_t height , uint8_t width , uint8_t alignWinSize , ui
 			break;
 		}
 
-		if ( win == 3 ) {
+		if ( win == 3 || G->full() ) {
 
 			mvprintw ( row / 2 , ( col - STR_TIE.length () + 1 ) / 2 , STR_TIE.c_str () );
 

@@ -69,6 +69,7 @@ static std::string STR_SAVE_REP ( "saves" );
 static std::string STR_SAVE_PRE ( "game" );
 static std::string STR_SAVE_EXT ( "sav" );
 static std::string STR_SAVE_IND ( "index" );
+static std::string STR_THINKING ( "Thinking..." );
 
 static void _debug8_t ( std::string name , uint8_t value , uint16_t time ) { // prints the desired value ant its name in the middle of the screen during a period of time
 
@@ -81,7 +82,7 @@ static void _debug8_t ( std::string name , uint8_t value , uint16_t time ) { // 
 	wait ( time );
 }
 
-static void _debug16_t ( std::string name , uint16_t value , uint16_t time ) {
+static void _debug32_t ( std::string name , uint32_t value , uint16_t time ) {
 
 	uint8_t row , col;
 	getmaxyx ( stdscr , row , col );
