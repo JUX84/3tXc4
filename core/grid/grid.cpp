@@ -468,13 +468,19 @@ uint8_t grid::checkWin ( void ) { // grid win check
 			countX = 0;
 			countO = 0;
 
-			for ( k = i , l = j ; k < i + alignWinSize , l < j + alignWinSize ; ++k , ++l ) {
+			k = i;
+			l = j;
+
+			while ( k < i + alignWinSize && l < j + alignWinSize ) {
 
 				if ( XO[k][l] == 1 )
 					countX++;
 
 				if ( XO[k][l] == 2 )
 					countO++;
+
+				++k;
+				++l;
 			}
 
 			if ( countX >= alignWinSize ) {
@@ -504,13 +510,19 @@ uint8_t grid::checkWin ( void ) { // grid win check
 			countX = 0;
 			countO = 0;
 
-			for ( k = i , l = j ; k < i + alignWinSize , l < j + alignWinSize ; ++k , ++l ) {
+			k = i;
+			l = j;
+
+			while ( k < i + alignWinSize && l < j + alignWinSize ) {
 
 				if ( XO[k][l] == 1 )
 					countX++;
 
 				if ( XO[k][l] == 2 )
 					countO++;
+
+				++k;
+				++l;
 			}
 
 			if ( countX >= alignWinSize ) {
@@ -540,13 +552,19 @@ uint8_t grid::checkWin ( void ) { // grid win check
 			countX = 0;
 			countO = 0;
 
-			for ( k = i , l = j ; k >= 0 , l < j + alignWinSize ; --k , ++l ) {
+			k = i;
+			l = j;
+
+			while ( k >= 0 && l < j + alignWinSize ) {
 
 				if ( XO[k][l] == 1 )
 					countX++;
 
 				if ( XO[k][l] == 2 )
 					countO++;
+
+				--k;
+				++l;
 			}
 
 			if ( countX >= alignWinSize ) {
@@ -576,13 +594,19 @@ uint8_t grid::checkWin ( void ) { // grid win check
 			countX = 0;
 			countO = 0;
 
-			for ( k = i , l = j ; k >= 0 , l < j + alignWinSize ; --k , ++l ) {
+			k = i;
+			l = j;
+
+			while ( k >= 0 && l < j +alignWinSize ) {
 
 				if ( XO[k][l] == 1 )
 					countX++;
 
 				if ( XO[k][l] == 2 )
 					countO++;
+
+				--k;
+				++l;
 			}
 
 			if ( countX >= alignWinSize ) {
@@ -912,13 +936,19 @@ int8_t grid::AI_value ( void ) {
 			countX = 0;
 			countO = 0;
 
-			for ( k = i , l = j ; k < i + alignWinSize , l < j + alignWinSize ; ++k , ++l ) {
+			k = i;
+			l = j;
+
+			while ( k < i + alignWinSize && l < j + alignWinSize ) {
 
 				if ( XO[k][l] == 1 )
 					countX++;
 
 				if ( XO[k][l] == 2 )
 					countO++;
+
+				++k;
+				++l;
 			}
 
 			if ( countX >= alignWinSize ) {
@@ -948,13 +978,19 @@ int8_t grid::AI_value ( void ) {
 			countX = 0;
 			countO = 0;
 
-			for ( k = i , l = j ; k < i + alignWinSize , l < j + alignWinSize ; ++k , ++l ) {
+			k = i;
+			l = j;
+
+			while ( k < i + alignWinSize && l < j + alignWinSize ) {
 
 				if ( XO[k][l] == 1 )
 					countX++;
 
 				if ( XO[k][l] == 2 )
 					countO++;
+
+				++k;
+				++l;
 			}
 
 			if ( countX >= alignWinSize ) {
@@ -984,13 +1020,19 @@ int8_t grid::AI_value ( void ) {
 			countX = 0;
 			countO = 0;
 
-			for ( k = i , l = j ; k >= 0 , l < j + alignWinSize ; --k , ++l ) {
+			k = i;
+			l = j;
+
+			while ( k >= 0 && l < j + alignWinSize ) {
 
 				if ( XO[k][l] == 1 )
 					countX++;
 
 				if ( XO[k][l] == 2 )
 					countO++;
+
+				--k;
+				++l;
 			}
 
 			if ( countX >= alignWinSize ) {
@@ -1020,13 +1062,19 @@ int8_t grid::AI_value ( void ) {
 			countX = 0;
 			countO = 0;
 
-			for ( k = i , l = j ; k >= 0 , l < j + alignWinSize ; --k , ++l ) {
+			k = i;
+			l = j;
+
+			while ( k >= 0 && l < j +alignWinSize ) {
 
 				if ( XO[k][l] == 1 )
 					countX++;
 
 				if ( XO[k][l] == 2 )
 					countO++;
+
+				--k;
+				++l;
 			}
 
 			if ( countX >= alignWinSize ) {

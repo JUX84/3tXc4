@@ -72,26 +72,4 @@ static std::string STR_SAVE_IND ( "index" );
 static std::string STR_THINKING ( "Thinking..." );
 static std::string STR_AI_PROF ( "AI DIFFICULTY" );
 
-static void _debug8_t ( std::string name , uint8_t value , uint16_t time ) { // prints the desired value ant its name in the middle of the screen during a period of time
-
-	uint8_t row , col;
-	getmaxyx ( stdscr , row , col );
-	clear ();
-	mvprintw ( row / 2 , ( col - name.length () + 1 ) / 2 , name.c_str () );
-	printw ( " %d" , value );
-	refresh ();
-	wait ( time );
-}
-
-static void _debug32_t ( std::string name , uint32_t value , uint16_t time ) {
-
-	uint8_t row , col;
-	getmaxyx ( stdscr , row , col );
-	clear ();
-	mvprintw ( row / 2 , ( col - name.length () + 1 ) / 2 , name.c_str () );
-	printw ( " %d" , value );
-	refresh ();
-	wait ( time );
-}
-
 #endif

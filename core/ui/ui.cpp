@@ -136,7 +136,7 @@ void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &default
 
 		if ( defaultAI_prof < 3 )
 			defaultAI_prof = 3;
-			
+
 		if ( defaultAI_prof > 7 )
 			defaultAI_prof = 7;
 
