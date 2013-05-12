@@ -9,15 +9,6 @@
 #include "grid.hpp"
 #include "../misc/misc.hpp"
 
-bool random ( uint8_t value ) {
-
-	std::random_device rd;
-	std::default_random_engine generator ( rd () );
-	std::uniform_int_distribution<uint8_t> distribution ( 0 , value );
-	int tmp = distribution ( generator );
-	return tmp > ( ( value + 0.5 ) / 2 );
-}
-
 bool grid::initXO = false;
 std::string grid::ID = "";
 bool grid::AI = false;
@@ -29,7 +20,7 @@ grid::grid ( void ) { // grid c-tor #1
 	height = 5;
 	width = 5;
 
-	AI_prof = 3;
+	AI_prof = 5;
 
 	XO = new uint8_t*[height];
 	for ( i = 0 ; i < height ; ++i )
@@ -1119,11 +1110,10 @@ bool grid::full ( void ) {
 	return true;
 }
 
-int8_t grid::calcMax ( uint8_t prof ) {
+int8_t grid::calcMax ( uint8_t prof , int8_t alpha , int8_t beta ) {
 
 	uint8_t i , j;
 	int8_t tmp;
-	int8_t max ( INT8_MIN );
 
 	uint8_t c = checkWin();
 
@@ -1141,12 +1131,15 @@ int8_t grid::calcMax ( uint8_t prof ) {
 
 				XO[i][j] = 2;
 
-				tmp = calcMin ( prof - 1 );
+				tmp = calcMin ( prof - 1 , alpha , beta );
 
-				if ( tmp > max || ( tmp == max && random ( width ) ) )
-					max = tmp;
+				if ( alpha < tmp )
+					alpha = tmp;
 
 				XO[i][j] = 0;
+
+				if ( beta <= alpha )
+					return alpha;
 			}
 		}
 	}
@@ -1156,33 +1149,38 @@ int8_t grid::calcMax ( uint8_t prof ) {
 	tmpG->rotate ( true , true );
 	tmpG->gravitate ( true );
 
-	tmp = tmpG->calcMin ( prof - 1 );
+	tmp = tmpG->calcMin ( prof - 1 , alpha , beta );
 
-	if ( tmp > max )
-		max = tmp;
+	if ( alpha < tmp )
+		alpha = tmp;
 
 	tmpG->destroy ();
+
+	if ( beta <= alpha )
+		return alpha;
 
 	tmpG = new grid ( this );
 
 	tmpG->rotate ( true , false );
 	tmpG->gravitate ( true );
 
-	tmp = tmpG->calcMin ( prof - 1 );
+	tmp = tmpG->calcMin ( prof - 1 , alpha , beta );
 
-	if ( tmp > max )
-		max = tmp;
+	if ( alpha < tmp )
+		alpha = tmp;
 
 	tmpG->destroy ();
 
-	return max;
+	if ( beta <= alpha )
+		return alpha;
+
+	return alpha;
 }
 
-int8_t grid::calcMin ( uint8_t prof ) {
+int8_t grid::calcMin ( uint8_t prof , int8_t alpha , int8_t beta ) {
 
 	uint8_t i , j;
 	int8_t tmp;
-	int8_t min ( INT8_MAX );
 
 	uint8_t c = checkWin();
 
@@ -1200,12 +1198,15 @@ int8_t grid::calcMin ( uint8_t prof ) {
 
 				XO[i][j] = 1;
 
-				tmp = calcMax ( prof - 1 );
+				tmp = calcMax ( prof - 1 , alpha , beta );
 
-				if ( tmp < min || ( tmp == min && random ( width ) ) )
-					min = tmp;
+				if ( beta > tmp )
+					beta = tmp;
 
 				XO[i][j] = 0;
+
+				if ( beta <= alpha )
+					return beta;
 			}
 		}
 	}
@@ -1215,33 +1216,40 @@ int8_t grid::calcMin ( uint8_t prof ) {
 	tmpG->rotate ( true , true );
 	tmpG->gravitate ( true );
 
-	tmp = tmpG->calcMax ( prof - 1 );
+	tmp = tmpG->calcMax ( prof - 1 , alpha , beta );
 
-	if ( tmp < min )
-		min = tmp;
+	if ( beta > tmp )
+		beta = tmp;
 
 	tmpG->destroy ();
+
+	if ( beta <= alpha )
+		return beta;
 
 	tmpG = new grid ( this );
 
 	tmpG->rotate ( true , false );
 	tmpG->gravitate ( true );
 
-	tmp = tmpG->calcMax ( prof - 1 );
+	tmp = tmpG->calcMax ( prof - 1 , alpha , beta );
 
-	if ( tmp < min )
-		min = tmp;
+	if ( beta > tmp )
+		beta = tmp;
 
 	tmpG->destroy ();
 
-	return min;
+	if ( beta <= alpha )
+		return beta;
+
+	return beta;
 }
 
 uint8_t grid::minimax ( uint8_t prof ) {
 
 	uint8_t i , j;
 	int8_t tmp;
-	int8_t max ( INT8_MIN );
+	int8_t alpha ( INT8_MIN );
+	int8_t beta ( INT8_MAX );
 	int8_t maxj = -1;
 
 	if ( ( prof != 0 ) || ( !full() ) ) {
@@ -1257,11 +1265,11 @@ uint8_t grid::minimax ( uint8_t prof ) {
 
 					XO[i][j] = 2;
 
-					tmp = calcMin ( prof - 1 );
+					tmp = calcMin ( prof - 1 , alpha , beta );
 
-					if ( ( tmp > max ) || ( tmp == max && random ( width ) ) ) {
+					if ( alpha < tmp ) {
 
-						max = tmp;
+						alpha = tmp;
 						maxj = j;
 					}
 
@@ -1275,11 +1283,11 @@ uint8_t grid::minimax ( uint8_t prof ) {
 		tmpG->rotate ( true , true );
 		tmpG->gravitate ( true );
 
-		tmp = tmpG->calcMin ( prof - 1 );
+		tmp = tmpG->calcMin ( prof - 1 , alpha , beta );
 
-		if ( tmp > max ) {
+		if ( alpha < tmp ) {
 
-			max = tmp;
+			alpha = tmp;
 			maxj = width;
 		}
 
@@ -1290,11 +1298,11 @@ uint8_t grid::minimax ( uint8_t prof ) {
 		tmpG->rotate ( true , false );
 		tmpG->gravitate ( true );
 
-		tmp = tmpG->calcMin ( prof - 1 );
+		tmp = tmpG->calcMin ( prof - 1 , alpha , beta );
 
-		if ( tmp > max ) {
+		if ( alpha < tmp ) {
 
-			max = tmp;
+			alpha = tmp;
 			maxj = width + 1;
 		}
 

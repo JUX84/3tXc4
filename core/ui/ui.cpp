@@ -134,11 +134,11 @@ void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &default
 		if ( defaultAlignWinTotal > 10 )
 			defaultAlignWinTotal = 10;
 
-		if ( defaultAI_prof < 3 )
-			defaultAI_prof = 3;
+		if ( defaultAI_prof < 5 )
+			defaultAI_prof = 15;
 
-		if ( defaultAI_prof > 7 )
-			defaultAI_prof = 7;
+		if ( defaultAI_prof > 15 )
+			defaultAI_prof = 5;
 
 		switch ( selected ) {
 
@@ -216,15 +216,15 @@ void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &default
 
 		switch ( defaultAI_prof ) {
 
-			case 3:
+			case 5:
 				mvprintw ( ( row / 2 ) + 8 , ( col / 2 ) + ( col / 20 ) + 9 , "EASY" );
 				break;
 
-			case 5:
+			case 10:
 				mvprintw ( ( row / 2 ) + 8 , ( col / 2 ) + ( col / 20 ) + 8 , "MEDIUM" );
 				break;
 
-			case 7:
+			case 15:
 				mvprintw ( ( row / 2 ) + 8 , ( col / 2 ) + ( col / 20 ) + 9 , "HARD" );
 				break;
 		}
@@ -257,7 +257,7 @@ void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &default
 					break;
 
 				case 5:
-					defaultAI_prof -= 2;
+					defaultAI_prof -= 5;
 					break;
 			}
 		}
@@ -283,7 +283,7 @@ void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &default
 					break;
 
 				case 5:
-					defaultAI_prof += 2;
+					defaultAI_prof += 5;
 					break;
 			}
 		}
@@ -694,7 +694,7 @@ void ui ( void ) { // main menu
 	uint8_t defaultWidth ( 5 );
 	uint8_t defaultAlignWinSize ( 5 );
 	uint8_t defaultAlignWinTotal ( 1 );
-	uint8_t defaultAI_prof ( 3 );
+	uint8_t defaultAI_prof ( 5 );
 	int32_t Key;
 	uint8_t row , col;
 

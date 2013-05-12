@@ -28,8 +28,8 @@ class grid {
 		int8_t AI_value ( void );
 		void AI_play ( void );
 		bool full ( void );
-		int8_t calcMin ( uint8_t prof );
-		int8_t calcMax ( uint8_t prof );
+		int8_t calcMin ( uint8_t prof , int8_t alpha , int8_t beta );
+		int8_t calcMax ( uint8_t prof , int8_t alpha , int8_t beta );
 		uint8_t minimax ( uint8_t prof );
 		void rotate ( bool silent , bool clockwise );
 		void insert ( bool player , int8_t pos );
