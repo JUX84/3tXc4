@@ -1110,7 +1110,7 @@ bool grid::full ( void ) {
 	return true;
 }
 
-int8_t grid::calcMax ( uint8_t prof , int8_t alpha , int8_t beta ) {
+int8_t grid::max ( uint8_t prof , int8_t alpha , int8_t beta ) {
 
 	uint8_t i , j;
 	int8_t tmp;
@@ -1131,12 +1131,12 @@ int8_t grid::calcMax ( uint8_t prof , int8_t alpha , int8_t beta ) {
 
 				XO[i][j] = 2;
 
-				tmp = calcMin ( prof - 1 , alpha , beta );
+				tmp = min ( prof - 1 , alpha , beta );
+
+				XO[i][j] = 0;
 
 				if ( alpha < tmp )
 					alpha = tmp;
-
-				XO[i][j] = 0;
 
 				if ( beta <= alpha )
 					return alpha;
@@ -1149,12 +1149,12 @@ int8_t grid::calcMax ( uint8_t prof , int8_t alpha , int8_t beta ) {
 	tmpG->rotate ( true , true );
 	tmpG->gravitate ( true );
 
-	tmp = tmpG->calcMin ( prof - 1 , alpha , beta );
+	tmp = tmpG->min ( prof - 1 , alpha , beta );
+
+	tmpG->destroy ();
 
 	if ( alpha < tmp )
 		alpha = tmp;
-
-	tmpG->destroy ();
 
 	if ( beta <= alpha )
 		return alpha;
@@ -1164,20 +1164,17 @@ int8_t grid::calcMax ( uint8_t prof , int8_t alpha , int8_t beta ) {
 	tmpG->rotate ( true , false );
 	tmpG->gravitate ( true );
 
-	tmp = tmpG->calcMin ( prof - 1 , alpha , beta );
+	tmp = tmpG->min ( prof - 1 , alpha , beta );
+
+	tmpG->destroy ();
 
 	if ( alpha < tmp )
 		alpha = tmp;
 
-	tmpG->destroy ();
-
-	if ( beta <= alpha )
-		return alpha;
-
 	return alpha;
 }
 
-int8_t grid::calcMin ( uint8_t prof , int8_t alpha , int8_t beta ) {
+int8_t grid::min ( uint8_t prof , int8_t alpha , int8_t beta ) {
 
 	uint8_t i , j;
 	int8_t tmp;
@@ -1198,7 +1195,7 @@ int8_t grid::calcMin ( uint8_t prof , int8_t alpha , int8_t beta ) {
 
 				XO[i][j] = 1;
 
-				tmp = calcMax ( prof - 1 , alpha , beta );
+				tmp = max ( prof - 1 , alpha , beta );
 
 				if ( beta > tmp )
 					beta = tmp;
@@ -1216,7 +1213,7 @@ int8_t grid::calcMin ( uint8_t prof , int8_t alpha , int8_t beta ) {
 	tmpG->rotate ( true , true );
 	tmpG->gravitate ( true );
 
-	tmp = tmpG->calcMax ( prof - 1 , alpha , beta );
+	tmp = tmpG->max ( prof - 1 , alpha , beta );
 
 	if ( beta > tmp )
 		beta = tmp;
@@ -1231,15 +1228,12 @@ int8_t grid::calcMin ( uint8_t prof , int8_t alpha , int8_t beta ) {
 	tmpG->rotate ( true , false );
 	tmpG->gravitate ( true );
 
-	tmp = tmpG->calcMax ( prof - 1 , alpha , beta );
+	tmp = tmpG->max ( prof - 1 , alpha , beta );
 
 	if ( beta > tmp )
 		beta = tmp;
 
 	tmpG->destroy ();
-
-	if ( beta <= alpha )
-		return beta;
 
 	return beta;
 }
@@ -1265,7 +1259,7 @@ uint8_t grid::minimax ( uint8_t prof ) {
 
 					XO[i][j] = 2;
 
-					tmp = calcMin ( prof - 1 , alpha , beta );
+					tmp = min ( prof - 1 , alpha , beta );
 
 					if ( alpha < tmp ) {
 
@@ -1283,10 +1277,9 @@ uint8_t grid::minimax ( uint8_t prof ) {
 		tmpG->rotate ( true , true );
 		tmpG->gravitate ( true );
 
-		tmp = tmpG->calcMin ( prof - 1 , alpha , beta );
+		tmp = tmpG->min ( prof - 1 , alpha , beta );
 
 		if ( alpha < tmp ) {
-
 			alpha = tmp;
 			maxj = width;
 		}
@@ -1298,7 +1291,7 @@ uint8_t grid::minimax ( uint8_t prof ) {
 		tmpG->rotate ( true , false );
 		tmpG->gravitate ( true );
 
-		tmp = tmpG->calcMin ( prof - 1 , alpha , beta );
+		tmp = tmpG->min ( prof - 1 , alpha , beta );
 
 		if ( alpha < tmp ) {
 
