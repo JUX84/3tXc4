@@ -396,6 +396,9 @@ uint8_t grid::checkWin ( void ) { // grid win check
 			countX = 0;
 			countO = 0;
 
+			if ( j > width - alignWinSize )
+                break;
+
 			for ( k = j ; k < j + alignWinSize ; ++k ) {
 
 				if ( XO[i][k] == 1 )
@@ -409,12 +412,14 @@ uint8_t grid::checkWin ( void ) { // grid win check
 
 				alignX++;
 				countX = 0;
+				j += alignWinSize - 1;
 			}
 
 			if ( countO >= alignWinSize ) {
 
 				alignO++;
 				countO = 0;
+				j += alignWinSize - 1;
 			}
 		}
 	}
@@ -425,6 +430,9 @@ uint8_t grid::checkWin ( void ) { // grid win check
 
 			countX = 0;
 			countO = 0;
+
+			if ( i > height - alignWinSize )
+                break;
 
 			for ( k = i ; k < i + alignWinSize ; ++k ) {
 
@@ -439,12 +447,14 @@ uint8_t grid::checkWin ( void ) { // grid win check
 
 				alignX++;
 				countX = 0;
+				i += alignWinSize - 1;
 			}
 
 			if ( countO >= alignWinSize ) {
 
 				alignO++;
 				countO = 0;
+				i += alignWinSize - 1;
 			}
 		}
 	}
@@ -478,12 +488,16 @@ uint8_t grid::checkWin ( void ) { // grid win check
 
 				alignX++;
 				countX = 0;
+				i += alignWinSize - 1;
+				j += alignWinSize - 1;
 			}
 
 			if ( countO >= alignWinSize ) {
 
 				alignO++;
 				countO = 0;
+				i += alignWinSize - 1;
+				j += alignWinSize - 1;
 			}
 
 			++i;
@@ -520,6 +534,8 @@ uint8_t grid::checkWin ( void ) { // grid win check
 
 				alignX++;
 				countX = 0;
+				i += alignWinSize - 1;
+				j += alignWinSize - 1;
 			}
 
 			if ( countO >= alignWinSize ) {
@@ -562,12 +578,16 @@ uint8_t grid::checkWin ( void ) { // grid win check
 
 				alignX++;
 				countX = 0;
+				i -= alignWinSize - 1;
+				j += alignWinSize - 1;
 			}
 
 			if ( countO >= alignWinSize ) {
 
 				alignO++;
 				countO = 0;
+				i -= alignWinSize - 1;
+				j += alignWinSize - 1;
 			}
 
 			--i;
@@ -604,12 +624,16 @@ uint8_t grid::checkWin ( void ) { // grid win check
 
 				alignX++;
 				countX = 0;
+				i -= alignWinSize - 1;
+				j += alignWinSize - 1;
 			}
 
 			if ( countO >= alignWinSize ) {
 
 				alignO++;
 				countO = 0;
+				i -= alignWinSize - 1;
+				j += alignWinSize - 1;
 			}
 
 			--i;
@@ -864,6 +888,9 @@ int8_t grid::AI_value ( void ) {
 			countX = 0;
 			countO = 0;
 
+			if ( j > width - alignWinSize )
+                break;
+
 			for ( k = j ; k < j + alignWinSize ; ++k ) {
 
 				if ( XO[i][k] == 1 )
@@ -877,12 +904,14 @@ int8_t grid::AI_value ( void ) {
 
 				alignX++;
 				countX = 0;
+				j += alignWinSize - 1;
 			}
 
 			if ( countO >= alignWinSize ) {
 
 				alignO++;
 				countO = 0;
+				j += alignWinSize - 1;
 			}
 		}
 	}
@@ -893,6 +922,9 @@ int8_t grid::AI_value ( void ) {
 
 			countX = 0;
 			countO = 0;
+
+			if ( i > height - alignWinSize )
+                break;
 
 			for ( k = i ; k < i + alignWinSize ; ++k ) {
 
@@ -907,12 +939,14 @@ int8_t grid::AI_value ( void ) {
 
 				alignX++;
 				countX = 0;
+				i += alignWinSize - 1;
 			}
 
 			if ( countO >= alignWinSize ) {
 
 				alignO++;
 				countO = 0;
+				i += alignWinSize - 1;
 			}
 		}
 	}
@@ -946,12 +980,16 @@ int8_t grid::AI_value ( void ) {
 
 				alignX++;
 				countX = 0;
+				i += alignWinSize - 1;
+				j += alignWinSize - 1;
 			}
 
 			if ( countO >= alignWinSize ) {
 
 				alignO++;
 				countO = 0;
+				i += alignWinSize - 1;
+				j += alignWinSize - 1;
 			}
 
 			++i;
@@ -988,12 +1026,16 @@ int8_t grid::AI_value ( void ) {
 
 				alignX++;
 				countX = 0;
+				i += alignWinSize - 1;
+				j += alignWinSize - 1;
 			}
 
 			if ( countO >= alignWinSize ) {
 
 				alignO++;
 				countO = 0;
+				i += alignWinSize - 1;
+				j += alignWinSize - 1;
 			}
 
 			++i;
@@ -1030,12 +1072,16 @@ int8_t grid::AI_value ( void ) {
 
 				alignX++;
 				countX = 0;
+				i -= alignWinSize - 1;
+				j += alignWinSize - 1;
 			}
 
 			if ( countO >= alignWinSize ) {
 
 				alignO++;
 				countO = 0;
+				i -= alignWinSize - 1;
+				j += alignWinSize - 1;
 			}
 
 			--i;
@@ -1072,12 +1118,16 @@ int8_t grid::AI_value ( void ) {
 
 				alignX++;
 				countX = 0;
+				i -= alignWinSize - 1;
+				j += alignWinSize - 1;
 			}
 
 			if ( countO >= alignWinSize ) {
 
 				alignO++;
 				countO = 0;
+				i -= alignWinSize - 1;
+				j += alignWinSize - 1;
 			}
 
 			--i;
@@ -1138,8 +1188,8 @@ int8_t grid::max ( uint8_t prof , int8_t alpha , int8_t beta ) {
 				if ( alpha < tmp )
 					alpha = tmp;
 
-				if ( beta <= alpha )
-					return alpha;
+                if ( beta <= alpha )
+                    return alpha;
 			}
 		}
 	}
@@ -1156,8 +1206,8 @@ int8_t grid::max ( uint8_t prof , int8_t alpha , int8_t beta ) {
 	if ( alpha < tmp )
 		alpha = tmp;
 
-	if ( beta <= alpha )
-		return alpha;
+    if ( beta <= alpha )
+        return alpha;
 
 	tmpG = new grid ( this );
 
@@ -1203,12 +1253,12 @@ int8_t grid::min ( uint8_t prof , int8_t alpha , int8_t beta ) {
 				XO[i][j] = 0;
 
 				if ( beta <= alpha )
-					return beta;
+                    return beta;
 			}
 		}
 	}
 
-	grid *tmpG = new grid ( this );
+	/*grid *tmpG = new grid ( this );
 
 	tmpG->rotate ( true , true );
 	tmpG->gravitate ( true );
@@ -1218,10 +1268,10 @@ int8_t grid::min ( uint8_t prof , int8_t alpha , int8_t beta ) {
 	if ( beta > tmp )
 		beta = tmp;
 
-	tmpG->destroy ();
+ 	if ( beta <= alpha )
+        return beta;
 
-	if ( beta <= alpha )
-		return beta;
+	tmpG->destroy ();
 
 	tmpG = new grid ( this );
 
@@ -1233,7 +1283,7 @@ int8_t grid::min ( uint8_t prof , int8_t alpha , int8_t beta ) {
 	if ( beta > tmp )
 		beta = tmp;
 
-	tmpG->destroy ();
+	tmpG->destroy ();*/
 
 	return beta;
 }
@@ -1280,6 +1330,7 @@ uint8_t grid::minimax ( uint8_t prof ) {
 		tmp = tmpG->min ( prof - 1 , alpha , beta );
 
 		if ( alpha < tmp ) {
+
 			alpha = tmp;
 			maxj = width;
 		}
