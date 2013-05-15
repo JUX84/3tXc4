@@ -1258,7 +1258,7 @@ int8_t grid::min ( uint8_t prof , int8_t alpha , int8_t beta ) {
 		}
 	}
 
-	/*grid *tmpG = new grid ( this );
+	grid *tmpG = new grid ( this );
 
 	tmpG->rotate ( true , true );
 	tmpG->gravitate ( true );
@@ -1283,7 +1283,7 @@ int8_t grid::min ( uint8_t prof , int8_t alpha , int8_t beta ) {
 	if ( beta > tmp )
 		beta = tmp;
 
-	tmpG->destroy ();*/
+	tmpG->destroy ();
 
 	return beta;
 }
