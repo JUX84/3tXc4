@@ -1,10 +1,6 @@
 #ifndef _GRID_HPP_
 #define _GRID_HPP_
 
-#include <string>
-#include <cstring>
-#include <stdint.h>
-
 class grid {
 
 	private:

@@ -1,6 +1,5 @@
 #include <ncurses.h>
 #include "ui/ui.hpp"
-#include "misc/misc.hpp"
 
 int main ( int argc , char **argv ) {
 

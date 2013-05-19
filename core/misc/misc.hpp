@@ -2,12 +2,11 @@
 #define _MISC_HPP_
 
 #include <unistd.h>
-
-#define wait(a) usleep(a*1000)
-
 #include <iostream>
 #include <cstring>
 #include <stdint.h>
+
+#define wait(a) usleep(a*1000)
 
 #define ENTER 10
 #define ESC 27

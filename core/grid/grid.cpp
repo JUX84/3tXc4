@@ -1,11 +1,9 @@
 #include <ncurses.h>
 #include <fstream>
-#include <ctime>
 #include <list>
 #include <algorithm>
 #include <iterator>
 #include <climits>
-#include <random>
 #include "grid.hpp"
 #include "../misc/misc.hpp"
 
@@ -20,7 +18,7 @@ grid::grid ( void ) { // grid c-tor #1
 	height = 5;
 	width = 5;
 
-	AI_prof = 5;
+	AI_prof = 3;
 
 	XO = new uint8_t*[height];
 	for ( i = 0 ; i < height ; ++i )
@@ -172,7 +170,7 @@ grid::grid ( std::string gameID ) { // grid c-tor #3
 	}
 }
 
-grid::grid ( grid *G ) {
+grid::grid ( grid *G ) { // grid c-tor #4
 
 	uint8_t i;
 	uint8_t j;
@@ -206,7 +204,7 @@ grid::~grid ( void ) { // grid d-tor
 	AI = false;
 }
 
-void grid::destroy ( void ) {
+void grid::destroy ( void ) { // XO grid d-tor
 
 	uint8_t i;
 
@@ -873,7 +871,7 @@ void grid::play ( bool player ) { // grid play (insert or rotate)
 	}
 }
 
-int8_t grid::AI_value ( void ) {
+int8_t grid::AI_value ( void ) { // grid value (minimax)
 
 	int8_t h , i , j , k , l;
 	uint8_t countX , countO;
@@ -1144,7 +1142,7 @@ int8_t grid::AI_value ( void ) {
 	return alignO-alignX;
 }
 
-bool grid::full ( void ) {
+bool grid::full ( void ) { // checks if the grid is full
 
 	int i , j;
 
@@ -1160,7 +1158,7 @@ bool grid::full ( void ) {
 	return true;
 }
 
-int8_t grid::max ( uint8_t prof , int8_t alpha , int8_t beta ) {
+int8_t grid::max ( uint8_t prof , int8_t alpha , int8_t beta ) { // maximizing function (minimax)
 
 	uint8_t i , j;
 	int8_t tmp;
@@ -1224,7 +1222,7 @@ int8_t grid::max ( uint8_t prof , int8_t alpha , int8_t beta ) {
 	return alpha;
 }
 
-int8_t grid::min ( uint8_t prof , int8_t alpha , int8_t beta ) {
+int8_t grid::min ( uint8_t prof , int8_t alpha , int8_t beta ) { // minimizing function (minimax)
 
 	uint8_t i , j;
 	int8_t tmp;
@@ -1288,13 +1286,13 @@ int8_t grid::min ( uint8_t prof , int8_t alpha , int8_t beta ) {
 	return beta;
 }
 
-uint8_t grid::minimax ( uint8_t prof ) {
+uint8_t grid::minimax ( uint8_t prof ) { // minimax function (with alpha-beta pruning)
 
 	uint8_t i , j;
 	int8_t tmp;
 	int8_t alpha ( INT8_MIN );
 	int8_t beta ( INT8_MAX );
-	int8_t maxj = -1;
+	int8_t nextj = -1;
 
 	if ( ( prof != 0 ) || ( !full() ) ) {
 
@@ -1314,7 +1312,7 @@ uint8_t grid::minimax ( uint8_t prof ) {
 					if ( alpha < tmp ) {
 
 						alpha = tmp;
-						maxj = j;
+						nextj = j;
 					}
 
 					XO[i][j] = 0;
@@ -1332,7 +1330,7 @@ uint8_t grid::minimax ( uint8_t prof ) {
 		if ( alpha < tmp ) {
 
 			alpha = tmp;
-			maxj = width;
+			nextj = width;
 		}
 
 		tmpG->destroy ();
@@ -1347,16 +1345,16 @@ uint8_t grid::minimax ( uint8_t prof ) {
 		if ( alpha < tmp ) {
 
 			alpha = tmp;
-			maxj = width + 1;
+			nextj = width + 1;
 		}
 
 		tmpG->destroy ();
 	}
 
-	return maxj;
+	return nextj;
 }
 
-void grid::AI_play ( void ) {
+void grid::AI_play ( void ) { // AI play function (calls minimax function)
 
 	uint8_t row , col;
 
@@ -1366,23 +1364,23 @@ void grid::AI_play ( void ) {
 
 	refresh ();
 
-	uint8_t pred = minimax ( AI_prof );
+	uint8_t nextj = minimax ( AI_prof ); // calls minimax function
 
-	if ( pred == width ) {
+	if ( nextj == width ) { // in case of clockwise rotation
 
 		rotate ( false , true );
 		gravitate ( false );
 	}
-	else if ( pred == width + 1 ) {
+	else if ( nextj == width + 1 ) { // counter-clockwise rotation
 
 		rotate ( false , false );
 		gravitate ( false );
 	}
 	else
-		XO[0][pred] = 2;
+		XO[0][nextj] = 2; // insertion
 }
 
-void grid::draw ( void ) { // grid draw
+void grid::draw ( void ) { // draws the grid
 
 	uint8_t i , j;
 	uint8_t row , col;
