@@ -761,8 +761,8 @@ void grid::play ( bool player ) { // grid play (insert or rotate)
 		if ( selected < 1 )
 			selected = 1;
 
-		if ( selected > 2 )
-			selected = 2;
+		if ( selected > 3 )
+			selected = 3;
 
 		if ( selected == 1 ) {
 			STR_SELECTED = STR_INSERT;
@@ -771,7 +771,12 @@ void grid::play ( bool player ) { // grid play (insert or rotate)
 
 		if ( selected == 2 ) {
 			STR_SELECTED = STR_ROTATE;
-			TAB = 2;
+			TAB = 3;
+		}
+
+		if ( selected == 3 ) {
+			STR_SELECTED = STR_INVERT;
+			TAB = 5;
 		}
 
 		clear ();
@@ -782,14 +787,15 @@ void grid::play ( bool player ) { // grid play (insert or rotate)
 
 		mvprintw ( 3 , ( col / 2 ) - ( STR_P1.length () / 2 ) + 1 , STR_P1.c_str () );
 
-		mvprintw ( row - 4 , ( TAB * col / 3 ) - STR_SELECTED.length () - 2 , STR_ARROW_RIGHT.c_str () );
-		mvprintw ( row - 4 , ( TAB * col / 3 ) + STR_SELECTED.length () , STR_ARROW_LEFT.c_str () );
+		mvprintw ( row - 4 , ( TAB * col / 6 ) - STR_SELECTED.length () - 2 , STR_ARROW_RIGHT.c_str () );
+		mvprintw ( row - 4 , ( TAB * col / 6 ) + STR_SELECTED.length () , STR_ARROW_LEFT.c_str () );
 
 		attroff ( A_BOLD );
 
-		mvprintw ( row - 4 , ( col / 3 ) - ( STR_INSERT.length () / 2 ) , STR_INSERT.c_str () );
-		mvprintw ( row - 4 , ( 2 * col / 3 ) - ( STR_ROTATE.length () / 2 ) , STR_ROTATE.c_str () );
-
+		mvprintw ( row - 4 , ( 1 * col / 6 ) - ( STR_INSERT.length () / 2 ) , STR_INSERT.c_str () );
+		mvprintw ( row - 4 , ( 3 * col / 6 ) - ( STR_ROTATE.length () / 2 ) , STR_ROTATE.c_str () );
+		mvprintw ( row - 4 , ( 5 * col / 6 ) - ( STR_INVERT.length () / 2 ) , STR_INVERT.c_str () );
+		
 		refresh ();
 
 		Key = getch ();
@@ -863,6 +869,10 @@ void grid::play ( bool player ) { // grid play (insert or rotate)
 					}
 				}
 			}
+
+			if ( selected == 3 )
+				invert();
+
 			break;
 		}
 
@@ -1219,6 +1229,9 @@ int8_t grid::max ( uint8_t prof , int8_t alpha , int8_t beta ) { // maximizing f
 	if ( alpha < tmp )
 		alpha = tmp;
 
+	if ( beta <= alpha )
+		return alpha;
+
 	return alpha;
 }
 
@@ -1282,6 +1295,9 @@ int8_t grid::min ( uint8_t prof , int8_t alpha , int8_t beta ) { // minimizing f
 		beta = tmp;
 
 	tmpG->destroy ();
+
+	if ( beta <= alpha )
+		return beta;
 
 	return beta;
 }
@@ -1415,4 +1431,18 @@ void grid::draw ( void ) { // draws the grid
 	}
 
 	refresh ();
+}
+
+void grid::invert ( void ) {
+
+	uint8_t i , j;
+
+	for ( i = 0 ; i < height ; ++i ) {
+
+		for ( j = 0 ; j < width ; ++j ) {
+
+			if ( XO[i][j] != 0 )
+				XO[i][j]==1?XO[i][j]=2:XO[i][j]=1;
+		}
+	}
 }

@@ -31,6 +31,7 @@ class grid {
 		void insert ( bool player , int8_t pos );
 		uint8_t checkWin ( void );
 		void save ( void );
+		void invert ( void );
 		uint8_t getWidth ( void );
 		uint8_t getHeight ( void );
 		uint8_t getAlignWinSize ( void );

@@ -33,6 +33,7 @@ static std::string STR_TITLE_OPTIONS ( "_OPTIONS_" );
 static std::string STR_PLAY ( "[P]LAY!" );
 static std::string STR_EXIT ( "[E]XIT" );
 static std::string STR_INSERT ( "[I]NSERT" );
+static std::string STR_INVERT ( "IN[V]ERT" );
 static std::string STR_ROTATE ( "[R]OTATE" );
 static std::string STR_P1 ( "Player 1 !" );
 static std::string STR_P2 ( "Player 2 !" );
