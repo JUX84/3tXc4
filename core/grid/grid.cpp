@@ -785,6 +785,8 @@ void grid::play ( bool player ) { // grid play (insert or rotate)
 
 		attron ( A_BOLD );
 
+		mvprintw ( 2 , 2 , STR_AI_HELP.c_str() );
+
 		mvprintw ( 3 , ( col / 2 ) - ( STR_P1.length () / 2 ) + 1 , STR_P1.c_str () );
 
 		mvprintw ( row - 4 , ( TAB * col / 6 ) - STR_SELECTED.length () - 2 , STR_ARROW_RIGHT.c_str () );
@@ -875,6 +877,26 @@ void grid::play ( bool player ) { // grid play (insert or rotate)
 
 			break;
 		}
+
+		if ( Key == KEY_F ( 8 ) ) {
+				
+				invert();
+				uint8_t help = minimax ( 6 );
+				invert();
+				clear();
+				if ( help == width ) 
+					mvprintw ( row / 2 , ( col - STR_AI_ROTATE_CLOCKWISE.length () + 1 ) / 2 , STR_AI_ROTATE_CLOCKWISE.c_str() );
+				else if ( help == width + 1 )
+					mvprintw ( row / 2 , ( col - STR_AI_ROTATE_CCLOCKWISE.length () + 1 ) / 2 , STR_AI_ROTATE_CCLOCKWISE.c_str() );
+				else {
+					uint8_t str_size = STR_AI_INSERT.length() + 10;
+					mvprintw ( row / 2 , ( col - str_size + 1 ) / 2 , STR_AI_INSERT.c_str() );
+					printw ( "%d" , help );
+					printw ( "th column" );
+				}
+				refresh();
+				wait ( 1000 );
+			}
 
 		if ( Key == ESC )
 			break;

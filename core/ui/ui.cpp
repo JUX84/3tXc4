@@ -347,10 +347,10 @@ void play ( grid *G , uint8_t height , uint8_t width , uint8_t alignWinSize , ui
 		if ( Key == ESC || Key == KEY_E )
 			break;
 
-		if ( Key == KEY_F ( 1 ) )
+		if ( Key == KEY_F ( 6 ) )
 			G->save ();
 
-		if ( Key == KEY_F ( 2 ) ) {
+		if ( Key == KEY_F ( 7 ) ) {
 
 			G->save ();
 			break;
