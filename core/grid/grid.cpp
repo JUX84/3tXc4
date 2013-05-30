@@ -1,3 +1,14 @@
+/*
+ * ------------------------------------------------------------------------------
+ * "THE BEER-WARE LICENSE" (Revision 42):
+ * <mehdi.mhiri@gmail.com> wrote this file. As long as you retain this notice you
+ * can do whatever you want with this stuff. If we meet some day, and you think
+ * this stuff is worth it, you can buy me a beer in return. Mehdi Mhiri
+ * ------------------------------------------------------------------------------
+ * License originally written by Poul-Henning Kamp <phk@FreeBSD.ORG>
+ * ------------------------------------------------------------------------------
+ */
+
 #include <ncurses.h>
 #include <fstream>
 #include <list>
@@ -648,6 +659,9 @@ uint8_t grid::checkWin ( void ) { // grid win check
 		alignO = 2;
 	else
 		alignO = 0;
+
+	if ( alignX == 0 && alignO == 0 && full() )
+		return 3;
 
 	return alignX+alignO;
 }
