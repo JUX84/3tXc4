@@ -1277,6 +1277,15 @@ int8_t grid::max ( uint8_t prof , int8_t alpha , int8_t beta ) { // maximizing f
 	if ( beta <= alpha )
 		return alpha;
 
+	invert();
+
+	tmp = min ( prof - 1 , alpha , beta );
+
+	if ( alpha < tmp )
+		alpha = tmp;
+
+	invert();
+
 	return alpha;
 }
 
@@ -1344,6 +1353,15 @@ int8_t grid::min ( uint8_t prof , int8_t alpha , int8_t beta ) { // minimizing f
 	if ( beta <= alpha )
 		return beta;
 
+	invert();
+
+	tmp = max ( prof - 1 , alpha , beta );
+
+	if ( beta > tmp )
+		beta = tmp;
+
+	invert();
+
 	return beta;
 }
 
@@ -1410,6 +1428,18 @@ uint8_t grid::minimax ( uint8_t prof ) { // minimax function (with alpha-beta pr
 		}
 
 		tmpG->destroy ();
+
+		invert();
+
+		tmp = min ( prof - 1 , alpha , beta );
+
+		if ( alpha < tmp ) {
+
+			alpha = tmp;
+			nextj = width + 2;
+		}
+
+		invert();
 	}
 
 	return nextj;
