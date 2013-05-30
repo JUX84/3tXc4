@@ -891,8 +891,17 @@ void grid::play ( bool player ) { // grid play (insert or rotate)
 				else {
 					uint8_t str_size = STR_AI_INSERT.length() + 10;
 					mvprintw ( row / 2 , ( col - str_size + 1 ) / 2 , STR_AI_INSERT.c_str() );
+					++help;
 					printw ( "%d" , help );
-					printw ( "th column" );
+					if ( help == 1 )
+						printw ( "st" );
+					else if ( help == 2 )
+						printw ( "nd" );
+					else if ( help == 3 )
+						printw ( "rd" );
+					else
+						printw ( "th" );
+					printw ( " column" );
 				}
 				refresh();
 				wait ( 1000 );

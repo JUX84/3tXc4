@@ -505,11 +505,24 @@ void load_menu () { // load game menu
 		if ( !vectorID.empty() )
 			vectorID.clear();
 
+		if ( selected < 1 ) {
+			if ( top > 0 )
+				top--;
+			selected = 1;
+		}
+
+		if ( selected > 10 ) {
+
+			if ( top < listID.size() )
+				top++;
+			selected = 10;
+		}
+
 		for ( it = listID.rbegin() ; it != listID.rend() ; ++it ) {
 
 			currentID = (*it);
 
-			if ( i >= top + 10 )
+			if ( i > top + 10 )
 				break;
 
 			if ( i >= top ) {
@@ -521,21 +534,9 @@ void load_menu () { // load game menu
 			++i;
 		}
 
-		if ( selected < 1 ) {
-			if ( top > 0 )
-				top--;
-			selected = 1;
-		}
+		if ( selected > vectorID.size() ) {
 
-		if ( selected > 20 ) {
-			if ( top < listID.size() )
-				top++;
-			selected = 20;
-		}
-
-		if ( selected >= 2 * vectorID.size() ) {
-
-			selected = ( 2 * vectorID.size() ) - 1;
+			selected = vectorID.size();
 		}
 
 		getmaxyx ( stdscr , row , col );
@@ -546,8 +547,8 @@ void load_menu () { // load game menu
 
 		mvprintw ( row / 5 , ( col - STR_LOAD_MENU.length () + 1 ) / 2 , STR_LOAD_MENU.c_str () );
 
-		mvprintw ( ( row / 3 ) + selected - 2 + ( selected % 2 ) , 5 * col / 20 , STR_ARROW_RIGHT.c_str () );
-		mvprintw ( ( row / 3 ) + selected - 2 + ( selected % 2 ) , 15 * col / 20 , STR_ARROW_LEFT.c_str () );
+		mvprintw ( ( row / 3 ) + selected*2 - 2 , 5 * col / 20 , STR_ARROW_RIGHT.c_str () );
+		mvprintw ( ( row / 3 ) + selected*2 - 2 , 15 * col / 20 , STR_ARROW_LEFT.c_str () );
 
 		mvprintw ( 2 , 2 , STR_HELP.c_str () );
 
@@ -558,7 +559,7 @@ void load_menu () { // load game menu
 			mvprintw ( ( row / 3 ) + ( i * 2 ) , ( col - 13 ) / 2 , vectorID[i].c_str() );
 		}
 
-		uint8_t current = ( selected - 0.5 ) / 2;
+		uint8_t current = selected - 1;
 		currentID = vectorID[current];
 
 		refresh ();
@@ -567,30 +568,17 @@ void load_menu () { // load game menu
 
 		if ( Key == ENTER ) {
 
-			if ( selected % 2 == 1 ) {
-
-				grid *G = new grid ( currentID.c_str() );
-				if ( grid::initXO ) {
-					play ( G , 5 , 5 , 5 , 1 , G->AI , G->getAI_prof() );
-					return;
-				}
-			}
-			else {
-
-				//delete_save ( currentID );
+			grid *G = new grid ( currentID.c_str() );
+			if ( grid::initXO ) {
+				play ( G , 5 , 5 , 5 , 1 , G->AI , G->getAI_prof() );
+				return;
 			}
 		}
 
 		if ( Key == KEY_DOWN )
-			selected += 2;
-
-		if ( Key == KEY_UP )
-			selected -= 2;
-
-		if ( Key == KEY_RIGHT && selected % 2 == 1 )
 			selected++;
 
-		if ( Key == KEY_LEFT && selected % 2 == 0 )
+		if ( Key == KEY_UP )
 			selected--;
 
 		if ( Key == ESC )
