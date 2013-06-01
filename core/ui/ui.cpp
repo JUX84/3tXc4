@@ -318,7 +318,7 @@ void options ( uint8_t &defaultHeight , uint8_t &defaultWidth , uint8_t &default
 			break;
 		}
 
-		if ( Key == KEY_F ( 1 ) )
+		if ( Key == KEY_F ( 5 ) )
 			options_help ();
 	}
 }
@@ -767,7 +767,7 @@ void ui ( void ) { // main menu
 			}
 		}
 
-		if ( Key == KEY_F ( 1 ) )
+		if ( Key == KEY_F ( 5 ) )
 			ui_help ();
 	}
 }
